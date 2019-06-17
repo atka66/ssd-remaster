@@ -12,6 +12,14 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### General
 
+#### Uploading sources
+
+* Maps [In progress]
+* Graphics [In progress]
+* Sounds
+* Musics
+* ...
+
 #### Intro
 
 * Fix aircraft scene water clipping bug
