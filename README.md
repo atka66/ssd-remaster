@@ -22,6 +22,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * Fix container doors to actually open instead of switching between impassable and passable
 
+### Zone 3: Skull Temple Zone
+
+#### Act 1
+
 ## External links
 * [The original Super Sonic Doom by The Ultimate DooMer](https://www.doomworld.com/idgames/levels/doom2/Ports/megawads/sonic)
 * [Get ZDoom](https://www.zdoom.org/index)
