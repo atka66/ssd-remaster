@@ -12,6 +12,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### General
 
+#### Intro
+
+* Fix aircraft scene water clipping bug
+
 ### Zone 1: Sunset Island Zone
 
 #### Act 1
