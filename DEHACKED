@@ -1,0 +1,347 @@
+Patch File for DeHackEd v3.0
+
+# Note: Use the pound sign ('#') to start comment lines.
+
+Doom version = 19
+Patch format = 6
+
+Thing 23 (Pain Elemental)
+Respawn frame = 0
+
+Thing 31 (Barrel)
+Bits = SOLID+SHOOTABLE+NOBLOOD+PUSHABLE+PASSMOBJ
+
+Thing 44 (Green Armor)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 46 (Health Potion)
+Bits = NOGRAVITY+SPECIAL+COUNTITEM
+
+Thing 47 (Armor Helmet)
+Bits = NOGRAVITY+SPECIAL+COUNTITEM
+
+Thing 48 (Blue Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 49 (Red Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 50 (Yellow Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 51 (Orange Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 52 (Purple Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 53 (Green Keycard)
+Bits = NOGRAVITY+SPECIAL+NOTDMATCH
+
+Thing 58 (Berserk Pack)
+Bits = NOGRAVITY+SPECIAL+COUNTITEM
+
+Thing 65 (Box of Ammo)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 66 (Rocket)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 67 (Box of Rockets)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 68 (Energy Cell)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 69 (Energy Pack)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 70 (Shells)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 71 (Box of Shells)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 72 (Backpack)
+Bits = NOGRAVITY+SPECIAL
+
+Thing 80 (Tall Lamp)
+Bits = SOLID+NOGRAVITY
+
+Thing 81 (Tall Lamp 2)
+Bits = SOLID+NOGRAVITY
+
+Thing 82 (Short Lamp)
+Bits = SOLID+NOGRAVITY
+
+Thing 83 (Tall Gr. Pillar)
+Bits = SOLID+NOGRAVITY
+
+Thing 84 (Short Gr. Pillar)
+Bits = SOLID+NOGRAVITY
+
+Thing 85 (Tall Red Pillar)
+Bits = SOLID+NOGRAVITY
+
+Thing 86 (Short Red Pillar)
+Bits = SOLID+NOGRAVITY
+
+Thing 87 (Pillar w/Skull)
+Bits = SOLID+NOGRAVITY
+
+Thing 88 (Pillar w/Heart)
+Bits = SOLID+NOGRAVITY
+
+Thing 89 (Eye in Symbol)
+Bits = SOLID+NOGRAVITY
+
+Thing 90 (Flaming Skulls)
+Bits = SOLID+NOGRAVITY
+
+Thing 92 (Tall Blue Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 93 (Tall Green Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 94 (Tall Red Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 95 (Small Blue Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 96 (Small Gr. Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 97 (Small Red Torch)
+Bits = SOLID+NOGRAVITY
+
+Thing 99 (Technical Column)
+Bits = SOLID+NOGRAVITY
+
+Thing 100 (Candle)
+Bits = NOGRAVITY
+
+Thing 101 (Candelabra)
+Bits = SOLID+NOGRAVITY
+
+Thing 112 (Dead Cacodemon)
+Bits = SOLID+NOGRAVITY
+
+Thing 113 (Dead Marine)
+Bits = NOGRAVITY
+
+Thing 114 (Dead Trooper)
+Bits = NOGRAVITY
+
+Thing 115 (Dead Demon)
+Bits = NOGRAVITY
+
+Thing 117 (Dead Imp)
+Bits = NOGRAVITY
+
+Thing 118 (Dead Sargeant)
+Bits = NOGRAVITY
+
+Thing 119 (Guts and Bones)
+Bits = NOGRAVITY
+
+Thing 120 (Guts and Bones 2)
+Bits = NOGRAVITY
+
+Thing 121 (Skewered Heads)
+Bits = SOLID+NOGRAVITY
+
+Thing 122 (Pool of Blood)
+Bits = NOGRAVITY
+
+Thing 123 (Pole with Skull)
+Bits = SOLID+NOGRAVITY
+
+Thing 124 (Pile of Skulls)
+Bits = SOLID+NOGRAVITY
+
+Thing 125 (Impaled Body)
+Bits = SOLID+NOGRAVITY
+
+Thing 126 (Twitching Body)
+Bits = SOLID+NOGRAVITY
+
+Weapon 4 (Railgun)
+Ammo type = 2
+Deselect frame = 59
+Select frame = 58
+Bobbing frame = 57
+Shooting frame = 804
+Firing frame = 63
+Ammo use = 10
+Min ammo = 10
+Decal = RailScorch
+
+Ammo 0 (Bullets)
+Max ammo = 150
+
+Ammo 1 (Shells)
+Max ammo = 40
+
+Ammo 2 (Cells)
+Max ammo = 200
+
+Ammo 3 (Rockets)
+Max ammo = 20
+
+Thing 5 (Archvile Attack)
+Bits = NOBLOCKMAP+NOGRAVITY
+
+Thing 7 (Revenant Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 8 (Fireball Trail)
+Bits = NOBLOCKMAP+NOGRAVITY
+
+Thing 10 (Mancubus Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 17 (Baron Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 32 (Imp Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 33 (Caco Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 34 (Rocket (in air))
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 35 (Plasma Bullet)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 36 (BFG Shot)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 37 (Arach. Fireball)
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 38 (Bullet Puff)
+Bits = NOBLOCKMAP+NOGRAVITY+PCROSS+IMPACT
+
+Thing 43 (BFG Hit)
+Bits = NOBLOCKMAP+NOGRAVITY+PCROSS+IMPACT
+
+
+Thing 14 (RevenantFireball2)
+ID # = -1
+Initial frame = 316
+Death frame = 318
+Alert sound = 0
+Death sound = xploshn2
+Speed = 655360
+Width = 720896
+Height = 524288
+Missile damage = 10
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Thing 24 (Rocket (in air) 2)
+ID # = -1
+Initial frame = 114
+Death frame = 127
+Alert sound = 0
+Death sound = 82
+Speed = 1310720
+Width = 720896
+Height = 524288
+Missile damage = 20
+Bits = NOBLOCKMAP+NOGRAVITY+DROPOFF+MISSILE+PCROSS+IMPACT
+
+Misc 0
+
+Powerup Color Radiation Suit = 0 0 255 0.125
+Powerup Color Invulnerability = 0 0 0 0.0
+Powerup Color Tome of Power = 0 0 255 0.8
+
+Text 4 4
+BSKUGKEY
+
+Text 4 4
+RSKUPKEY
+
+Text 4 4
+YSKUOKEY
+
+[STRINGS]
+
+GOTBLUECARD = Blue key
+GOTYELWCARD = Yellow key
+GOTREDCARD  = Red key
+GOTBLUESKUL = Green key
+GOTREDSKUL = Purple key
+GOTYELWSKUL = Orange key
+
+PD_BLUEC = You need a blue key to open this door
+PD_REDC = You need a red key to open this door
+PD_YELLOWC = You need a yellow key to open this door
+PD_BLUES = You need a green key to open this door
+PD_REDS = You need a purple key to open this door
+PD_YELLOWS = You need an orange key to open this door
+
+GOTBERSERK = Berserk!
+GOTARMOR = Heavy armour
+GOTARMBONUS = Helmet
+
+GOTBACKPACK = Backpack
+GOTCLIP = Clip of bullets
+GOTCLIPBOX = Box of bullets
+GOTSHELLS = Shotgun shells
+GOTSHELLBOX = Box of shotgun shells
+GOTCELL = Energy cell
+GOTCELLBOX  = Energy cell pack
+
+GOTCHAINSAW  = A chainsaw!  Find some meat!
+GOTSHOTGUN = Shotgun!
+GOTSHOTGUN2 = Double barrelled shotgun!
+GOTCHAINGUN = Chaingun!
+TXT_WPNPHOENIXROD = Rocket launcher!
+GOTPLASMA = Plasma gun!
+GOTBFG9000 = BFG 9000!  Oh, yes!
+GOTLAUNCHER = Railgun!
+
+STSTR_DQDON = God Mode On
+STSTR_DQDOFF = God Mode Off
+STSTR_FAADDED = You Cheating Bastard
+STSTR_KFAADDED = You Big Cheating Bastard!
+STSTR_CHOPPERS = I'm reeeeeally mad!
+
+QUITMSG1 = you are a moron you are a moron\nyou are a moron you are a moron
+QUITMSG2 = you fail it!\n- your skill is not enough -\n- see you next time -\n- bye-bye! -
+QUITMSG3 = somebody set up us the bomb!\ncome back and sort it out!
+QUITMSG4 = where do you think you're you going?\nget back in here at once!
+QUITMSG5 = all you base are belong to us\nif you leave here now!
+QUITMSG6 = just leave. when you come\nback, i'll be waiting with a bat.
+QUITMSG7 = come back!\nfor great justice!
+QUITMSG8 = you are a moron you are a moron\nyou are a moron you are a moron
+QUITMSG9 = you fail it!\n- your skill is not enough -\n- see you next time -\n- bye-bye! -
+QUITMSG10 = somebody set up us the bomb!\ncome back and sort it out!
+QUITMSG11 = where do you think you're you going?\nget back in here at once!
+QUITMSG12 = all you base are belong to us\nif you leave now!
+QUITMSG13 = just leave. when you come\nback, i'll be waiting with a bat.
+QUITMSG14 = come back!\nfor great justice!
+
+Frame 804
+Sprite number = 9
+Sprite subnumber = 32768
+Duration = 10
+Next frame = 805
+
+Frame 805
+Sprite number = 9
+Sprite subnumber = 1
+Duration = 40
+Next frame = 57
+
+[CODEPTR]
+
+#Railgun
+
+Frame 804 = A_FireRailgunRight
+Frame 805 = NULL
