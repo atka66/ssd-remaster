@@ -14,16 +14,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Uploading sources
 
-* Maps [In progress]
-* Graphics [In progress]
+* [In progress] Maps
+* ✔ Graphics
 * Sounds
 * Musics
 * ...
-
-#### Suggested editing tools
-
-* GZDoomBuilder/Doom Builder X (for map editing)
-* SLADE (for advanced resource management)
 
 #### Intro
 
@@ -40,6 +35,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 #### Act 1
 
 * Some doors don't work.
+
+## Suggested editing tools
+
+* GZDoomBuilder/Doom Builder X (for map editing)
+* SLADE (for advanced resource management)
 
 ## External links
 * [The original Super Sonic Doom by The Ultimate DooMer](https://www.doomworld.com/idgames/levels/doom2/Ports/megawads/sonic)
