@@ -1,0 +1,392 @@
+map MAP01 "sunset island zone - act 1"
+levelnum 1
+next MAP02
+sky1 SKY01 0
+sky2 SKY02 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+
+map MAP02 "sunset island zone - act 2"
+levelnum 2
+next MAP03
+sky1 SKY01 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone01a2
+
+map MAP03 "sunset forest zone - act 1"
+levelnum 3
+next MAP04
+sky1 SKY02 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone02a1
+
+map MAP04 "sunset forest zone - act 2"
+levelnum 4
+next MAP05
+sky1 SKY02 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone02a2
+
+map MAP05 "skull temple zone - act 1"
+levelnum 5
+next MAP06
+sky1 SKY02 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone03a1
+
+map MAP06 "skull temple zone - act 2"
+levelnum 6
+next MAP07
+sky1 SKY02 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone03a2
+
+map MAP07 "nightmare zone - act 1"
+levelnum 7
+next MAP08
+sky1 SKY03 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+map07special
+music zone04a1
+
+map MAP08 "nightmare zone - act 2"
+levelnum 8
+next MAP09
+sky1 SKY03 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone04a2
+
+map MAP09 "forest fortress zone - act 1"
+levelnum 9
+next MAP10
+sky1 SKY03 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone05a1
+
+map MAP10 "forest fortress zone - act 2"
+levelnum 10
+next MAP11
+sky1 SKY03 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone05a2
+
+map MAP11 "active volcano zone - act 1"
+levelnum 11
+next MAP12
+sky1 SKY03 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone06a1
+
+map MAP12 "active volcano zone - act 2"
+levelnum 12
+next MAP13
+sky1 SKY03B 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone06a2
+
+map MAP13 "ocean city zone - act 1"
+levelnum 13
+next MAP14
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone07a1
+
+map MAP14 "ocean city zone - act 2"
+levelnum 14
+next MAP15
+sky1 SKY05 0
+sky2 SKY06 0
+cluster 8
+outsidefog "ff 88 00"
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone07a2
+
+map MAP15 "crystal palace zone - act 1"
+levelnum 15
+next MAP16
+sky1 SKY06 0
+sky2 SKY07 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone08a1
+
+map MAP16 "crystal palace zone - act 2"
+levelnum 16
+next MAP17
+sky1 SKY07 0
+sky2 SKY06 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone08a2
+
+map MAP17 "nautical mines zone - act 1"
+levelnum 17
+next MAP18
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone09a1
+
+map MAP18 "nautical mines zone - act 2"
+levelnum 18
+next MAP19
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone09a2
+
+map MAP19 "steel works zone - act 1"
+levelnum 19
+next MAP20
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone10a1
+
+map MAP20 "steel works zone - act 2"
+levelnum 20
+next MAP21
+sky1 BRICK19 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone10a2
+
+map MAP21 "industrial zone - act 1"
+levelnum 21
+next MAP22
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone11a1
+
+map MAP22 "industrial zone - act 2"
+levelnum 22
+next MAP23
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone11a2
+
+map MAP23 "sky city zone - act 1"
+levelnum 23
+next MAP24
+sky1 SKY08 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone12a1
+
+map MAP24 "sky city zone - act 2"
+levelnum 24
+next MAP25
+sky1 SKY08 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone12a2
+
+map MAP25 "space chase zone - act 1"
+levelnum 25
+next MAP26
+sky1 SKY09 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone13a1
+
+map MAP26 "space chase zone - act 2"
+levelnum 26
+next MAP27
+sky1 SKY09 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone13a2
+
+map MAP27 "doom star zone - act 1"
+levelnum 27
+next MAP28
+sky1 SKY10 0
+allowmonstertelefrags
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone14a1
+
+map MAP28 "doom star zone - act 2"
+levelnum 28
+next MAP29
+sky1 SKY10 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone14a2
+
+map MAP29 "final battle zone - act 1"
+levelnum 29
+next MAP30
+sky1 SKY10 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_boss2
+
+map MAP30 "final battle zone - act 2"
+levelnum 30
+next ENDGAMEC
+sky1 SKY08S 0
+sky2 SKY01 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music zone15a2
+
+map MAP31 "bonus stage 1"
+levelnum 31
+sky1 SKY11 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_bonus
+
+map MAP32 "bonus stage 2"
+levelnum 32
+sky1 SKY12 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_bonus
+
+map MAP33 "bonus stage 3"
+levelnum 33
+sky1 SKY13 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_bonus
+
+map MAP34 "bonus stage 4"
+levelnum 34
+sky1 SKY04 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_bonus
+
+map MAP35 "bonus stage 5"
+levelnum 35
+sky1 SKY09 0
+cluster 8
+evenlighting
+nointermission
+aircontrol 0.25
+airsupply 15
+music z_bonus
+
+clusterdef 8
+hub
+flat grass2
+music z_victor
+exittext "the end sequence"
