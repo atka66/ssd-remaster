@@ -23,8 +23,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Act 1
 
-* [WIP] Fix aircraft scene water clipping bug
-* Fix container doors to actually open instead of switching between impassable and passable
+* Base background sky should be a proper sky instead of sky-wall
+* Some cameras should be higher up instead of laying on the floor
+* Water floor clips during aircraft scene
+* Container doors should open instead of switching between impassable and passable
 
 #### Act 2
 
