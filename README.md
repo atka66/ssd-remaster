@@ -30,6 +30,15 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * Fix container doors to actually open instead of switching between impassable and passable
 
+#### Act 2
+
+* Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special.
+* Fix windows. Using skybox slows down.
+
+### Zone 2: Sunset Forest Zone
+
+#### Act 1
+
 ### Zone 3: Skull Temple Zone
 
 #### Act 1
