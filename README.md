@@ -14,11 +14,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Uploading sources
 
-* [In progress] Maps
+* ✔ Maps
 * ✔ Graphics
 * ✔ Sounds
 * ✔ Musics
-* ...
 
 #### Intro
 
