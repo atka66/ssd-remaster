@@ -14,19 +14,16 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Uploading sources
 
-* ✔ Maps
-* ✔ Graphics
-* ✔ Sounds
-* ✔ Musics
-
-#### Intro
-
-* Fix aircraft scene water clipping bug
+* [✔] Maps
+* [✔] Graphics
+* [✔] Sounds
+* [✔] Musics
 
 ### Zone 1: Sunset Island Zone
 
 #### Act 1
 
+* [WIP] Fix aircraft scene water clipping bug
 * Fix container doors to actually open instead of switching between impassable and passable
 
 #### Act 2
