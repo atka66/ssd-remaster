@@ -1,0 +1,80 @@
+//
+// Sonic Locks
+//
+ClearLocks
+
+Lock 1 Doom                      // red
+{
+	RedCard
+	Message "$PD_REDC"
+	RemoteMessage "$PD_REDC"
+	Mapcolor 255 0 0
+}
+
+
+Lock 2 Doom                      // blue
+{
+	BlueCard
+	Message "$PD_BLUEC"
+	RemoteMessage "$PD_BLUEC"
+	Mapcolor 0 0 255
+}
+
+
+Lock 3 Doom                      // yellow
+{
+	YellowCard
+	Message "$PD_YELLOWC"
+	RemoteMessage "$PD_YELLOWC"
+	Mapcolor 255 255 0
+}
+
+
+Lock 4 Doom                      // purple
+{
+	RedSkull
+	Message "$PD_REDS"
+	RemoteMessage "$PD_REDS"
+	Mapcolor 255 0 255
+}
+
+
+Lock 5 Doom                      // green
+{
+	BlueSkull
+	Message "$PD_BLUES"
+	RemoteMessage "$PD_BLUES"
+	Mapcolor 0 255 0
+}
+
+
+Lock 6 Doom                      // orange
+{
+	YellowSkull
+	Message "$PD_YELLOWS"
+	RemoteMessage "$PD_YELLOWS"
+	Mapcolor 255 128 0
+}
+
+Lock 229 Doom                    // rainbow (3)
+{
+	Any { BlueCard BlueSkull }
+	Any { YellowCard YellowSkull }
+	Any { RedCard RedSkull }
+	Message "$PD_ALL3"
+	RemoteMessage "$PD_ALL3"
+	MapColor 255 255 255
+}
+
+Lock 101 Doom                    // rainbow (6)
+{
+	BlueCard 
+	BlueSkull
+	YellowCard 
+	YellowSkull
+	RedCard 
+	RedSkull
+	Message "$PD_ALL6"
+	RemoteMessage "$PD_ALL6O"
+	MapColor 255 255 255
+}

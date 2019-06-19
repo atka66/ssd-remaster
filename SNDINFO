@@ -1,0 +1,336 @@
+$playersound	player	male	*grunt		land
+$playersound	player	male	*jump		62
+$playersound	player	male	*land		land
+$playersound	player	male	*fist		punch
+$playersound	player	male	*pain100	ouch
+$playersound	player	male	*pain75		ouch
+$playersound	player	male	*pain50		ouch
+$playersound	player	male	*pain25		ouch
+
+world/barrelx			xplosion
+world/volcano/shoot		volcano1
+world/volcano/blast		volcano2
+
+weapons/fist			punch
+weapons/sawup			chansaw1
+weapons/sawidle			chansaw2
+weapons/sawfull			chansaw3
+weapons/sawhit			chansaw4
+weapons/pistol			pistol
+weapons/shotgf			shotgun
+weapons/sshotf			sshotgun
+weapons/sshoto			sshotgn1
+weapons/sshotc			sshotgn2
+weapons/sshotl			sshotgn3
+weapons/chngun			chaingun
+weapons/rocklf			rocket
+weapons/rocklx			xplosion
+weapons/phoenixshoot		rocket
+weapons/phoenixhit		xplosion
+weapons/plasmaf			plasma
+weapons/bfgf			bfg
+weapons/bfgx			bfghit
+weapons/railgf			railgun
+
+grunt/attack			pistol
+shotguy/attack			shotgun
+chainguy/attack			shotgun2
+spider/attack			shotgun2
+skeleton/tracex			xploshn2
+vile/stop			xploshn3
+baby/attack			plasma
+
+$alias misc/keytry		NOWAY
+$alias misc/armor_pkup		ISHIELD
+misc/h_pkup			34
+misc/w_pkup			weapon
+misc/p_pkup			66
+misc/i_pkup			item
+misc/k_pkup			9c
+misc/secret			silent
+misc/teleport			e5
+
+switches/normbutn		9a
+switches/exitbutn		58
+
+menu/activate			9a
+menu/backup			9a
+menu/prompt			9a
+menu/cursor			67
+menu/change			52
+menu/invalid			b2
+menu/dismiss			58
+menu/choose			b4
+menu/clear			58
+
+RING 34
+SPEEDOFF 36
+BSHIELD 3a
+DROWNING 3b
+MONITOR 3d
+FSHIELD 3e
+WSHIELD 3f
+LSHIELD 41
+ISHIELD 42
+LSJUMP 45
+FIREJET 48		// fire jets (custom)
+BOSS01 4b
+TURRET1 4d		// fireballs (imp)
+EXPLOSION1 4e
+SIREN1 50
+SPIKES 52
+SIREN2 53
+EXPLOSION2 54
+SWITCH1 58
+COLLAPSE1 59
+BUTTON1 5b
+LASER1 5e		// laser cannons (custom)
+SLAM1 5f
+FLYING1 60
+CHECKPOINT 63
+BERSERK 66
+TURRET2 67		// fireballs (caco)
+POWERUP 68
+TELEPORT1 6a
+SPLASH 6c
+BOSSHIT 6e
+TURRET3 70		// fireballs (baron, mancubus)
+TECH1 72
+SIREN3 73
+BUNG 74
+ELECTRIC5 78
+ELECTRIC1 79
+TURRET4 7c		// missiles (revenant)
+ICEJET 7f		// ice jets (custom)
+ICEBREAK 80
+TURRET5 81		// rockets (normal and cyber)
+ATTACKUP 84_a
+ATTACKON 84_b
+ATTACKDOWN 85
+SIREN4 86
+BUTTON2 89
+DOOR1 8f
+DOOR2 90
+DOOR3 91
+GHOST2 92
+SLAM2 96
+SLIDE1 97_a
+SLIDE2 97_b
+BOSS00 92
+SWITCH2 9a
+SLAM3 9b
+KEY 9c
+SIREN5 9d
+SLAM4 9e
+TELEPORT2 9f
+TURRET6 a0		// firebombs (custom)
+LIFT1A a3_a
+LIFT1B a3_b
+BLEEP1 a7
+ELECTRIC2 a8
+PING1 aa
+BLEEP2 ad
+PING2 ae
+TELEPORT3 af
+ENDOFACT b0
+SPRING b1
+NOWAY b2
+GOLDEN b3
+EXPLOSION3 b4
+SPEEDON b6
+SECRET b8
+RINGOUT b9
+FLYING2 bd
+SIREN6 be
+MACHINE1 c0_a
+MACHINE2 c0_b
+FAN1 c1_a
+FAN2 c1_b
+BOSSAMB1 c3
+BOSSAMB2 c4
+BOSSAMB3 c5
+BOSSAMB4 c6
+TECH2 ca
+QUAKE1 cb
+QUAKE2 cc
+QUAKE3 cd
+LIFT2A d0_a
+LIFT2B d0_b
+FANROOM1 d4_a
+FANROOM2 d4_b
+TECH3 d9
+BOSSKILL dc
+SAW1U dd_a
+SAW1D dd_b
+ELECTRIC3 de
+ELECTRIC4 df
+PING3 e2
+FLYING3 e3
+LASER2 e4		// laser cannons (custom)
+TELEPORT4 e5
+SAW2 e6
+TURRET7 e7		// plasma (normal and spider)
+TURRET8 e8		// fireball sequences and volcanoes (custom)
+EMERALD e9
+SLAM5 ef
+
+FIRE fire
+FOREST forest
+DROPLET droplet
+Q2LAVA q2lava
+LAUGH laugh
+CITY city
+OCEAN ocean
+SHUTTLE shuttle
+SILENT silent
+MISC_01 conveyor
+MISC_02 dsmash1
+MISC_03 dsmash2
+MISC_07 hmm
+FUTR_18 hlamb3
+FUTR_20 q2amb1
+FUTR_21 q2amb9
+FUTR_22 samb01
+FUTR_26 uconsole
+GOTH_28 gong
+GOTH_29 piece1
+GOTH_30 scary1
+GOTH_31 scary3
+GOTH_32 spirit
+GOTH_33 ugrowl
+IND_34  q2amb2
+IND_35  q2amb3
+IND_36  samb04
+IND_43  samb30
+IND_44  samb32
+NAT_49  hlwind
+NAT_51  lavafall
+NAT_54  q2water
+NAT_55  q2wind
+NAT_57  uwatrfal
+
+HEXENFIREBALL1 hexfbal1
+HEXENFIREBALL2 hexfbal2
+HEXENFIREBALL3 hexfbal3
+HEXENFIREBALL4 hexfbal4
+HEXENFIREBALL5 hexfbal5
+HEXENICEBALL1 hexibal1
+HEXENICEBALL2 hexibal2
+HEXENICEBALL3 hexibal3
+ARROW arrow
+CHINK chink
+
+BOSS1_A   boss1_a
+BOSS2_D   boss2_d
+BOSS2_F   boss2_f
+BOSS2C_R  boss2c_r
+BOSS2M_R  boss2m_r
+CENTOR_A  centor_a
+COMNDR_D  comndr_d
+E4ALN_A   e4aln_a
+E4ALN_P   e4aln_p
+E4ALN_R   e4aln_r
+E4ALN_S   e4aln_s
+FIEND_D   fiend_d
+FIEND_F   fiend_f
+FIEND_P   fiend_p
+FIEND_R   fiend_r
+FYRIMP_F  fyrimp_f
+HERESI_D  heresi_d
+HERESI_P  heresi_p
+ICEBST_A  icebst_a
+KORAX_A   korax_a
+KORAX_P   korax_p
+KORAX_D   korax_d
+OCTA_A    octa_a
+OCTA_D    octa_d
+OGRE_A    ogre_a
+OGRE_D    ogre_d
+REIVER_A  reiver_a
+REIVER_D  reiver_d
+REIVER_P  reiver_p
+REIVER_R  reiver_r
+ROMERO_A  romero_a
+ROMERO_D  romero_d
+
+DDOOR    ddoor
+HLDOOR1a hldoor1a
+HLDOOR1b hldoor1b
+HLDOOR3a hldoor3a
+HLDOOR3b hldoor3b
+HXDOOR0  hxdoor0
+HXDOOR1a hxdoor1a
+HXDOOR1b hxdoor1b
+HXDOOR1c hxdoor1c
+HXDOOR2a hxdoor2a
+HXDOOR2b hxdoor2b
+HXDOOR3  hxdoor3
+HXDOOR4  hxdoor4
+Q1DOOR1a q1door1a
+Q1DOOR1b q1door1b
+Q1DOOR2a q1door2a
+SDOOR1   sdoor1
+SDOOR4a  sdoor4a
+SDOOR4b  sdoor4b
+
+HLLIFT1a hllift1a
+HLLIFT1b hllift1b
+Q1LIFT2a q1lift2a
+Q1LIFT2b q1lift2b
+ULIFT1a  ulift1a
+ULIFT2a  ulift2a
+ULIFT12b ulift12b
+
+$AMBIENT 1  FUTR_18 POINT CONTINUOUS 1.0
+$AMBIENT 2  FUTR_20 SURROUND CONTINUOUS 1.0
+$AMBIENT 3  FUTR_21 SURROUND CONTINUOUS 1.0
+$AMBIENT 4  FUTR_22 POINT CONTINUOUS 1.0
+$AMBIENT 5  FUTR_26 POINT CONTINUOUS 1.0
+$AMBIENT 6  GOTH_28 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 7  GOTH_29 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 8  GOTH_30 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 9  GOTH_31 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 10 GOTH_32 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 11 GOTH_33 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 12 IND_34 POINT CONTINUOUS 1.0
+$AMBIENT 13 IND_35 POINT CONTINUOUS 1.0
+$AMBIENT 14 IND_36 POINT CONTINUOUS 1.0
+$AMBIENT 15 IND_44 POINT CONTINUOUS 1.0
+$AMBIENT 16 NAT_49 POINT CONTINUOUS 1.0
+$AMBIENT 17 NAT_54 POINT CONTINUOUS 1.0
+$AMBIENT 18 NAT_57 POINT CONTINUOUS 1.0
+$AMBIENT 19 FIRE POINT CONTINUOUS 1.0
+$AMBIENT 20 FOREST SURROUND CONTINUOUS 1.0
+
+$AMBIENT 21 BOSSKILL SURROUND CONTINUOUS 1.0
+$AMBIENT 22 EXPLOSION1 SURROUND RANDOM 30.0 60.0 1.0
+$AMBIENT 23 MACHINE1 POINT CONTINUOUS 1.0
+$AMBIENT 24 MACHINE2 POINT CONTINUOUS 1.0
+$AMBIENT 25 QUAKE1 SURROUND CONTINUOUS 1.0
+$AMBIENT 26 DROPLET SURROUND RANDOM 15.0 30.0 1.0
+$AMBIENT 27 Q2LAVA POINT CONTINUOUS 1.0
+$AMBIENT 28 FIREJET POINT CONTINUOUS 1.0
+$AMBIENT 29 NAT_51 POINT CONTINUOUS 1.0
+$AMBIENT 30 CITY SURROUND CONTINUOUS 1.0
+$AMBIENT 31 OCEAN SURROUND CONTINUOUS 1.0
+$AMBIENT 32 NAT_54 SURROUND CONTINUOUS 1.0
+$AMBIENT 33 FLYING2 SURROUND CONTINUOUS 1.0
+$AMBIENT 34 NAT_57 SURROUND CONTINUOUS 1.0
+$AMBIENT 35 IND_43 POINT CONTINUOUS 1.0
+$AMBIENT 36 MISC_01 POINT CONTINUOUS 1.0
+$AMBIENT 37 SAW1U POINT CONTINUOUS 1.0
+$AMBIENT 38 SLIDE2 SURROUND CONTINUOUS 1.0
+$AMBIENT 39 NAT_55 SURROUND CONTINUOUS 1.0
+$AMBIENT 40 DROWNING SURROUND RANDOM 15.0 30.0 1.0
+$AMBIENT 41 TECH1 POINT CONTINUOUS 1.0
+$AMBIENT 42 TECH2 POINT CONTINUOUS 1.0
+$AMBIENT 43 TECH3 POINT CONTINUOUS 1.0
+$AMBIENT 44 BOSSAMB1 POINT CONTINUOUS 1.0
+$AMBIENT 45 BOSSAMB2 POINT CONTINUOUS 1.0
+$AMBIENT 46 BOSSAMB3 POINT CONTINUOUS 1.0
+$AMBIENT 47 BOSSAMB4 POINT CONTINUOUS 1.0
+$AMBIENT 48 ATTACKON SURROUND CONTINUOUS 1.0
+$AMBIENT 49 GHOST2 SURROUND RANDOM 15.0 30.0 1.0
+$AMBIENT 50 FANROOM2 SURROUND CONTINUOUS 1.0
+$AMBIENT 51 ELECTRIC1 POINT RANDOM 1.0 3.0 1.0
+$AMBIENT 52 SIREN6 SURROUND CONTINUOUS 1.0

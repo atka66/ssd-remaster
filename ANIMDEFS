@@ -1,0 +1,69 @@
+texture fan1
+
+pic 1 tics 2
+pic 2 tics 2
+pic 3 tics 2
+
+texture fan_1
+
+pic 1 tics 2
+pic 3 tics 2
+pic 2 tics 2
+
+texture saw1
+
+pic 1 tics 2
+pic 2 tics 2
+pic 3 tics 2
+pic 4 tics 2
+pic 5 tics 2
+pic 6 tics 2
+
+texture sewer3-1
+
+pic 1 tics 5
+pic 3 tics 5
+pic 2 tics 5
+
+texture wfall1
+
+pic 1 tics 5
+pic 2 tics 5
+pic 3 tics 5
+pic 4 tics 5
+
+texture gfall1
+
+pic 1 tics 5
+pic 2 tics 5
+pic 3 tics 5
+pic 4 tics 5
+
+
+texture lfall1
+
+pic 1 tics 5
+pic 2 tics 5
+pic 3 tics 5
+pic 4 tics 5
+
+texture slfall1
+
+pic 1 tics 5
+pic 2 tics 5
+pic 3 tics 5
+pic 4 tics 5
+
+flat gwater1
+
+pic 1 rand 5 12
+pic 2 rand 5 12
+pic 3 rand 5 12
+pic 4 rand 5 12
+
+warp flat blood
+warp flat fwater
+warp flat gwater
+warp flat nukage
+warp flat lava
+warp flat slime

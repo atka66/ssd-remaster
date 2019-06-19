@@ -16,8 +16,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [In progress] Maps
 * ✔ Graphics
-* Sounds
-* Musics
+* ✔ Sounds
+* ✔ Musics
 * ...
 
 #### Intro

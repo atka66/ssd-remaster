@@ -1,0 +1,14 @@
+generator WolfensteinSS			Scorch
+generator BaronFireball2		BaronScorch
+generator CacoFireball2			CacoScorch
+generator ImpFireball2			DoomImpScorch
+generator MancubusFireball2		Scorch
+generator Spectre			RevenantScorch
+
+generator ReiverFireball		CacoScorch
+generator BloodscourgeShot		Scorch
+generator HexenArrow			BulletChip
+generator HexenBlade			BulletChip
+generator HexenMace			DoomImpScorch
+
+generator PhoenixFX1			Scorch

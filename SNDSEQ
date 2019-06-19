@@ -1,0 +1,151 @@
+:Door1(Big)
+        door            1
+        playuntildone   ddoor
+        nostopcutoff
+end
+
+
+:Door2(Small)
+        door            2
+        playuntildone   hldoor1a
+        stopsound	hldoor1b
+end
+
+
+:Door3(Slow)
+        door            3
+        playrepeat      hldoor3a
+        stopsound	hldoor3b
+end
+
+
+:Door4(Fast)
+        door            4
+        playuntildone   q1door1a
+        stopsound	q1door1b
+end
+
+
+:Door5(Wood)
+        door            5
+        playrepeat      q1door2a
+        stopsound       q1lift2b
+end
+
+
+:Door6(Corrugated)
+        door            6
+        playrepeat      sdoor4a
+        stopsound	sdoor4b
+end
+
+
+:SwingingDoor1(Single)
+        door            7
+        playuntildone  	hxdoor1a
+        stopsound	hxdoor1b
+end
+
+:SwingingDoor2(Double)
+        door            8
+        playuntildone   hxdoor1a
+        stopsound	hxdoor1c
+end
+
+:SwingingDoor3(Cell)
+        door            9
+        playuntildone   hxdoor3
+        nostopcutoff
+end
+
+:SwingingDoor4(Creak)
+        door            10
+        playuntildone   hxdoor4
+        stopsound	q1lift2b
+end
+
+:SwingingDoor5(House)
+        door            11
+        playuntildone   sdoor1
+        nostopcutoff
+end
+
+:SlidingDoor
+        door            12
+        playuntildone   hxdoor2a
+        stopsound	hxdoor2b
+end
+
+
+:SonicDoor
+        door            13
+        playuntildone   door1
+        nostopcutoff
+end
+
+:Lift1(Freight)
+        platform        1
+        playrepeat      hllift1a
+        stopsound       hllift1b
+end
+
+
+:Lift2(Wooden)
+        platform        2
+        playrepeat      q1lift2a
+        stopsound       q1lift2b
+end
+
+
+:Lift3(Fast)
+        platform        3
+        playrepeat      ulift1a
+        stopsound       ulift12b
+end
+
+
+:Lift4(Turbo)
+        platform        4
+        playrepeat      ulift2a
+        stopsound       ulift12b
+end
+
+
+:SonicLift
+        platform        5
+        playrepeat      door2
+        stopsound       door3
+end
+
+:Crusher
+        platform        6
+        playrepeat      hxdoor0
+        stopsound       hxdoor1c
+end
+
+
+
+:FakeDoor1
+        platform        11
+        playuntildone   ddoor
+        nostopcutoff
+end
+
+
+:FakeDoor2
+        platform        12
+        playuntildone   hldoor1a
+        stopsound	hldoor1b
+end
+
+:FakeDoor3
+        platform        13
+        playrepeat      q1door2a
+        stopsound       q1lift2b
+end
+
+:Silence!
+        platform        0
+        playuntildone   silent
+        nostopcutoff
+end
