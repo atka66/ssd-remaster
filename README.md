@@ -30,18 +30,22 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Act 2
 
-* Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special.
-* Fix windows. Using skybox slows down.
+* Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
+* Fix windows. Using skybox slows down
 
 ### Zone 2: Sunset Forest Zone
 
 #### Act 1
 
+* Fix house roof similar to MAP02
+
+#### Act 2
+
 ### Zone 3: Skull Temple Zone
 
 #### Act 1
 
-* Some doors don't work.
+* Some doors don't work
 
 ## Suggested editing tools
 
