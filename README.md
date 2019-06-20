@@ -35,6 +35,9 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * [✔] Fix fence around house
 * Fix windows. Using skybox slows down
+* Fix bridges using 3D floors
+* Fix bottom of tree houses
+* Fix deep waters using 3D floors. Make sure that scrolling effects are applied to dummy sectors. Creating also a wind effect makes rivers more realistic.
 
 #### Zone 2: Sunset Forest Zone
 
