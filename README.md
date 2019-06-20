@@ -33,7 +33,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 2 (MAP02)
 
 * Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
-* Fix fence around house
+* [✔] Fix fence around house
 * Fix windows. Using skybox slows down
 
 #### Zone 2: Sunset Forest Zone
@@ -41,7 +41,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP03)
 
 * Fix house roof similar to MAP02
-* Fix fence similar to MAP02
+* [✔] Fix fence similar to MAP02
 
 ##### Act 2 (MAP04)
 
