@@ -1,0 +1,128 @@
+int killbonus;
+int secretbonus;
+int mins;
+int secs;
+int score;
+int timebonus = 100000;
+
+script 231 (int killtarget,int killcount)					// killtarget checker
+
+{
+print(d:killtarget);
+delay(105);
+print(d:killcount);
+}
+
+script 232 (int killtarget)					// killtarget
+
+{
+killtarget++;
+}
+
+script 300 OPEN						// score display
+
+{
+setfont ("BigFont");
+hudmessage (s:"score:    \cc",d:score; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+delay(1);
+Restart;
+}
+
+script 400 (void)					// time display
+
+{
+setfont ("BigFont");
+secs += 1;
+if(secs < 10)
+{
+    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+else
+{
+    hudmessage (s:"time:    \cb",d:mins,s:":",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+if(secs > 59)
+{
+    mins += 1;
+    secs = 0;
+    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+
+if(timebonus < 50)
+{
+    timebonus = 0;
+}
+else
+{
+timebonus -= 50;
+}
+delay(35);
+Restart;
+}
+
+script 500 (void)					// time bonus rundown
+
+{
+if(timebonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(1);
+	terminate;
+}
+if(timebonus == 50)
+{
+	timebonus -= 50;
+	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	score += 50;
+	activatorsound ("button1", 127);
+}
+else
+{
+	timebonus -= 100;
+	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	score += 100;
+	activatorsound ("button1", 127);
+}
+delay(1);
+Restart;
+}
+
+script 600 (void)					// kill bonus rundown
+
+{
+if(killbonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(1);
+	terminate;
+}
+else
+{
+	killbonus -= 100;
+	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+	score += 100;
+	activatorsound ("button1", 127);
+}
+delay(1);
+Restart;
+}
+
+script 700 (void)					// secret bonus rundown
+
+{
+if(secretbonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(1);
+	terminate;
+}
+else
+{
+	secretbonus -= 100;
+	hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
+	score += 100;
+	activatorsound ("button1", 127);
+}
+delay(1);
+Restart;
+}

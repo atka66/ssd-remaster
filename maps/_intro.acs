@@ -1,0 +1,608 @@
+
+script 101 (void)				    // forest - camera pan towards outpost
+
+{
+SetPlayerProperty (1, 1, 4);
+hudmessage (s:" type 'puke 222' on the console to skip main intro"; 0, 1, CR_RED, 1.0, 0.0, 0.0);
+setfont ("BigFont");
+hudmessage (s:" a forest..."; 2, 2, CR_GREEN, 0.5, 0.4, 3.0, 0.05, 1.0);
+Thing_Activate (125);
+ChangeCamera (125, 0, 0);
+delay(315);
+hudmessage (s:"sss outpost 1337"; 2, 2, CR_GREEN, 0.5, 0.4, 3.0, 0.05, 1.0);
+delay(210);
+setfont ("SmallFont");
+hudmessage (s:"right, it's time to make my grid transmission..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+ACS_Execute (102, 0, 0, 0, 0);
+}
+
+script 102 (void)					// forest - marine walking to radio set
+
+{
+Thing_Activate (115);
+delay(175);
+ACS_Execute (103, 0, 0, 0, 0);
+}
+
+script 103 (void)					// forest - open comms
+
+{
+delay(35);
+hudmessage (s:"grid on...searching..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+Light_ChangeToValue (121, 255);
+thingsound (115, "button2", 127);
+Thing_Activate (107);
+delay(175);
+hudmessage (s:"damn, that pirate tv station is running again!"; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+Thing_Deactivate (107);
+setmusic ("z_posthl");
+Ceiling_RaiseInstant (111, 0, 12);
+delay(175);
+hudmessage (s:"right, try again..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+Ceiling_LowerInstant (111, 0, 12);
+setmusic ("");
+Thing_Activate (107);
+delay(70);
+TeleportOther (102, 122, 0);
+TeleportOther (103, 100, 0);
+delay(105);
+Thing_Deactivate (107);
+Thing_Activate (110);
+Ceiling_RaiseInstant (111, 0, 12);
+hudmessage (s:"this is outpost 1337 calling base with routine transmission..."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"this is base, go ahead 1337..."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"it's big.  the fac has started flaming this island, and it's been getting nearer here all the time."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(245);
+hudmessage (s:"that's serious. what else?"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"there are monsters about."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+ACS_Execute (104, 0, 0, 0, 0);
+}
+
+script 104 (void)					// comms room - conversation
+
+{
+Autosave();
+TeleportOther (115, 137, 0);
+ChangeCamera (140, 0, 0);
+TeleportOther (102, 100, 0);
+TeleportOther (103, 122, 0);
+hudmessage (s:"omg, it's happening again.  anything else?"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"i've heard rumours that the seven deadly sinners have been deployed."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(210);
+hudmessage (s:"this calls for action!  someone find out where 007 is at the moment!"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+ChangeCamera (139, 0, 0);
+hudmessage (s:"i couldn't agree more!  i feel more unsafe now than ever before!"; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+Thing_ProjectileGravity (151, T_MANCUBUSFIREBALL, 192, 5, -400);
+}
+
+script 105 (void)					// forest - destruction
+
+{
+Thing_Activate (115);
+ambientsound ("explosion1", 127);
+Radius_Quake (3, 260, 0, 128, 141);
+delay(70);
+Thing_Remove(115);
+Thing_SpawnFacing(138, T_SCRIPTEDMARINE, YES, 115);
+ambientsound ("explosion1", 127);
+Light_ChangeToValue (141, 255);
+Sector_SetFade (141, 255, 128, 0);
+Light_Fade (141, 0, 15);
+hudmessage (s:"wtf?"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
+delay(15);
+Light_ChangeToValue (142, 255);
+Sector_SetFade (142, 255, 128, 0);
+Light_Fade (142, 0, 15);
+delay(15);
+hudmessage (s:"aagh!"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
+ambientsound ("explosion1", 127);
+Light_ChangeToValue (143, 255);
+Sector_SetFade (143, 255, 128, 0);
+Light_Fade (143, 0, 15);
+delay(15);
+Light_ChangeToValue (144, 255);
+Sector_SetFade (144, 255, 128, 0);
+Light_Fade (144, 0, 15);
+delay(15);
+hudmessage (s:"whatever you do, get someone out here now!"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
+ambientsound ("explosion1", 127);
+Light_ChangeToValue (145, 255);
+Sector_SetFade (145, 255, 128, 0);
+Light_Fade (145, 0, 15);
+delay(15);
+Light_ChangeToValue (146, 255);
+Sector_SetFade (146, 255, 128, 0);
+Light_Fade (146, 0, 15);
+delay(15);
+ambientsound ("explosion1", 127);
+Light_ChangeToValue (147, 255);
+Sector_SetFade (147, 255, 128, 0);
+Light_Fade (147, 0, 15);
+delay(15);
+Light_ChangeToValue (148, 255);
+Sector_SetFade (148, 255, 128, 0);
+Light_Fade (148, 0, 15);
+delay(15);
+
+for (int i = 141; i <= 148; ++i)
+	{
+	ChangeCeiling (i, "grass3");
+	}
+ambientsound ("explosion1", 127);
+Light_ChangeToValue (149, 255);
+Sector_SetFade (149, 255, 128, 0);
+Light_Fade (149, 0, 15);
+delay(2);
+Light_ChangeToValue (150, 255);
+Sector_SetFade (150, 255, 128, 0);
+Light_Fade (150, 0, 15);
+delay(5);
+Thing_Destroy (115);
+delay(65);
+ChangeCamera (140, 0, 0);
+delay(35);
+Ceiling_LowerInstant (113, 0, 12);
+Thing_Activate (108);
+Thing_Deactivate (320);
+hudmessage (s:"1337? come in 1337!"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(105);
+hudmessage (s:"it won't do any good, sir."; 2, 2, CR_TAN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+thingsound (140, "button2", 127);
+Thing_Deactivate (108);
+Light_ChangeToValue (123, 190);
+delay(35);
+ChangeCamera (322, 0, 0);
+hudmessage (s:"so - where's 007 right now?"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"he's on a mission in fragport, sir."; 2, 2, CR_TAN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"damn. we'll get damage then, he's still here."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"call him up on the emergency channel, he's bound to be watching that pirate tv show again."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(210);
+hudmessage (s:"right away, sir."; 2, 2, CR_TAN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+ACS_Execute (106, 0, 0, 0, 0);
+}
+
+script 106 (void)					// office - message and open comms
+
+{
+Autosave();
+Thing_Deactivate (108);
+Thing_Deactivate (110);
+Thing_Deactivate (301);
+ChangeCamera (154, 0, 0);
+setmusic ("z_posthl");
+delay(70);
+hudmessage (s:"hahahaha! i love this show!"; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+Polyobj_DoorSlide (1, 8, 128, 160, 128);
+Polyobj_DoorSlide (2, 8, 0, 160, 128);
+delay(35);
+hudmessage (s:"damage, this is an emergency, respond now!"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(105);
+Ceiling_LowerInstant (114, 0, 12);
+setmusic ("");
+Thing_Activate (109);
+delay(35);
+TeleportOther (102, 122, 0);
+TeleportOther (103, 100, 0);
+delay(35);
+Thing_Deactivate (109);
+Thing_Activate (110);
+Ceiling_RaiseInstant (114, 0, 12);
+Ceiling_RaiseInstant (113, 0, 12);
+TeleportOther (101, 152, 0);
+TeleportOther (104, 153, 0);
+hudmessage (s:"damage to comms, what's up?"; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(35);
+ACS_Execute (107, 0, 0, 0, 0);
+}
+
+script 107 (void)					// office - conversation and DamaGe exits room
+
+{
+delay(105);
+ChangeCamera (140, 0, 0);
+delay(35);
+hudmessage (s:"a few moments ago, outpost 1337 was flamed in the middle of it's routine transmission."; 2, 0, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(210);
+hudmessage (s:"how?"; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(70);
+ChangeCamera (154, 0, 0);
+hudmessage (s:"i don't know. but he did mention that monsters were about."; 2, 0, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"on my way. damage out."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+thingsound (119, "button2", 127);
+Thing_Deactivate (110);
+Ceiling_LowerInstant (114, 0, 12);
+Ceiling_LowerInstant (113, 0, 12);
+Light_ChangeToValue (124, 180);
+Light_ChangeToValue (123, 190);
+delay(35);
+Thing_Activate (119);
+Thing_Activate (154);
+delay(175);
+hudmessage (s:"damn. it was gonna be a classic episode as well."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"nevermind. saving the world is better."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_Remove (119);
+ACS_Execute (108, 0, 0, 0, 0);
+}
+
+script 108 (void)					// comms room - DamaGe enters and briefing
+
+{
+Autosave();
+setfont ("BigFont");
+hudmessage (s:"comms room, sss base, sladen"; 2, 2, CR_GREY, 0.5, 0.4, 3.0, 0.05, 1.0);
+ChangeCamera (169, 0, 0);
+Thing_Activate (170);
+delay(175);
+setfont ("SmallFont");
+hudmessage (s:"1337 also told us that the seven deadly sinners might have been deployed."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"that's the firestarter's personal generals."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"yes. here's the lowdown on what we have on them so far."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+TeleportOther (101, 175, 0);
+TeleportOther (105, 100, 0);
+Thing_SetTranslation (176, 20);
+delay(175);
+Thing_Activate (169);
+Light_ChangeToValue (123, 255);
+Ceiling_RaiseInstant (113, 0, 12);
+Thing_SetTranslation (176, 20);
+thingsound (140, "button2", 127);
+delay(175);
+setlinetexture (100, SIDE_FRONT, TEXTURE_MIDDLE, "-");
+hudmessage (s:"envy. nature lover, probably the weakest."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 21);
+hudmessage (s:"lust. deeply religious with a thirst for blood."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 22);
+hudmessage (s:"sloth. but he isn't like that, quite the reverse."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 23);
+hudmessage (s:"greed. extravagant and cold-hearted."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 24);
+hudmessage (s:"vanity. a dark, shadowy character."; 2, 0, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 25);
+hudmessage (s:"gluttony. has a real head for heights."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+Thing_SetTranslation (176, 26);
+hudmessage (s:"pride. a real militaristic type and psychotic, too. probably the strongest."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(210);
+Thing_SetTranslation (176, 30);
+hudmessage (s:"finally, the firestarter himself. head of fac, and an extremely good fighter.  rumoured to be proficient in every known military weapon."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(280);
+Ceiling_LowerInstant (113, 0, 12);
+Light_ChangeToValue (123, 190);
+thingsound (140, "button2", 127);
+hudmessage (s:"so, the usual bunch of losers then."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+ChangeCamera (328, 0, 0);
+delay(35);
+hudmessage (s:"we have a stolen fac shuttle in the bay downstairs, and it is being loaded as we speak."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(210);
+hudmessage (s:"it is stocked with lots of firepower, including the new railgun."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"nice. i've been wanting to use that for ages."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"your mission, should you choose to accept it ( hang on, got a bit confused there ) is to neutralise any threat from fac, destroying the company if necessary."; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(315);
+hudmessage (s:"i guess i'd better get down to the shuttle then."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+ACS_Execute (109, 0, 0, 0, 0);
+}
+
+script 109 (void)					// shuttle bay - DamaGe boards and starts it up
+
+{
+Autosave();
+SetFont ("BigFont");
+hudmessage (s:"shuttle bay"; 2, 2, CR_GREY, 0.5, 0.4, 1.0, 0.05, 1.0);
+ChangeCamera (177, 0, 0);
+Thing_Activate (190);
+Thing_Activate (183);
+delay(105);
+Thing_Activate (177);
+SetFont ("SmallFont");
+hudmessage (s:"hey, it's a lim-class. just like the ones jody told me about."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(630);
+hudmessage (s:"entering startup code..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+thingsound (191, "button1", 127);
+delay(14);
+thingsound (191, "button1", 127);
+delay(14);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(14);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(14);
+thingsound (191, "button1", 127);
+delay(7);
+thingsound (191, "button1", 127);
+delay(28);
+ChangeCamera (191, 0, 0);
+hudmessage (s:"hey, look at that in the back! i'm gonna have some fun with that!"; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(175);
+hudmessage (s:"anyway, powering up..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+thingsound (191, "switch1", 127);
+delay(140);
+hudmessage (s:"engines on..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+Thing_Activate (329);
+delay(35);
+Thing_Remove (329);
+Thing_Activate (330);
+delay(105);
+hudmessage (s:"all systems online..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+thingsound (191, "switch2", 127);
+delay(140);
+Ceiling_RaiseByValue (321, 8, 83);
+hudmessage (s:"opening bay doors..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+thingsound (191, "door1", 64);
+delay(140);
+ACS_Execute (110, 0, 0, 0, 0);
+}
+
+script 110 (void)					// shuttle bay - launch
+
+{
+ChangeCamera (300, 0, 0);
+hudmessage (s:"for great justice..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+Thing_Remove (330);
+thingsound (300, "shuttle", 127);
+Floor_MoveToValueTimes8 (301, 2000, 0, 0);
+Floor_MoveToValueTimes8 (302, 2000, 0, 0);
+Floor_MoveToValueTimes8 (303, 2000, 0, 0);
+ChangeFloor (301, "flat4");
+ChangeFloor (302, "flat4");
+ChangeFloor (303, "flat4");
+Floor_RaiseByValue (304, 2000, 16);
+Floor_RaiseByValue (305, 2000, 4);
+Floor_RaiseByValue (306, 2000, 83);
+ChangeFloor (304, "flat23");
+ChangeFloor (305, "flat23");
+ChangeFloor (306, "flat23");
+delay(2);
+Floor_MoveToValueTimes8 (304, 2000, 0, 0);
+Floor_MoveToValueTimes8 (305, 2000, 0, 0);
+Floor_MoveToValueTimes8 (306, 2000, 0, 0);
+ChangeFloor (304, "flat4");
+ChangeFloor (305, "flat4");
+ChangeFloor (306, "flat4");
+Floor_RaiseByValue (307, 2000, 16);
+Floor_RaiseByValue (308, 2000, 4);
+Floor_RaiseByValue (309, 2000, 83);
+ChangeFloor (307, "flat23");
+ChangeFloor (308, "flat23");
+ChangeFloor (309, "flat23");
+delay(2);
+Floor_MoveToValueTimes8 (307, 2000, 0, 0);
+Floor_MoveToValueTimes8 (308, 2000, 0, 0);
+Floor_MoveToValueTimes8 (309, 2000, 0, 0);
+ChangeFloor (307, "flat4");
+ChangeFloor (308, "flat4");
+ChangeFloor (309, "flat4");
+Floor_RaiseByValue (310, 2000, 16);
+Floor_RaiseByValue (311, 2000, 4);
+Floor_RaiseByValue (310, 2000, 83);
+ChangeFloor (310, "flat23");
+ChangeFloor (311, "flat23");
+ChangeFloor (312, "flat23");
+delay(2);
+Floor_MoveToValueTimes8 (310, 2000, 0, 0);
+Floor_MoveToValueTimes8 (311, 2000, 0, 0);
+Floor_MoveToValueTimes8 (312, 2000, 0, 0);
+ChangeFloor (310, "flat4");
+ChangeFloor (311, "flat4");
+ChangeFloor (312, "flat4");
+Floor_RaiseByValue (313, 2000, 16);
+Floor_RaiseByValue (314, 2000, 4);
+Floor_RaiseByValue (315, 2000, 83);
+ChangeFloor (313, "flat23");
+ChangeFloor (314, "flat23");
+ChangeFloor (315, "flat23");
+delay(2);
+Floor_MoveToValueTimes8 (313, 2000, 0, 0);
+Floor_MoveToValueTimes8 (314, 2000, 0, 0);
+Floor_MoveToValueTimes8 (315, 2000, 0, 0);
+ChangeFloor (313, "flat4");
+ChangeFloor (314, "flat4");
+ChangeFloor (315, "flat4");
+Floor_RaiseByValue (316, 2000, 16);
+Floor_RaiseByValue (317, 2000, 4);
+Floor_RaiseByValue (318, 2000, 83);
+ChangeFloor (316, "flat23");
+ChangeFloor (317, "flat23");
+ChangeFloor (318, "flat23");
+delay(2);
+Floor_MoveToValueTimes8 (316, 2000, 0, 0);
+Floor_MoveToValueTimes8 (317, 2000, 0, 0);
+Floor_MoveToValueTimes8 (318, 2000, 0, 0);
+ChangeFloor (316, "flat4");
+ChangeFloor (317, "flat4");
+ChangeFloor (318, "flat4");
+delay(105);
+Thing_Deactivate (183);
+Thing_Deactivate (190);
+ACS_Execute (111, 0, 0, 0, 0);
+}
+
+int t = 111;
+
+script 111 (void)					// ocean - welcome and missile attack
+
+{
+t++;
+t++;
+t++;
+Autosave();
+setmusic ("z_intro");
+Scroll_Floor (120, -256, 0, 0);
+ChangeCamera (192, 0, 0);
+hudmessage (s:""; 0, 1, 0, 0, 0, 1);
+hudmessage (s:""; 0, 2, 0, 0, 0, 1);
+setfont ("BigFont");
+delay(35);
+hudmessage (s:"welcome to"; 2, 0, CR_BRICK, 0.5, 0.3, 6.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"super sonic doom"; 2, 0, CR_GOLD, 0.5, 0.4, 5.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"by"; 2, 0, CR_TAN, 0.5, 0.5, 4.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"the ultimate doomer"; 2, 0, CR_ORANGE, 0.5, 0.6, 3.0, 0.01, 1.0);
+delay(175);
+hudmessage (s:"things work a little differently here"; 2, 0, CR_BROWN, 0.5, 0.3, 2.0, 0.01, 1.0);
+delay(105);
+hudmessage (s:"health comes in:"; 2, 0, CR_BLUE, 0.5, 0.3, 1.0, 0.01, 1.0);
+delay(70);
+hudmessage (s:"rings  -  1     (can go over 100)"; 2, 0, CR_YELLOW, 0.5, 0.3, 5.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"monitors  -  10    (can go over 100)"; 2, 0, CR_YELLOW, 0.5, 0.4, 4.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"golden potions  -  50    (can go over 100)"; 2, 0, CR_GOLD, 0.5, 0.5, 3.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"and berserk packs  -  100"; 2, 0, CR_RED, 0.5, 0.6, 2.0, 0.01, 1.0);
+delay(140);
+hudmessage (s:"armour comes in:"; 2, 0, CR_BLUE, 0.5, 0.3, 1.0, 0.01, 1.0);
+delay(70);
+hudmessage (s:"helmets  -  1    (can go over 100)"; 2, 0, CR_GREEN, 0.5, 0.3, 5.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"monitors  -  10    (can go over 100)"; 2, 0, CR_GREEN, 0.5, 0.4, 4.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"red suits  -  50"; 2, 0, CR_RED, 0.5, 0.5, 3.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"and green suits  -  100"; 2, 0, CR_GREEN, 0.5, 0.6, 2.0, 0.01, 1.0);
+delay(140);
+hudmessage (s:"points are scored by:"; 2, 0, CR_BLUE, 0.5, 0.3, 1.0, 0.01, 1.0);
+delay(70);
+hudmessage (s:"killing enemies"; 2, 0, CR_BRICK, 0.5, 0.3, 5.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"finding secrets"; 2, 0, CR_GREY, 0.5, 0.4, 4.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"100% kills in a map"; 2, 0, CR_GOLD, 0.5, 0.5, 3.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"100% secrets in a map"; 2, 0, CR_GOLD, 0.5, 0.6, 2.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"and time taken"; 2, 0, CR_TAN, 0.5, 0.7, 1.0, 0.01, 1.0);
+delay(140);
+hudmessage (s:"each zone has 2 bosses:"; 2, 0, CR_BLUE, 0.5, 0.3, 1.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"the 1st is monster-based"; 2, 0, CR_BRICK, 0.5, 0.4, 3.0, 0.01, 1.0);
+delay(35);
+hudmessage (s:"the 2nd is target-based"; 2, 0, CR_BRICK, 0.5, 0.5, 2.0, 0.01, 1.0);
+delay(140);
+hudmessage (s:"and there is a hidden bonus stage every 5 maps"; 2, 0, CR_WHITE, 0.5, 0.5, 3.0, 0.01, 1.0);
+delay(210);
+thingsound (200, "turret6", 127);
+Thing_Projectile (197, T_ROCKET2, 0, 200, 0);
+setmusic ("z_encntr");
+delay(70);
+thingsound (200, "turret6", 127);
+Thing_Projectile (198, T_ROCKET2, 0, 200, 0);
+delay(70);
+thingsound (200, "turret6", 127);
+Thing_Projectile (199, T_ROCKET2, 0, 200, 0);
+}
+
+script 112 (void)					// ocean - missile hit and crash
+
+{
+Radius_Quake (5, 35, 0, 256, 325);
+ambientsound ("explosion1", 127);
+delay(35);
+hudmessage (s:"going down! punching out!"; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.01, 1.0);
+Thing_Activate (319);
+Thing_SpawnNoFog (323, T_BOOM, 0, 0);
+delay(5);
+Thing_SpawnNoFog (324, T_BOOM, 0, 0);
+delay(5);
+Thing_SpawnNoFog (325, T_BOOM, 0, 0);
+delay(5);
+Thing_SpawnNoFog (326, T_BOOM, 0, 0);
+delay(5);
+Thing_SpawnNoFog (327, T_BOOM, 0, 0);
+delay(35);
+Thing_Activate (192);
+delay(45);
+Thing_Remove (119);
+Thing_ProjectileGravity (200, T_SCRIPTEDMARINE, 128, 125, 125);
+thingsound (200, "turret5", 127);
+delay(1);
+Thing_SetTranslation (0, -1);
+delay(104);
+Thing_SetTranslation (0, 0);
+Thing_Deactivate (319);
+thingsound (200, "splash", 127);
+delay(70);
+ACS_Execute (113, 0, 0, 0, 0);
+}
+
+script 113 (void)					// island - emerge from water to start point
+
+{
+ChangeCamera (249, 0, 0);
+Thing_Activate (247);
+Thing_Activate (256);
+delay(140);
+hudmessage (s:"that was not supposed to happen."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"i've lost all my weapons, too."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(140);
+hudmessage (s:"but at least i've made the island. well, the outskirts anyway."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+delay(105);
+Thing_Activate (249);
+delay(160);
+Thing_Remove (247);
+Floor_LowerInstant (246, 0, 4);
+delay(15);
+ACS_Execute (2, 0, 0, 0, 0);
+}
+
+script 116 ENTER					// self-coloured marines
+
+{
+Thing_SetTranslation (119, -1);
+Thing_SetTranslation (170, -1);
+Thing_SetTranslation (183, -1);
+Thing_SetTranslation (247, -1);
+}
+
+script 222 (void)					// skip intro
+
+{
+for (int s = 101; s <= 110; ++s)
+{
+ACS_Terminate (s, 0);
+}
+Thing_Deactivate (190);
+Thing_Deactivate (320);
+ACS_Execute (t, 0, 0, 0, 0);
+}
