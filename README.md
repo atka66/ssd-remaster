@@ -19,33 +19,37 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Sounds
 * [✔] Musics
 
-### Zone 1: Sunset Island Zone
+### Editing maps
 
-#### Act 1
+#### Zone 1: Sunset Island Zone
+
+##### Act 1 (MAP01)
 
 * Base background sky should be a proper sky instead of sky-wall
 * Some cameras should be higher up instead of laying on the floor
 * Water floor clips during aircraft scene
 * Container doors should open instead of switching between impassable and passable
 
-#### Act 2
+##### Act 2 (MAP02)
 
 * Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * Fix windows. Using skybox slows down
 
-### Zone 2: Sunset Forest Zone
+#### Zone 2: Sunset Forest Zone
 
-#### Act 1
+##### Act 1 (MAP03)
 
 * Fix house roof similar to MAP02
 
-#### Act 2
+##### Act 2 (MAP04)
 
-### Zone 3: Skull Temple Zone
+#### Zone 3: Skull Temple Zone
 
-#### Act 1
+##### Act 1 (MAP05)
 
 * Some doors don't work
+
+##### Act 2 (MAP06)
 
 ## Suggested editing tools
 
