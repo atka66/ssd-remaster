@@ -61,6 +61,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP05)
 
 * Some doors don't work
+* Fix bridges using 3D floors
 
 ##### Act 2 (MAP06)
 
