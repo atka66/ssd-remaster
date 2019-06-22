@@ -33,13 +33,14 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * Water floor clips during aircraft scene
 * Container doors should open instead of switching between impassable and passable
 * Water around island should be 3D floor instead of using TransferHeight.
+* Use fading effect underwater
 
 ##### Act 2 (MAP02)
 
 * [✔] Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * [✔] Fix fence around house
 * [✔] Fix windows. Using skybox slows down
-* Fix water using 3D floors.
+* Fix water using 3D floors similar to MAP01
 
 #### Zone 2: Sunset Forest Zone
 
@@ -47,9 +48,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [✔] Fix house roof similar to MAP02
 * [✔] Fix fence similar to MAP02
+* [✔] Fix windows similar to MAP02
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree houses
-* Fix rivers using 3D floors. Make sure that scrolling effects are applied to dummy sectors. Creating also a wind effect makes rivers more realistic
+* Fix water using 3D floors. Make sure that scrolling effects are applied properly. Creating also a wind effect makes rivers more realistic
 
 ##### Act 2 (MAP04)
 
@@ -60,8 +62,9 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP05)
 
-* Some doors don't work
+* Some doors don't work because thing (de)activation freezes
 * Fix bridges using 3D floors
+* Fix entrance stairway by increasing sector height
 
 ##### Act 2 (MAP06)
 
