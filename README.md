@@ -30,7 +30,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * Grid transmission should use portals
 * Base background sky should be a proper sky instead of sky-wall
 * Some cameras should be higher up instead of laying on the floor
-* Water floor clips during aircraft scene
+* [✔] Water floor clips during aircraft scene
+* [✔] Use 3D floor for aircraft
 * Container doors should open instead of switching between impassable and passable
 * Water around island should be 3D floor instead of using TransferHeight.
 * Use fading effect underwater
