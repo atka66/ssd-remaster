@@ -68,6 +68,16 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP06)
 
+#### Zone 10: Steel Works Zone
+
+##### Act 2 (MAP20)
+
+* Some particles cannot render due to the sheer number of them
+
+### Other
+
+* Align railgun crosshair to the correct position
+
 ## Suggested editing tools
 
 * GZDoomBuilder/Doom Builder X (for map editing)
