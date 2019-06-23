@@ -40,6 +40,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * [✔] Fix fence around house
 * [✔] Fix windows. Using skybox slows down
+* Create gradient lighting for doors and windows in the houses
 * Fix water using 3D floors similar to MAP01
 
 #### Zone 2: Sunset Forest Zone
@@ -51,6 +52,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix windows similar to MAP02
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree houses
+* Create gradient lighting in houses similar to MAP02
 * Fix water using 3D floors. Make sure that scrolling effects are applied properly. Creating also a wind effect makes rivers more realistic
 
 ##### Act 2 (MAP04)
