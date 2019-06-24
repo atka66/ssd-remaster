@@ -34,6 +34,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * Container doors should open instead of switching between impassable and passable
 * Water around island should be 3D floor instead of using TransferHeight.
 * Use fading effect underwater
+* Tree clip issue
 
 ##### Act 2 (MAP02)
 
