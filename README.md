@@ -65,7 +65,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP05)
 
-* Some doors don't work because thing (de)activation freezes
+* [✔] Some doors don't work because thing (de)activation freezes. Temporarily removed action special from affected linedefs
 * Fix bridges using 3D floors
 * Fix entrance stairway by increasing sector height
 
