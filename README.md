@@ -72,6 +72,12 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP06)
 
+#### Zone 5: Forest Fortress Zone
+
+##### Act 2 (MAP20)
+
+* Fix still crossbows using 3D floors
+
 #### Zone 10: Steel Works Zone
 
 ##### Act 2 (MAP20)
