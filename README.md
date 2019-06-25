@@ -58,8 +58,9 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP04)
 
-* Fix outpost building upstairs using 3D floors
-* Set lighting of outpost downstairs to darker
+* [✔] Fix outpost building upstairs using 3D floors
+* [✔] Set lighting of outpost downstairs to darker
+* Improve anti-aircraft gun near main outpost
 
 #### Zone 3: Skull Temple Zone
 
