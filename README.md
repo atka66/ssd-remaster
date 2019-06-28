@@ -26,6 +26,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP01)
 
 * [✔] Trees should have proper bark texture
+* [✔] Trees should have correct offsets
 * Grid transmission should use portals
 * Base background sky should be a proper sky instead of sky-wall
 * Some cameras should be higher up instead of laying on the floor
