@@ -31,11 +31,13 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * Base background sky should be a proper sky instead of sky-wall
 * Some cameras should be higher up instead of laying on the floor
 * [✔] Water floor clips during aircraft scene
-* [✔] Use 3D floor for aircraft
+* [✔] Use 3D floor for aircraft when flying
 * Container doors should open instead of switching between impassable and passable
 * Water around island should be 3D floor instead of using TransferHeight.
 * Use fading effect underwater
-* Tree clip issue
+* Trees get outside of camera view during intro scene
+* [✔] Solve island tree height issue using 3D floors
+* Improve island trees using random heights and texture
 
 ##### Act 2 (MAP02)
 
