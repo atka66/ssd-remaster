@@ -75,13 +75,49 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP06)
 
+#### Zone 4: Nightmare Zone
+
+##### Act 1 (MAP07)
+
+##### Act 2 (MAP08)
+
 #### Zone 5: Forest Fortress Zone
 
-##### Act 2 (MAP20)
+##### Act 1 (MAP09)
+
+##### Act 2 (MAP10)
 
 * Fix still crossbows using 3D floors
 
+#### Zone 6: Active Volcano Zone
+
+##### Act 1 (MAP11)
+
+##### Act 2 (MAP12)
+
+#### Zone 7: Ocean City Zone
+
+##### Act 1 (MAP11)
+
+##### Act 2 (MAP12)
+
+#### Zone 8: Crystal Palace Zone
+
+##### Act 1 (MAP15)
+
+* Use static line portals instead of line teleporters for better connection between palace levels
+
+##### Act 2 (MAP16)
+
+#### Zone 9: Nautical Mines Zone
+
+##### Act 1 (MAP17)
+
+##### Act 2 (MAP18)
+
 #### Zone 10: Steel Works Zone
+
+##### Act 1 (MAP19)
 
 ##### Act 2 (MAP20)
 
