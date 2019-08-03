@@ -1,3 +1,5 @@
+#include "zcommon.acs"
+
 int killbonus;
 int secretbonus;
 int mins;

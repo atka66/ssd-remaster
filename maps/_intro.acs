@@ -1,3 +1,4 @@
+#include "zcommon.acs"
 
 script 101 (void)				    // forest - camera pan towards outpost
 
