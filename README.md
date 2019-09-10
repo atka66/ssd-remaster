@@ -123,6 +123,50 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * Some particles cannot render due to the sheer number of them
 
+#### Zone 11: Industrial Zone
+
+##### Act 1 (MAP21)
+
+##### Act 2 (MAP22)
+
+#### Zone 12: Sky City Zone
+
+##### Act 1 (MAP23)
+
+##### Act 2 (MAP24)
+
+#### Zone 13: Space Chase Zone
+
+##### Act 1 (MAP25)
+
+* Sound sequence activation freeze issue solved (with Sector Action actors)
+
+##### Act 2 (MAP26)
+
+#### Zone 14: Doom Star Zone
+
+##### Act 1 (MAP27)
+
+##### Act 2 (MAP28)
+
+#### Zone 15: Final Battle Zone
+
+##### Act 1 (MAP29)
+
+##### Act 2 (MAP30)
+
+#### Bonus Levels:
+
+##### (MAP31)
+
+##### (MAP32)
+
+##### (MAP33)
+
+##### (MAP34)
+
+##### (MAP35)
+
 ### Other
 
 * Align railgun crosshair to the correct position
