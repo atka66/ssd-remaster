@@ -27,25 +27,25 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [✔] Trees should have proper bark texture
 * [✔] Trees should have correct offsets
-* Grid transmission should use portals
-* Base background sky should be a proper sky instead of sky-wall
-* Some cameras should be higher up instead of laying on the floor
+* [ ] Grid transmission should use portals
+* [ ] Base background sky should be a proper sky instead of sky-wall
+* [ ] Some cameras should be higher up instead of laying on the floor
 * [✔] Water floor clips during aircraft scene
 * [✔] Use 3D floor for aircraft when flying
-* Container doors should open instead of switching between impassable and passable
-* Water around island should be 3D floor instead of using TransferHeight.
-* Use fading effect underwater
-* Trees get outside of camera view during intro scene
+* [ ] Container doors should open instead of switching between impassable and passable
+* [ ] Water around island should be 3D floor instead of using TransferHeight.
+* [ ] Use fading effect underwater
+* [ ] Trees get outside of camera view during intro scene
 * [✔] Solve island tree height issue using 3D floors
-* Improve island trees using random heights and texture
+* [ ] Improve island trees using random heights and texture
 
 ##### Act 2 (MAP02)
 
 * [✔] Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * [✔] Fix fence around house
 * [✔] Fix windows. Using skybox slows down
-* Create gradient lighting for doors and windows in the houses
-* Fix water using 3D floors similar to MAP01
+* [ ] Create gradient lighting for doors and windows in the houses
+* [ ] Fix water using 3D floors similar to MAP01
 
 #### Zone 2: Sunset Forest Zone
 
@@ -56,30 +56,37 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix windows similar to MAP02
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree houses
-* Create gradient lighting in houses similar to MAP02
-* Fix water using 3D floors. Make sure that scrolling effects are applied properly. Creating also a wind effect makes rivers more realistic
+* [ ] Create gradient lighting in houses similar to MAP02
+* [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Creating also a wind effect makes rivers more realistic
 
 ##### Act 2 (MAP04)
 
 * [✔] Fix outpost building upstairs using 3D floors
 * [✔] Set lighting of outpost downstairs to darker
-* Improve anti-aircraft gun near main outpost
+* [ ] Improve anti-aircraft gun near main outpost
 
 #### Zone 3: Skull Temple Zone
 
 ##### Act 1 (MAP05)
 
 * [✔] Some doors don't work because thing (de)activation freezes. Temporarily removed action special from affected linedefs
-* Fix bridges using 3D floors
-* Fix entrance stairway by increasing sector height
+* [✔] Solve sound sequence activation issue (using Sector Action actors)
+* [ ] Fix bridges using 3D floors
+* [ ] Fix entrance stairway by increasing sector height
 
 ##### Act 2 (MAP06)
+
+* [ ] Solve sound sequence activation issue
 
 #### Zone 4: Nightmare Zone
 
 ##### Act 1 (MAP07)
 
+* [ ] Solve sound sequence activation issue
+
 ##### Act 2 (MAP08)
+
+* [ ] Solve sound sequence activation issue
 
 #### Zone 5: Forest Fortress Zone
 
@@ -87,7 +94,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP10)
 
-* Fix still crossbows using 3D floors
+* [✔] Fix still crossbows using 3D floors
+* [✔] Fix huts roof using 3D floors
 
 #### Zone 6: Active Volcano Zone
 
@@ -105,9 +113,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP15)
 
-* Use static line portals instead of line teleporters for better connection between palace levels
+* [✔] Use static line portals instead of line teleporters for better connection between palace levels
 
 ##### Act 2 (MAP16)
+
+* [ ] Use static line portals between palace levels
 
 #### Zone 9: Nautical Mines Zone
 
@@ -121,7 +131,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP20)
 
-* Some particles cannot render due to the sheer number of them
+* [ ] Some particles cannot render due to the sheer number of them
 
 #### Zone 11: Industrial Zone
 
@@ -139,7 +149,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP25)
 
-* Sound sequence activation freeze issue solved (with Sector Action actors)
+* [✔] Sound sequence activation freeze issue solved (using Sector Action actors)
 
 ##### Act 2 (MAP26)
 
@@ -169,7 +179,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### Other
 
-* Align railgun crosshair to the correct position
+* [ ] Align railgun crosshair to the correct position
+* [ ] Consider using 3D model for MovingPlatform actor instead of sprite
 
 ## Suggested editing tools
 
