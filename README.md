@@ -33,7 +33,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Water floor clips during aircraft scene
 * [✔] Use 3D floor for aircraft when flying
 * [ ] Container doors should open instead of switching between impassable and passable
-* [ ] Water around island should be 3D floor instead of using TransferHeight.
+* [ ] Water around island should be 3D floor instead of using TransferHeight
 * [ ] Use fading effect underwater
 * [ ] Trees get outside of camera view during intro scene
 * [✔] Solve island tree height issue using 3D floors
@@ -46,6 +46,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix windows. Using skybox slows down
 * [ ] Create gradient lighting for doors and windows in the houses
 * [ ] Fix water using 3D floors similar to MAP01
+* [ ] Water splash sound effects issue should be solved by additional ACS scripts
 
 #### Zone 2: Sunset Forest Zone
 
@@ -57,7 +58,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree houses
 * [ ] Create gradient lighting in houses similar to MAP02
-* [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Creating also a wind effect makes rivers more realistic
+* [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
 
 ##### Act 2 (MAP04)
 
@@ -70,7 +71,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP05)
 
 * [✔] Some doors don't work because thing (de)activation freezes. Temporarily removed action special from affected linedefs
-* [✔] Solve sound sequence activation issue (using Sector Action actors)
+* [✔] Solve sound sequence activation issue (using Sector Action triggers)
 * [ ] Fix bridges using 3D floors
 * [ ] Fix entrance stairway by increasing sector height
 
@@ -132,6 +133,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 2 (MAP20)
 
 * [ ] Some particles cannot render due to the sheer number of them
+* [✔] Fix house roof using 3D floors
 
 #### Zone 11: Industrial Zone
 
@@ -149,7 +151,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP25)
 
-* [✔] Sound sequence activation freeze issue solved (using Sector Action actors)
+* [✔] Sound sequence activation freeze issue solved (using Sector Action triggers)
 
 ##### Act 2 (MAP26)
 
