@@ -110,6 +110,9 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP12)
 
+* [ ] Solve sound sequence activation issue (using Sector Action triggers)
+* [ ] Fix huts roof using 3D floors
+
 #### Zone 8: Crystal Palace Zone
 
 ##### Act 1 (MAP15)
@@ -151,7 +154,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP25)
 
-* [✔] Sound sequence activation freeze issue solved (using Sector Action triggers)
+* [✔] Solve sound sequence activation issue (using Sector Action triggers)
 
 ##### Act 2 (MAP26)
 
