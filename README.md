@@ -158,6 +158,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP26)
 
+* [ ] Solve sound sequence activation issue (using Sector Action triggers)
+
 #### Zone 14: Doom Star Zone
 
 ##### Act 1 (MAP27)
