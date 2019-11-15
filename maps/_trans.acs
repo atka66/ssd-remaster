@@ -1,4 +1,4 @@
-#include "zcommon.acs"
+//#include "zcommon.acs"
 
 script 301 open		// static translations
 

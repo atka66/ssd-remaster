@@ -1,4 +1,29 @@
-#include "zcommon.acs"
+//#include "zcommon.acs"
+
+int ammo1;
+int capacity1;
+int ammo2;
+int capacity2;
+int ammo3;
+int capacity3;
+int ammo4;
+int capacity4;
+int ammo5;
+int capacity5;
+int weapon1;
+int weapon2;
+int weapon3;
+int weapon33;
+int weapon4;
+int weapon5;
+int weapon6;
+int weapon7;
+int weapon8;
+int pack;
+int health;
+int armour;
+
+#define T_BAZOOKA 170
 
 script 233 ENTER					// player TID changer
 
