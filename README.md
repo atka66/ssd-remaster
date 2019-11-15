@@ -148,6 +148,9 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP23)
 
+* [ ] Solve sound sequence activation issue (using Sector Action triggers)
+* [ ] Replace 3D midtex bridges (and other platforms) using 3D floors.
+
 ##### Act 2 (MAP24)
 
 #### Zone 13: Space Chase Zone
