@@ -4,9 +4,12 @@
 #define T_MANCUBUSFIREBALL 204
 #define T_ROCKET2 127
 
+int skipped_intro=0;
+
 script 101 (void)				    // forest - camera pan towards outpost
 
 {
+if (skipped_intro>0) terminate;
 SetPlayerProperty (1, 1, 4);
 hudmessage (s:" type 'puke 222' on the console to skip main intro"; 0, 1, CR_RED, 1.0, 0.0, 0.0);
 setfont ("BigFont");
@@ -25,6 +28,7 @@ ACS_Execute (102, 0, 0, 0, 0);
 script 102 (void)					// forest - marine walking to radio set
 
 {
+if (skipped_intro>0) terminate;
 Thing_Activate (115);
 delay(175);
 ACS_Execute (103, 0, 0, 0, 0);
@@ -33,6 +37,7 @@ ACS_Execute (103, 0, 0, 0, 0);
 script 103 (void)					// forest - open comms
 
 {
+if (skipped_intro>0) terminate;
 delay(35);
 hudmessage (s:"grid on...searching..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 Light_ChangeToValue (121, 255);
@@ -71,6 +76,7 @@ ACS_Execute (104, 0, 0, 0, 0);
 script 104 (void)					// comms room - conversation
 
 {
+if (skipped_intro>0) terminate;
 Autosave();
 TeleportOther (115, 137, 0);
 ChangeCamera (140, 0, 0);
@@ -91,6 +97,7 @@ Thing_ProjectileGravity (151, T_MANCUBUSFIREBALL, 192, 5, -400);
 script 105 (void)					// forest - destruction
 
 {
+if (skipped_intro>0) terminate;
 Thing_Activate (115);
 ambientsound ("explosion1", 127);
 Radius_Quake (3, 260, 0, 128, 141);
@@ -182,6 +189,7 @@ ACS_Execute (106, 0, 0, 0, 0);
 script 106 (void)					// office - message and open comms
 
 {
+if (skipped_intro>0) terminate;
 Autosave();
 Thing_Deactivate (108);
 Thing_Deactivate (110);
@@ -217,6 +225,7 @@ ACS_Execute (107, 0, 0, 0, 0);
 script 107 (void)					// office - conversation and DamaGe exits room
 
 {
+if (skipped_intro>0) terminate;
 delay(105);
 ChangeCamera (140, 0, 0);
 delay(35);
@@ -250,6 +259,7 @@ ACS_Execute (108, 0, 0, 0, 0);
 script 108 (void)					// comms room - DamaGe enters and briefing
 
 {
+if (skipped_intro>0) terminate;
 Autosave();
 setfont ("BigFont");
 hudmessage (s:"comms room, sss base, sladen"; 2, 2, CR_GREY, 0.5, 0.4, 3.0, 0.05, 1.0);
@@ -319,6 +329,7 @@ ACS_Execute (109, 0, 0, 0, 0);
 script 109 (void)					// shuttle bay - DamaGe boards and starts it up
 
 {
+if (skipped_intro>0) terminate;
 Autosave();
 SetFont ("BigFont");
 hudmessage (s:"shuttle bay"; 2, 2, CR_GREY, 0.5, 0.4, 1.0, 0.05, 1.0);
@@ -378,6 +389,7 @@ ACS_Execute (110, 0, 0, 0, 0);
 script 110 (void)					// shuttle bay - launch
 
 {
+if (skipped_intro>0) terminate;
 ChangeCamera (300, 0, 0);
 hudmessage (s:"for great justice..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 delay(140);
@@ -540,6 +552,8 @@ Thing_Projectile (199, T_ROCKET2, 0, 200, 0);
 script 112 (void)					// ocean - missile hit and crash
 
 {
+if (skipped_intro<2)
+{
 Radius_Quake (5, 35, 0, 256, 325);
 ambientsound ("explosion1", 127);
 delay(35);
@@ -555,9 +569,12 @@ Thing_SpawnNoFog (326, T_BOOM, 0, 0);
 delay(5);
 Thing_SpawnNoFog (327, T_BOOM, 0, 0);
 delay(35);
+}
 Thing_Activate (192);
 delay(45);
 Thing_Remove (119);
+if (skipped_intro<2)
+{
 Thing_ProjectileGravity (200, T_SCRIPTEDMARINE, 128, 125, 125);
 thingsound (200, "turret5", 127);
 delay(1);
@@ -567,6 +584,7 @@ Thing_SetTranslation (0, 0);
 Thing_Deactivate (319);
 thingsound (200, "splash", 127);
 delay(70);
+}
 ACS_Execute (113, 0, 0, 0, 0);
 }
 
@@ -577,17 +595,36 @@ ChangeCamera (249, 0, 0);
 Thing_Activate (247);
 Thing_Activate (256);
 delay(140);
+if (skipped_intro<2)
+{
 hudmessage (s:"that was not supposed to happen."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 delay(140);
 hudmessage (s:"i've lost all my weapons, too."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 delay(140);
 hudmessage (s:"but at least i've made the island. well, the outskirts anyway."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 delay(105);
+}
 Thing_Activate (249);
 delay(160);
 Thing_Remove (247);
 Floor_LowerInstant (246, 0, 4);
 delay(15);
+ACS_Execute (2, 0, 0, 0, 0);
+}
+
+script 114 (void)
+{
+int s;
+for (s = 111; s <= 113; ++s)
+{
+ACS_Terminate (s, 0);
+}
+skipped_intro=2;
+for (s = 112; s <= 113; ++s)
+{
+ACS_Terminate (s, 0);
+}
+Teleport_NoFog(235,0);
 ACS_Execute (2, 0, 0, 0, 0);
 }
 
@@ -603,6 +640,7 @@ Thing_SetTranslation (247, -1);
 script 222 (void)					// skip intro
 
 {
+skipped_intro=1;
 for (int s = 101; s <= 110; ++s)
 {
 ACS_Terminate (s, 0);
