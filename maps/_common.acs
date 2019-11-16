@@ -1,0 +1,12 @@
+int deepWaterN = 128;
+bool inDeepWater[128];
+bool onWaterSurface[128];
+
+script 900 OPEN
+{
+	for (int i=0;i<deepWaterN;i++)
+	{
+		inDeepWater[i] = false;
+		onWaterSurface[i] = false;
+	}
+}
