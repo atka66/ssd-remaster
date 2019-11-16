@@ -2,6 +2,10 @@ int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
 
+#define T_MINICYBERDEMON 23
+#define T_BOOM 161
+#define T_ICEJET 223
+
 script 900 OPEN
 {
 	for (int i=0;i<deepWaterN;i++)
@@ -9,4 +13,4 @@ script 900 OPEN
 		inDeepWater[i] = false;
 		onWaterSurface[i] = false;
 	}
-}
+}  
