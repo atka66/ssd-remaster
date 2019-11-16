@@ -8,5 +8,16 @@ if (Test-Path $zip) {
 if (Test-Path $pk3) {
   Remove-Item $pk3
 }
+
+New-Item -Path "mapstemp/" -ItemType Directory -Force
+
+Move-Item "maps/*.acs" -Destination "mapstemp/" -Force
+Move-Item "maps/*.dbs" -Destination "mapstemp/" -Force
+Move-Item "maps/*.wad.backup*" -Destination "mapstemp/" -Force
+
 Compress-Archive -Path $source -DestinationPath $zip
 Rename-Item -Path $zip -NewName $pk3
+
+Copy-Item "mapstemp/*.*" -Recurse -Destination "maps/" -Force
+
+Remove-Item -Path "mapstemp/" -Recurse
