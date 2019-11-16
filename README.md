@@ -41,10 +41,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 2 (MAP02)
 
-* [✔] Fix house roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
+* [✔] Fix hut roof by using 3D floors instead of InvisibleBridge actors and TransferHeight linedef special
 * [✔] Fix fence around house
 * [✔] Fix windows. Using skybox slows down
-* [ ] Create gradient lighting for doors and windows in the houses
+* [✔] Fix doors using additional ACS script
+* [✔] Create gradient lighting for doors and windows in the huts
 * [ ] Fix water using 3D floors similar to MAP01
 * [ ] Water splash sound effects issue should be solved by additional ACS scripts
 
@@ -52,12 +53,12 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP03)
 
-* [✔] Fix house roof similar to MAP02
+* [✔] Fix huts roof similar to MAP02
 * [✔] Fix fence similar to MAP02
 * [✔] Fix windows similar to MAP02
 * [✔] Fix bridges using 3D floors
-* [✔] Fix bottom of tree houses
-* [ ] Create gradient lighting in houses similar to MAP02
+* [✔] Fix bottom of tree huts
+* [ ] Create gradient lighting in huts similar to MAP02
 * [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
 
 ##### Act 2 (MAP04)
