@@ -585,9 +585,9 @@ Thing_SpawnNoFog (326, T_BOOM, 0, 0);
 delay(5);
 Thing_SpawnNoFog (327, T_BOOM, 0, 0);
 delay(35);
-}
 Thing_Activate (192);
 delay(45);
+}
 Thing_Remove (119);
 if (skipped_intro<2)
 {
@@ -607,12 +607,12 @@ ACS_Execute (113, 0, 0, 0, 0);
 script 113 (void)					// island - emerge from water to start point
 
 {
+if (skipped_intro<2)
+{
 ChangeCamera (249, 0, 0);
 Thing_Activate (247);
 Thing_Activate (256);
 delay(140);
-if (skipped_intro<2)
-{
 hudmessage (s:"that was not supposed to happen."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
 delay(140);
 hudmessage (s:"i've lost all my weapons, too."; 2, 0, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
@@ -621,7 +621,10 @@ hudmessage (s:"but at least i've made the island. well, the outskirts anyway."; 
 delay(105);
 }
 Thing_Activate (249);
+if (skipped_intro<2)
+{
 delay(160);
+}
 Thing_Remove (247);
 Floor_LowerInstant (246, 0, 4);
 delay(15);
@@ -630,18 +633,21 @@ ACS_Execute (2, 0, 0, 0, 0);
 
 script 114 (void)
 {
+if (skipped_intro<2)
+{
 int s;
 for (s = 111; s <= 113; ++s)
 {
 ACS_Terminate (s, 0);
 }
-skipped_intro=2;
 for (s = 112; s <= 113; ++s)
 {
-ACS_Terminate (s, 0);
+ACS_Execute (s, 0);
 }
-Teleport_NoFog(235,0);
+//Teleport_NoFog(235,0);
+skipped_intro=2;
 ACS_Execute (2, 0, 0, 0, 0);
+}
 }
 
 script 116 ENTER					// self-coloured marines
@@ -656,12 +662,18 @@ Thing_SetTranslation (247, -1);
 script 222 (void)					// skip intro
 
 {
+if (skipped_intro<1) 
+{
 skipped_intro=1;
 for (int s = 101; s <= 110; ++s)
 {
 ACS_Terminate (s, 0);
 }
+}
+if (skipped_intro<2) 
+{
 Thing_Deactivate (190);
 Thing_Deactivate (320);
 ACS_Execute (t, 0, 0, 0, 0);
+}
 }
