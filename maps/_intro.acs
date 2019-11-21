@@ -493,6 +493,7 @@ int t = 111;
 script 111 (void)					// ocean - welcome and missile attack
 
 {
+skipped_intro=1;
 t++;
 t++;
 t++;
@@ -635,6 +636,7 @@ script 114 (void)
 {
 if (skipped_intro<2)
 {
+skipped_intro=2;
 int s;
 for (s = 111; s <= 113; ++s)
 {
@@ -644,8 +646,7 @@ for (s = 112; s <= 113; ++s)
 {
 ACS_Execute (s, 0);
 }
-//Teleport_NoFog(235,0);
-skipped_intro=2;
+Teleport_NoFog(235,0);
 ACS_Execute (2, 0, 0, 0, 0);
 }
 }
@@ -664,13 +665,10 @@ script 222 (void)					// skip intro
 {
 if (skipped_intro<1) 
 {
-skipped_intro=1;
 for (int s = 101; s <= 110; ++s)
-{
-ACS_Terminate (s, 0);
+	ACS_Terminate (s, 0);
 }
-}
-if (skipped_intro<2) 
+if (skipped_intro<2)
 {
 Thing_Deactivate (190);
 Thing_Deactivate (320);
