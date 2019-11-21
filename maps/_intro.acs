@@ -101,6 +101,20 @@ delay(140);
 Thing_ProjectileGravity (151, T_MANCUBUSFIREBALL, 192, 5, -400);
 }
 
+int forest_old_br[10];
+
+script 120 (void)
+{
+	int i;
+	for (i=0;i<10;i++)
+	{
+		Light_ChangeToValue(141+i, forest_old_br[i]);
+		Sector_SetFade(141+i, 0,0,0);
+		if (i<8)
+			ChangeCeiling(141+i,"F_SKY1");
+	}
+}
+
 script 105 (void)					// forest - destruction
 {
 if (skipped_intro>0) terminate;
@@ -111,40 +125,48 @@ delay(70);
 Thing_Remove(115);
 Thing_SpawnFacing(138, T_SCRIPTEDMARINE, YES, 115);
 ambientsound ("explosion1", 127);
+forest_old_br[0]=GetSectorLightLevel(141);
 Light_ChangeToValue (141, 255);
 Sector_SetFade (141, 255, 128, 0);
 Light_Fade (141, 0, 15);
 hudmessage (s:"wtf?"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
 delay(15);
+forest_old_br[1]=GetSectorLightLevel(142);
 Light_ChangeToValue (142, 255);
 Sector_SetFade (142, 255, 128, 0);
 Light_Fade (142, 0, 15);
 delay(15);
 hudmessage (s:"aagh!"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
 ambientsound ("explosion1", 127);
+forest_old_br[2]=GetSectorLightLevel(143);
 Light_ChangeToValue (143, 255);
 Sector_SetFade (143, 255, 128, 0);
 Light_Fade (143, 0, 15);
 delay(15);
+forest_old_br[3]=GetSectorLightLevel(144);
 Light_ChangeToValue (144, 255);
 Sector_SetFade (144, 255, 128, 0);
 Light_Fade (144, 0, 15);
 delay(15);
 hudmessage (s:"whatever you do, get someone out here now!"; 2, 2, CR_GREEN, 0.5, 0.5, 0.0, 0.05, 1.0);
 ambientsound ("explosion1", 127);
+forest_old_br[4]=GetSectorLightLevel(145);
 Light_ChangeToValue (145, 255);
 Sector_SetFade (145, 255, 128, 0);
 Light_Fade (145, 0, 15);
 delay(15);
+forest_old_br[5]=GetSectorLightLevel(146);
 Light_ChangeToValue (146, 255);
 Sector_SetFade (146, 255, 128, 0);
 Light_Fade (146, 0, 15);
 delay(15);
+forest_old_br[6]=GetSectorLightLevel(147);
 ambientsound ("explosion1", 127);
 Light_ChangeToValue (147, 255);
 Sector_SetFade (147, 255, 128, 0);
 Light_Fade (147, 0, 15);
 delay(15);
+forest_old_br[7]=GetSectorLightLevel(148);
 Light_ChangeToValue (148, 255);
 Sector_SetFade (148, 255, 128, 0);
 Light_Fade (148, 0, 15);
@@ -155,10 +177,12 @@ for (int i = 141; i <= 148; ++i)
 	ChangeCeiling (i, "grass3");
 	}
 ambientsound ("explosion1", 127);
+forest_old_br[8]=GetSectorLightLevel(149);
 Light_ChangeToValue (149, 255);
 Sector_SetFade (149, 255, 128, 0);
 Light_Fade (149, 0, 15);
 delay(2);
+forest_old_br[9]=GetSectorLightLevel(150);
 Light_ChangeToValue (150, 255);
 Sector_SetFade (150, 255, 128, 0);
 Light_Fade (150, 0, 15);
@@ -170,6 +194,7 @@ delay(35);
 //Ceiling_LowerInstant (113, 0, 12);
 Line_SetPortalTarget(200, 0);
 Line_SetPortalTarget(202, 0);
+ACS_Execute(120, 0, 0, 0, 0);
 Thing_Activate (108);
 Thing_Deactivate (320);
 hudmessage (s:"1337? come in 1337!"; 2, 2, CR_BROWN, 0.5, 0.5, 1.0, 0.05, 1.0);
@@ -323,6 +348,7 @@ hudmessage (s:"finally, the firestarter himself. head of fac, and an extremely g
 delay(280);
 //Ceiling_LowerInstant (113, 0, 12);
 Line_SetPortalTarget(202, 0);
+Thing_Remove(176);
 Light_ChangeToValue (123, 190);
 thingsound (140, "button2", 127);
 hudmessage (s:"so, the usual bunch of losers then."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
