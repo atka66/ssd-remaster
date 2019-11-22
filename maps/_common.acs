@@ -6,6 +6,62 @@ bool onWaterSurface[128];
 #define T_BOOM 161
 #define T_ICEJET 223
 
+// deep water effect scripts (by tiszaszaki)
+
+script 901 (int i)
+{
+    if (!inDeepWater[i])
+    {
+        PlaySound(0,"splash");
+        inDeepWater[i]=true;
+    }
+}
+
+script 902 (int i)
+{
+    if (inDeepWater[i])
+    {
+        PlaySound(0,"splash");
+        inDeepWater[i]=false;
+    }
+}
+
+script 210 (int i, int wtag, int wtid)
+{
+    if (!onWaterSurface[i])
+    {
+        onWaterSurface[i]=true;
+        ACS_Execute(903, 0, i,wtag,wtid);
+    }
+}
+
+script 211 (int i)
+{
+    if (onWaterSurface[i])
+    {
+        onWaterSurface[i]=false;
+    }
+}
+
+script 903 (int i, int wtag, int wtid)
+{
+    while (onWaterSurface[i])
+    {
+        int x=GetActorX(wtid);
+        int y=GetActorX(wtid);
+        int sfloor=GetSectorFloorZ(wtag, x,y);
+        int playerEyeHeight=(GetActorZ(0) - sfloor) + GetActorViewHeight(0); // ( - GetActorFloorZ(0)) +
+        int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
+        int dl=2;
+        if (playerEyeHeight <= waterSurfaceHeight)
+            ACS_Execute(901, 0, i,0,0);
+        else
+            ACS_Execute(902, 0, i,0,0);
+        //Log(d:playerEyeHeight >> 16, s:"<=", d:waterSurfaceHeight >> 16, s:"?");
+        Delay(dl);
+    }
+}
+
 script 900 OPEN
 {
 	for (int i=0;i<deepWaterN;i++)
