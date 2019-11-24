@@ -2,9 +2,12 @@ int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
 
+// spawn IDs (by tiszaszaki)
+
 #define T_MINICYBERDEMON 23
 #define T_BOOM 161
 #define T_ICEJET 223
+#define T_GREENARMOUR T_GREENARMOR
 
 // deep water effect scripts (by tiszaszaki)
 
