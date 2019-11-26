@@ -8,6 +8,7 @@ bool onWaterSurface[128];
 #define T_BOOM 161
 #define T_ICEJET 223
 #define T_GREENARMOUR T_GREENARMOR
+#define T_ENHANCEDCACODEMON 30020
 
 // deep water effect scripts (by tiszaszaki)
 
