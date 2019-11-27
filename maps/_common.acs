@@ -4,11 +4,13 @@ bool onWaterSurface[128];
 
 // spawn IDs (by tiszaszaki)
 
+#define T_GREENARMOUR T_GREENARMOR
+
 #define T_MINICYBERDEMON 23
 #define T_BOOM 161
 #define T_ICEJET 223
-#define T_GREENARMOUR T_GREENARMOR
 #define T_ENHANCEDCACODEMON 30020
+#define T_REIVERFIREBALL2 212
 
 // deep water effect scripts (by tiszaszaki)
 

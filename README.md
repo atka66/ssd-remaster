@@ -103,7 +103,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP11)
 
+* [ ] Crater mechanism (eruption) is too slow to animate. Needs some cleanup for it
+
 ##### Act 2 (MAP12)
+
+* [ ] Crater mechanism (eruption) is too slow to animate. Needs some cleanup for it
 
 #### Zone 7: Ocean City Zone
 
