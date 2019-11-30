@@ -329,14 +329,62 @@ QUITMSG14 = come back!\nfor great justice!
 
 Frame 804
 Sprite number = 9
-Sprite subnumber = 32768
-Duration = 10
+Sprite subnumber = 1
+Duration = 5
 Next frame = 805
 
 Frame 805
 Sprite number = 9
-Sprite subnumber = 1
-Duration = 40
+Sprite subnumber = 2
+Duration = 5
+Next frame = 806
+
+Frame 806
+Sprite number = 9
+Sprite subnumber = 3
+Duration = 5
+Next frame = 807
+
+Frame 807
+Sprite number = 9
+Sprite subnumber = 4
+Duration = 5
+Next frame = 808
+
+Frame 808
+Sprite number = 9
+Sprite subnumber = 5
+Duration = 5
+Next frame = 809
+
+Frame 809
+Sprite number = 9
+Sprite subnumber = 6
+Duration = 5
+Next frame = 810
+
+Frame 810
+Sprite number = 9
+Sprite subnumber = 7
+Duration = 5
+Next frame = 811
+
+Frame 811
+Sprite number = 9
+Sprite subnumber = 8
+Duration = 5
+Next frame = 812
+
+Frame 812
+Sprite number = 9
+Sprite subnumber = 9
+Duration = 5
+Next frame = 813
+
+Frame 813
+Sprite number = 9
+Sprite subnumber = 10
+Duration = 5
 Next frame = 57
 
 [CODEPTR]
@@ -345,3 +393,11 @@ Next frame = 57
 
 Frame 804 = A_FireRailgunRight
 Frame 805 = NULL
+Frame 806 = NULL
+Frame 807 = NULL
+Frame 808 = NULL
+Frame 809 = NULL
+Frame 810 = NULL
+Frame 811 = NULL
+Frame 812 = NULL
+Frame 813 = NULL
