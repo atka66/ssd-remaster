@@ -195,7 +195,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ### Other
 
 * [✔] Remaster Railgun sprites
-* [ ] Consider using 3D model for MovingPlatform actor instead of sprite
+* [✔] Consider using 3D model for MovingPlatform actors along with sprite
+* [ ] New texture for MovingPlatform 3D model
 
 ## Suggested editing tools
 
