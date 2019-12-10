@@ -866,7 +866,7 @@ Solid
 NoGravity
 CanPass
 Radius 16
-Height 32
+Height 16
 }
 
 MovingPlatform2
@@ -877,7 +877,7 @@ Frames "A"
 NoGravity
 CanPass
 Radius 16
-Height 32
+Height 16
 }
 
 SecurityCam

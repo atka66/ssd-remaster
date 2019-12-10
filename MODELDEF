@@ -1,0 +1,17 @@
+Model MovingPlatform
+{
+   Path "models/"   
+   Model 0 "128cube.md3"  
+   Skin 0 "64x16_GATE2"  
+   Scale 0.254 0.254 0.127
+   FrameIndex PLAT A 0 0
+}
+
+Model MovingPlatform2
+{
+   Path "models/"   
+   Model 0 "128cube.md3"  
+   Skin 0 "64x16_GATE2"  
+   Scale 0.254 0.254 0.127
+   FrameIndex PLAT A 0 0
+}
