@@ -865,7 +865,7 @@ Frames "A"
 Solid
 NoGravity
 CanPass
-Radius 16
+Radius 32
 Height 16
 }
 
@@ -876,7 +876,7 @@ Sprite PLAT
 Frames "A"
 NoGravity
 CanPass
-Radius 16
+Radius 32
 Height 16
 }
 
