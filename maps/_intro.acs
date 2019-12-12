@@ -11,16 +11,20 @@ script 101 (void)				    // forest - camera pan towards outpost
 {
 if (skipped_intro>0) terminate;
 SetPlayerProperty (1, 1, 4);
+if (skipped_intro>0) terminate;
 hudmessage (s:" type 'puke 222' on the console to skip main intro"; 0, 1, CR_RED, 1.0, 0.0, 0.0);
 setfont ("BigFont");
 hudmessage (s:" a forest..."; 2, 2, CR_GREEN, 0.5, 0.4, 3.0, 0.05, 1.0);
+if (skipped_intro>0) terminate;
 Thing_Activate (125);
 ChangeCamera (125, 0, 0);
 delay(315);
+if (skipped_intro>0) terminate;
 hudmessage (s:"sss outpost 1337"; 2, 2, CR_GREEN, 0.5, 0.4, 3.0, 0.05, 1.0);
 delay(210);
 setfont ("SmallFont");
 hudmessage (s:"right, it's time to make my grid transmission..."; 2, 2, CR_GREEN, 0.5, 0.5, 1.0, 0.05, 1.0);
+if (skipped_intro>0) terminate;
 delay(175);
 ACS_Execute (102, 0, 0, 0, 0);
 }
