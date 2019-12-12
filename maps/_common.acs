@@ -19,6 +19,7 @@ bool onWaterSurface[128];
 
 #define T_MINICYBERDEMON 23
 #define T_MACE2 211
+#define T_ROCKET2 116
 
 // deep water effect scripts (by tiszaszaki)
 
