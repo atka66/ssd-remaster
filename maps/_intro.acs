@@ -1,9 +1,6 @@
 //#include "zcommon.acs"
 #include "_common.acs"
 
-#define T_MANCUBUSFIREBALL 204
-#define T_ROCKET2 127
-
 int skipped_intro=0;
 
 script 101 (void)				    // forest - camera pan towards outpost
