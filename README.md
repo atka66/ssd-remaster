@@ -27,17 +27,18 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [✔] Trees should have proper bark texture
 * [✔] Trees should have correct offsets
-* [ ] Grid transmission should use portals
+* [✔] Grid transmission should use portals
 * [ ] Base background sky should be a proper sky instead of sky-wall
 * [ ] Some cameras should be higher up instead of laying on the floor
 * [✔] Water floor clips during aircraft scene
 * [✔] Use 3D floor for aircraft when flying
-* [ ] Container doors should open instead of switching between impassable and passable
-* [ ] Water around island should be 3D floor instead of using TransferHeight
-* [ ] Use fading effect underwater
+* [✔] Container doors should open instead of switching between impassable and passable
+* [✔] Water around island should be 3D floor instead of using TransferHeight
+* [✔] Use fading effect underwater
 * [ ] Trees get outside of camera view during intro scene
 * [✔] Solve island tree height issue using 3D floors
 * [ ] Improve island trees using random heights and texture
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 ##### Act 2 (MAP02)
 
@@ -46,8 +47,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix windows. Using skybox slows down
 * [✔] Fix doors using additional ACS script
 * [✔] Create gradient lighting for doors and windows in the huts
-* [ ] Fix water using 3D floors similar to MAP01
-* [ ] Water splash sound effects issue should be solved by additional ACS scripts
+* [✔] Fix water using 3D floors similar to MAP01
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 #### Zone 2: Sunset Forest Zone
 
@@ -58,7 +59,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix windows similar to MAP02
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree huts
-* [ ] Create gradient lighting in huts similar to MAP02
+* [✔] Create gradient lighting in huts similar to MAP02
 * [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
 
 ##### Act 2 (MAP04)
@@ -75,6 +76,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Solve sound sequence activation issue (using Sector Action triggers)
 * [ ] Fix bridges using 3D floors
 * [ ] Fix entrance stairway by increasing sector height
+* [ ] Reduce 3D platform objects.
 
 ##### Act 2 (MAP06)
 
