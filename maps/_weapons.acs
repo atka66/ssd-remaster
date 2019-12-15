@@ -444,18 +444,30 @@ script 250 (void)					// water splash
 activatorsound ("splash", 127);
 }
 
+str playerClassStr="DoomPlayer";
+
 script 251 (int arg0, int arg1)				// spring (horizontal)
 
 {
+str activatorClass=GetActorClass(0);
+bool b=true;//(activatorClass == playerClassStr);
+if (b)
+{
 activatorsound ("spring", 127);
 ThrustThing (arg1, arg0, 1);
+}
 }
 
 script 252 (int arg0, int arg1)				// spring (vertical)
 
 {
+str activatorClass=GetActorClass(0);
+bool b=true;//(activatorClass == playerClassStr);
+if (b)
+{
 activatorsound ("spring", 127);
 ThrustThingZ (0, arg0, arg1, 0);
+}
 }
 
 script 253 ENTER					// golden health potion checker
