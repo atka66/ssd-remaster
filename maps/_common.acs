@@ -11,7 +11,8 @@ bool onWaterSurface[128];
 
 #define T_REIVERFIREBALL2 212
 #define T_IMPFIREBALL2 201
-#define T_CACOFIREBALL 202
+#define T_CACOFIREBALL 126
+#define T_CACOFIREBALL2 202
 
 #define T_ENHANCEDDEMON 30017
 #define T_ENHANCEDCACODEMON 30020
@@ -22,6 +23,8 @@ bool onWaterSurface[128];
 #define T_MINICYBERDEMON 23
 #define T_MACE2 211
 #define T_ROCKET2 116
+
+#define T_RING 167
 
 // deep water effect scripts (by tiszaszaki)
 
