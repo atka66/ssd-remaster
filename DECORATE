@@ -4764,3 +4764,17 @@ ACTOR SSDTheFirestarter 30061
         	Stop
     	}
 }
+
+actor SSDBossEye : BossEye replaces BossEye (by tiszaszaki)
+{
+	DropItem "SSDEnhancedImp"		255 50
+	DropItem "SSDEnhancedDemon"		255 40
+	DropItem "SSDPainElemental"		255 10
+	DropItem "SSDEnhancedCacodemon"		255 30
+	DropItem "SSDArchvile"			255  2
+	DropItem "SSDRevenant"			255 10
+	DropItem "SSDArachnotron"		255 20
+	DropItem "SSDMancubus"			255 30
+	DropItem "SSDHellKnight"		255 24
+	DropItem "SSDBaronOfHell"		255 10
+}
