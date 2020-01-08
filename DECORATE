@@ -4778,3 +4778,9 @@ actor SSDBossEye : BossEye replaces BossEye // (by tiszaszaki)
 	DropItem "SSDHellKnight"		255 24
 	DropItem "SSDBaronOfHell"		255 10
 }
+
+// key actor name replacement (by tiszaszaki)
+
+actor GreenCard : BlueSkull replaces BlueSkull { }
+actor OrangeCard : YellowSkull replaces YellowSkull { }
+actor PurpleCard : RedSkull replaces RedSkull { }
