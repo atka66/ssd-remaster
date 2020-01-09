@@ -196,6 +196,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### Other
 
+* [ ] Some keys (skulls) are renamed in DECORATE. ACS of all maps should be checked for key dropping errors.
+* [ ] Consider connecting levels using smarter intermission mechanism instead of direct teleporting.
 * [✔] Remaster Railgun sprites
 * [✔] Consider using 3D model for MovingPlatform actors along with sprite
 * [ ] New texture for MovingPlatform 3D model
