@@ -5,7 +5,7 @@ ClearLocks
 
 Lock 1 Doom                      // red
 {
-	RedCard
+	RedCard2
 	Message "$PD_REDC"
 	RemoteMessage "$PD_REDC"
 	Mapcolor 255 0 0
@@ -14,7 +14,7 @@ Lock 1 Doom                      // red
 
 Lock 2 Doom                      // blue
 {
-	BlueCard
+	BlueCard2
 	Message "$PD_BLUEC"
 	RemoteMessage "$PD_BLUEC"
 	Mapcolor 0 0 255
@@ -23,7 +23,7 @@ Lock 2 Doom                      // blue
 
 Lock 3 Doom                      // yellow
 {
-	YellowCard
+	YellowCard2
 	Message "$PD_YELLOWC"
 	RemoteMessage "$PD_YELLOWC"
 	Mapcolor 255 255 0
@@ -58,9 +58,9 @@ Lock 6 Doom                      // orange
 
 Lock 229 Doom                    // rainbow (3)
 {
-	Any { BlueCard GreenCard }
-	Any { YellowCard OrangeCard }
-	Any { RedCard PurpleCard }
+	Any { BlueCard2 GreenCard }
+	Any { YellowCard2 OrangeCard }
+	Any { RedCard2 PurpleCard }
 	Message "$PD_ALL3"
 	RemoteMessage "$PD_ALL3"
 	MapColor 255 255 255
@@ -68,11 +68,11 @@ Lock 229 Doom                    // rainbow (3)
 
 Lock 101 Doom                    // rainbow (6)
 {
-	BlueCard 
+	BlueCard2
 	GreenCard
-	YellowCard 
+	YellowCard2
 	OrangeCard
-	RedCard 
+	RedCard2
 	PurpleCard
 	Message "$PD_ALL6"
 	RemoteMessage "$PD_ALL6O"
