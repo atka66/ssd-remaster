@@ -4781,10 +4781,10 @@ actor SSDBossEye : BossEye replaces BossEye // (by tiszaszaki)
 
 // key actor name replacement (by tiszaszaki)
 
-actor GreenCard : BlueSkull replaces BlueSkull { }
-actor OrangeCard : YellowSkull replaces YellowSkull { }
-actor PurpleCard : RedSkull replaces RedSkull { }
+actor GreenCard : BlueSkull replaces BlueSkull { +NOGRAVITY }
+actor OrangeCard : YellowSkull replaces YellowSkull { +NOGRAVITY }
+actor PurpleCard : RedSkull replaces RedSkull { +NOGRAVITY }
 
-actor BlueCard2 : BlueCard replaces BlueCard { }
-actor YellowCard2 : YellowCard replaces YellowCard { }
-actor RedCard2 : RedCard replaces RedCard { }
+actor BlueCard2 : BlueCard replaces BlueCard { +NOGRAVITY }
+actor YellowCard2 : YellowCard replaces YellowCard { +NOGRAVITY }
+actor RedCard2 : RedCard replaces RedCard { +NOGRAVITY }
