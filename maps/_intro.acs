@@ -9,7 +9,7 @@ script 101 (void)				    // forest - camera pan towards outpost
 if (skipped_intro>0) terminate;
 SetPlayerProperty (1, 1, 4);
 if (skipped_intro>0) terminate;
-hudmessage (s:" type 'puke 222' on the console to skip main intro"; 0, 1, CR_RED, 1.0, 0.0, 0.0);
+hudmessage (s:" type 'puke 222' on the console to skip main intro"; 0, 1, CR_RED, 0.0, 0.0, 0.0);
 setfont ("BigFont");
 hudmessage (s:" a forest..."; 2, 2, CR_GREEN, 0.5, 0.4, 3.0, 0.05, 1.0);
 if (skipped_intro>0) terminate;
@@ -532,6 +532,7 @@ setmusic ("z_intro");
 Scroll_Floor (120, -256, 0, 0);
 ChangeCamera (192, 0, 0);
 hudmessage (s:""; 0, 1, 0, 0, 0, 1);
+hudmessage (s:" type 'puke 222' on the console to skip welcome intro"; 0, 1, CR_RED, 0.0, 0.0, 0.0);
 hudmessage (s:""; 0, 2, 0, 0, 0, 1);
 setfont ("BigFont");
 delay(35);
@@ -658,6 +659,7 @@ delay(160);
 }
 Thing_Remove (247);
 Floor_LowerInstant (246, 0, 4);
+hudmessage (s:""; 0, 1, 0, 0, 0, 1);
 delay(15);
 ACS_Execute (2, 0, 0, 0, 0);
 }
