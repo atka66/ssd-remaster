@@ -30,6 +30,7 @@ bool onWaterSurface[128];
 #define T_FIREBOMB 217
 #define T_MACE2 211
 #define T_ROCKET2 116
+#define T_TRACER2 9
 
 #define T_PLASMABOLT2 206
 
