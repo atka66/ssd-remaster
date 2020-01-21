@@ -38,7 +38,7 @@ bool onWaterSurface[128];
 
 // deep water effect scripts (by tiszaszaki)
 
-script 901 (int i)
+script 901 (int i) // in
 {
     if (!inDeepWater[i])
     {
@@ -47,7 +47,7 @@ script 901 (int i)
     }
 }
 
-script 902 (int i)
+script 902 (int i) // out
 {
     if (inDeepWater[i])
     {
