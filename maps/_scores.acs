@@ -9,9 +9,9 @@ int mins;
 int secs;
 int score;
 int timebonus_unit_down = 50;
-int timebonus_unit = 500;
-int timebonus_unit2 = 1000;
+int timebonus_unit = 1000;
 int timebonus = 100000;
+int killbonus_unit = 250;
 int zone;
 
 script 231 (int killtarget2,int killcount2)					// killtarget checker
@@ -57,13 +57,16 @@ if(secs > 59)
     hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 }
 
-if(timebonus < timebonus_unit_down)
+if(timebonus!=0)
 {
-    timebonus = 0;
-}
-else
-{
-timebonus -= timebonus_unit_down;
+	if(timebonus < timebonus_unit_down)
+	{
+		timebonus = 0;
+	}
+	else
+	{
+		timebonus -= timebonus_unit_down;
+	}
 }
 delay(35);
 Restart;
@@ -78,9 +81,9 @@ if(timebonus == 0)
 	delay(1);
 	terminate;
 }
-if(timebonus == timebonus_unit)
+else if(timebonus == timebonus_unit)
 {
-	timebonus -= timebonus_unit;
+	timebonus = 0;
 	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
 	score += timebonus_unit;
 	activatorsound ("button1", 127);
@@ -96,9 +99,9 @@ else
 	}
 	else
 	{
-		timebonus -= timebonus_unit2;
+		timebonus -= timebonus_unit;
 		hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-		score += timebonus_unit2;
+		score += timebonus_unit;
 		activatorsound ("button1", 127);
 	}
 }
@@ -117,10 +120,30 @@ if(killbonus == 0)
 }
 else
 {
-	killbonus -= 100;
-	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
-	score += 100;
-	activatorsound ("button1", 127);
+	if (killbonus == killbonus_unit)
+	{
+		killbonus = 0;
+		hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+		score += killbonus_unit;
+		activatorsound ("button1", 127);
+	}
+	else
+	{
+		if (killbonus < killbonus_unit)
+		{
+			killbonus = 0;
+			hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+			score += killbonus;
+			activatorsound ("button1", 127);
+		}
+		else
+		{
+			killbonus -= killbonus_unit;
+			hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+			score += killbonus_unit;
+			activatorsound ("button1", 127);
+		}
+	}
 }
 delay(1);
 Restart;
