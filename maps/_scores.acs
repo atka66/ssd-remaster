@@ -12,7 +12,9 @@ int timebonus_unit_down = 50;
 int timebonus_unit = 1000;
 int timebonus = 100000;
 int killbonus_unit = 250;
+int secretbonus_unit = 250;
 int zone;
+int rundown_dl=2;
 
 script 231 (int killtarget2,int killcount2)					// killtarget checker
 
@@ -78,35 +80,22 @@ script 500 (void)					// time bonus rundown
 if(timebonus == 0)
 {
 	ACS_ExecuteAlways (800, 0, 0, 0, 0);
-	delay(1);
-	terminate;
-}
-else if(timebonus == timebonus_unit)
-{
-	timebonus = 0;
-	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-	score += timebonus_unit;
-	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	//terminate;
 }
 else
 {
-	if (timebonus < timebonus_unit)
-	{
+	int timebonus_temp=timebonus;
+	if(timebonus <= timebonus_unit)
 		timebonus = 0;
-		hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-		score += timebonus;
-		activatorsound ("button1", 127);
-	}
 	else
-	{
 		timebonus -= timebonus_unit;
-		hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-		score += timebonus_unit;
-		activatorsound ("button1", 127);
-	}
+	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	score += min(timebonus_unit,timebonus_temp);
+	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
 }
-delay(1);
-Restart;
 }
 
 script 600 (void)					// kill bonus rundown
@@ -115,38 +104,22 @@ script 600 (void)					// kill bonus rundown
 if(killbonus == 0)
 {
 	ACS_ExecuteAlways (800, 0, 0, 0, 0);
-	delay(1);
-	terminate;
+	delay(rundown_dl);
+	//terminate;
 }
 else
 {
-	if (killbonus == killbonus_unit)
-	{
+	int killbonus_temp=killbonus;
+	if (killbonus <= killbonus_unit)
 		killbonus = 0;
-		hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
-		score += killbonus_unit;
-		activatorsound ("button1", 127);
-	}
 	else
-	{
-		if (killbonus < killbonus_unit)
-		{
-			killbonus = 0;
-			hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
-			score += killbonus;
-			activatorsound ("button1", 127);
-		}
-		else
-		{
-			killbonus -= killbonus_unit;
-			hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
-			score += killbonus_unit;
-			activatorsound ("button1", 127);
-		}
-	}
+		killbonus -= killbonus_unit;
+	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+	score += min(killbonus_unit,killbonus_temp);
+	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
 }
-delay(1);
-Restart;
 }
 
 script 700 (void)					// secret bonus rundown
@@ -155,17 +128,20 @@ script 700 (void)					// secret bonus rundown
 if(secretbonus == 0)
 {
 	ACS_ExecuteAlways (800, 0, 0, 0, 0);
-	delay(1);
-	terminate;
+	delay(rundown_dl);
+	//terminate;
 }
 else
 {
-	secretbonus -= 100;
+	int secretbonus_temp=secretbonus;
+	if (secretbonus <= secretbonus_unit)
+		secretbonus = 0;
+	else
+		secretbonus -= secretbonus_unit;
 	hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
-	score += 100;
+	score += min(secretbonus_unit,secretbonus_temp);
 	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
 }
-delay(1);
-Restart;
 }
-      

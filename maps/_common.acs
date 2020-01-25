@@ -99,4 +99,20 @@ script 900 OPEN
 		inDeepWater[i] = false;
 		onWaterSurface[i] = false;
 	}
-}  
+}
+
+// useful functions (by tiszaszaki)
+
+function int min(int a, int b)
+{
+	int res=b;
+	if (a < b) res = a;
+	return res;
+}
+
+function int max(int a, int b)
+{
+	int res=b;
+	if (a > b) res = a;
+	return res;
+}
