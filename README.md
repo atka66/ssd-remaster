@@ -184,15 +184,15 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 #### Bonus Levels:
 
-##### (MAP31)
+##### Bonus Stage 1 (MAP31)
 
-##### (MAP32)
+##### Bonus Stage 2 (MAP32)
 
-##### (MAP33)
+##### Bonus Stage 3 (MAP33)
 
-##### (MAP34)
+##### Bonus Stage 4 (MAP34)
 
-##### (MAP35)
+##### Bonus Stage 5 (MAP35)
 
 ### Other
 
