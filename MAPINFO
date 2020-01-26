@@ -1,6 +1,7 @@
 map MAP01 "Sunset Island Zone - Act 1"
 levelnum 1
 next MAP02
+secretnext MAP31
 sky1 SKY01 0
 sky2 SKY02 0
 cluster 8
@@ -12,6 +13,7 @@ airsupply 15
 map MAP02 "Sunset Island Zone - Act 2"
 levelnum 2
 next MAP03
+secretnext MAP31
 sky1 SKY01 0
 cluster 8
 evenlighting
@@ -23,6 +25,7 @@ music zone01a2
 map MAP03 "Sunset Forest Zone - Act 1"
 levelnum 3
 next MAP04
+secretnext MAP31
 sky1 SKY02 0
 cluster 8
 evenlighting
@@ -34,6 +37,7 @@ music zone02a1
 map MAP04 "Sunset Forest Zone - Act 2"
 levelnum 4
 next MAP05
+secretnext MAP31
 sky1 SKY02 0
 cluster 8
 evenlighting
@@ -45,6 +49,7 @@ music zone02a2
 map MAP05 "Skull Temple Zone - Act 1"
 levelnum 5
 next MAP06
+secretnext MAP31
 sky1 SKY02 0
 cluster 8
 evenlighting
@@ -56,6 +61,7 @@ music zone03a1
 map MAP06 "Skull Temple Zone - Act 2"
 levelnum 6
 next MAP07
+secretnext MAP32
 sky1 SKY02 0
 cluster 8
 evenlighting
@@ -67,6 +73,7 @@ music zone03a2
 map MAP07 "Nightmare Zone - Act 1"
 levelnum 7
 next MAP08
+secretnext MAP32
 sky1 SKY03 0
 cluster 8
 evenlighting
@@ -79,6 +86,7 @@ music zone04a1
 map MAP08 "Nightmare Zone - Act 2"
 levelnum 8
 next MAP09
+secretnext MAP32
 sky1 SKY03 0
 cluster 8
 evenlighting
@@ -90,6 +98,7 @@ music zone04a2
 map MAP09 "Forest Fortress Zone - Act 1"
 levelnum 9
 next MAP10
+secretnext MAP32
 sky1 SKY03 0
 cluster 8
 evenlighting
@@ -101,6 +110,7 @@ music zone05a1
 map MAP10 "Forest Fortress Zone - Act 2"
 levelnum 10
 next MAP11
+secretnext MAP32
 sky1 SKY03 0
 cluster 8
 evenlighting
@@ -112,6 +122,7 @@ music zone05a2
 map MAP11 "Active Volcano Zone - Act 1"
 levelnum 11
 next MAP12
+secretnext MAP33
 sky1 SKY03 0
 cluster 8
 evenlighting
@@ -123,6 +134,7 @@ music zone06a1
 map MAP12 "Active Volcano Zone - Act 2"
 levelnum 12
 next MAP13
+secretnext MAP33
 sky1 SKY03B 0
 cluster 8
 evenlighting
@@ -134,6 +146,7 @@ music zone06a2
 map MAP13 "Ocean City Zone - Act 1"
 levelnum 13
 next MAP14
+secretnext MAP33
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -145,6 +158,7 @@ music zone07a1
 map MAP14 "Ocean City Zone - Act 2"
 levelnum 14
 next MAP15
+secretnext MAP33
 sky1 SKY05 0
 sky2 SKY06 0
 cluster 8
@@ -158,6 +172,7 @@ music zone07a2
 map MAP15 "Crystal Palace Zone - Act 1"
 levelnum 15
 next MAP16
+secretnext MAP33
 sky1 SKY06 0
 sky2 SKY07 0
 cluster 8
@@ -170,6 +185,7 @@ music zone08a1
 map MAP16 "Crystal Palace Zone - Act 2"
 levelnum 16
 next MAP17
+secretnext MAP34
 sky1 SKY07 0
 sky2 SKY06 0
 cluster 8
@@ -182,6 +198,7 @@ music zone08a2
 map MAP17 "Nautical Mines Zone - Act 1"
 levelnum 17
 next MAP18
+secretnext MAP34
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -193,6 +210,7 @@ music zone09a1
 map MAP18 "Nautical Mines Zone - Act 2"
 levelnum 18
 next MAP19
+secretnext MAP34
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -204,6 +222,7 @@ music zone09a2
 map MAP19 "Steel Works Zone - Act 1"
 levelnum 19
 next MAP20
+secretnext MAP34
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -215,6 +234,7 @@ music zone10a1
 map MAP20 "Steel Works Zone - Act 2"
 levelnum 20
 next MAP21
+secretnext MAP34
 sky1 BRICK19 0
 cluster 8
 evenlighting
@@ -226,6 +246,7 @@ music zone10a2
 map MAP21 "Industrial Zone - Act 1"
 levelnum 21
 next MAP22
+secretnext MAP35
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -237,6 +258,7 @@ music zone11a1
 map MAP22 "Industrial Zone - Act 2"
 levelnum 22
 next MAP23
+secretnext MAP35
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -248,6 +270,7 @@ music zone11a2
 map MAP23 "Sky City Zone - Act 1"
 levelnum 23
 next MAP24
+secretnext MAP35
 sky1 SKY08 0
 cluster 8
 evenlighting
@@ -259,6 +282,7 @@ music zone12a1
 map MAP24 "Sky City Zone - Act 2"
 levelnum 24
 next MAP25
+secretnext MAP35
 sky1 SKY08 0
 cluster 8
 evenlighting
@@ -270,6 +294,7 @@ music zone12a2
 map MAP25 "Space Chase Zone - Act 1"
 levelnum 25
 next MAP26
+secretnext MAP35
 sky1 SKY09 0
 cluster 8
 evenlighting
@@ -337,6 +362,8 @@ music zone15a2
 
 map MAP31 "Bonus Stage 1"
 levelnum 31
+next MAP06
+secretnext MAP32
 sky1 SKY11 0
 cluster 8
 evenlighting
@@ -347,6 +374,8 @@ music z_bonus
 
 map MAP32 "Bonus Stage 2"
 levelnum 32
+next MAP11
+secretnext MAP33
 sky1 SKY12 0
 cluster 8
 evenlighting
@@ -357,6 +386,8 @@ music z_bonus
 
 map MAP33 "Bonus Stage 3"
 levelnum 33
+next MAP16
+secretnext MAP34
 sky1 SKY13 0
 cluster 8
 evenlighting
@@ -367,6 +398,8 @@ music z_bonus
 
 map MAP34 "Bonus Stage 4"
 levelnum 34
+next MAP21
+secretnext MAP35
 sky1 SKY04 0
 cluster 8
 evenlighting
@@ -377,6 +410,7 @@ music z_bonus
 
 map MAP35 "Bonus Stage 5"
 levelnum 35
+next MAP26
 sky1 SKY09 0
 cluster 8
 evenlighting
