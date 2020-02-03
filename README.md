@@ -81,6 +81,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 2 (MAP06)
 
 * [ ] Solve sound sequence activation issue
+* [ ] Fix collapsing bridge using advanced ACS mechanism.
 
 #### Zone 4: Nightmare Zone
 
@@ -95,6 +96,11 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 #### Zone 5: Forest Fortress Zone
 
 ##### Act 1 (MAP09)
+
+* [✔] Solve sound sequence activation issue
+* [✔] Fix deep water (sludge) in sewers: use 3D floors, fix ACS scripts.
+* [ ] Fix puzzles using Random ACS function: block and tackle room, reveal yellow keycard, causeway.
+* [ ] Lava pits use 3D floors.
 
 ##### Act 2 (MAP10)
 
