@@ -39,7 +39,7 @@ delay(1);
 Restart;
 }
 
-script 400 (void)					// time display
+script 400 (int skipbonus)					// time display
 
 {
 setfont ("BigFont");
@@ -59,7 +59,7 @@ if(secs > 59)
     hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 }
 
-if(timebonus!=0)
+if((!skipbonus) && (timebonus!=0))
 {
 	if(timebonus < timebonus_unit_down)
 	{

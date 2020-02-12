@@ -35,6 +35,7 @@ bool onWaterSurface[128];
 
 #define T_PLASMABOLT2 206
 
+#define T_SPHERE 189
 #define T_RING 167
 
 // deep water effect scripts (by tiszaszaki)
