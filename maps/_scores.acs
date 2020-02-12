@@ -7,7 +7,7 @@ int secretcount;
 int killtarget;
 int mins;
 int secs;
-int score;
+global int 1:score;
 int timebonus_unit_down = 50;
 int timebonus_unit = 1000;
 int timebonus = 100000;
