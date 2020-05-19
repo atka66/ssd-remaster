@@ -99,12 +99,13 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [✔] Solve sound sequence activation issue
 * [✔] Fix deep water (sludge) in sewers: use 3D floors, fix ACS scripts.
-* [ ] Fix puzzles using Random ACS function: block and tackle room, reveal yellow keycard, causeway.
+* [ ] More fixes for sludge: better texture replacement management.
+* [ ] Fix puzzles using Random ACS function: block and tackle room (✔), reveal yellow keycard (✔), causeway ( ).
 * [ ] Lava pits use 3D floors.
 
 ##### Act 2 (MAP10)
 
-* [✔] Fix still crossbows using 3D floors
+* [✔] Fix still crossbows (i.e. ballistas) using 3D floors
 * [✔] Fix huts roof using 3D floors
 
 #### Zone 6: Active Volcano Zone
