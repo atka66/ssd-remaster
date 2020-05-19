@@ -88,6 +88,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP07)
 
 * [ ] Solve sound sequence activation issue
+* [ ] Issue in boss sequence: projected monsters fail to pass through pit ledge (only affects GZDoom, not Zandronum)
 
 ##### Act 2 (MAP08)
 
