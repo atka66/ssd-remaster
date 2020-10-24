@@ -1,3 +1,8 @@
+map TITLEMAP "Main Title"
+sky1 SKY01
+nointermission
+music d_dm2ttl
+
 map MAP01 "Sunset Island Zone - Act 1"
 levelnum 1
 next MAP02

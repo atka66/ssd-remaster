@@ -21,6 +21,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### Editing maps
 
+#### Custom Title Map (TODO: more tasks)
+
 #### Zone 1: Sunset Island Zone
 
 ##### Act 1 (MAP01)
