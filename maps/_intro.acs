@@ -695,6 +695,9 @@ Thing_SetTranslation (247, -1);
 script 222 (void)					// skip intro
 
 {
+if (skipped_intro==0) Log(s:"Skipping main intro sequence...");
+if (skipped_intro==1) Log(s:"Skipping welcome intro sequence...");
+if (skipped_intro==2) Log(s:"There is no cutscene to skip.");
 if (skipped_intro<1) 
 {
 for (int s = 101; s <= 110; ++s)
