@@ -165,8 +165,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP23)
 
-* [ ] Solve sound sequence activation issue (using Sector Action triggers)
-* [ ] Replace 3D midtex bridges (and other platforms) using 3D floors.
+* [✔] Solve sound sequence activation issue (using Sector Action triggers)
+* [ ] Replace 3D midtex bridges (and other platforms) using 3D floors
+* [ ] Boss platform may have checkerboard pattern when transforming to 3D floor
+* [ ] Use unbreakable glass windows for gatehouses
 
 ##### Act 2 (MAP24)
 
