@@ -1,7 +1,9 @@
 map TITLEMAP "Main Title"
-sky1 SKY01
+sky1 SKY01 0
+sky2 SKY02 0
+cluster 8
+evenlighting
 nointermission
-music d_dm2ttl
 
 map MAP01 "Sunset Island Zone - Act 1"
 levelnum 1
