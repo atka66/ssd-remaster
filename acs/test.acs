@@ -1,6 +1,0 @@
-#include "zcommon.acs"
-
-script 123 OPEN
-{
-	DamageThing(40);
-}
