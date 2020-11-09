@@ -13,7 +13,6 @@ int timebonus_unit = 1000;
 int timebonus = 100000;
 int killbonus_unit = 250;
 int secretbonus_unit = 250;
-int zone;
 int rundown_dl=2;
 
 script 231 (int killtarget2,int killcount2)					// killtarget checker

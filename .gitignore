@@ -2,3 +2,4 @@ ssd-remaster.pk3
 maps/*.dbs
 maps/*.backup*
 maps/*.bak
+acs/compile.bat
