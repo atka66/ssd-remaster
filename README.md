@@ -63,12 +63,16 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix bottom of tree huts
 * [✔] Create gradient lighting in huts similar to MAP02
 * [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
+* [✔] Highlight pathways in automap using 3D floor
 
 ##### Act 2 (MAP04)
 
 * [✔] Fix outpost building upstairs using 3D floors
 * [✔] Set lighting of outpost downstairs to darker
 * [ ] Improve anti-aircraft gun near main outpost
+* [✔] Fix issue: anti-aircraft gun approaching action ruined rails on nearby stairs
+* [✔] Highlight road strips in automap using 3D floor
+* [ ] Transform swamp using 3D floors and apply friction effect on them
 
 #### Zone 3: Skull Temple Zone
 
@@ -76,14 +80,15 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 * [✔] Some doors don't work because thing (de)activation freezes. Temporarily removed action special from affected linedefs
 * [✔] Solve sound sequence activation issue (using Sector Action triggers)
-* [ ] Fix bridges using 3D floors
+* [✔] Fix bridges using 3D floors
 * [ ] Fix entrance stairway by increasing sector height
-* [ ] Reduce 3D platform objects.
+* [ ] Reduce 3D platform objects
 
 ##### Act 2 (MAP06)
 
 * [ ] Solve sound sequence activation issue
-* [ ] Fix collapsing bridge using advanced ACS mechanism.
+* [ ] Fix collapsing bridge using advanced ACS mechanism
+* [✔] In four-switch puzzle, wrong switch can be picked randomly (actually, from two switches)
 
 #### Zone 4: Nightmare Zone
 
@@ -101,10 +106,10 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP09)
 
 * [✔] Solve sound sequence activation issue
-* [✔] Fix deep water (sludge) in sewers: use 3D floors, fix ACS scripts.
-* [ ] More fixes for sludge: better texture replacement management.
-* [ ] Fix puzzles using Random ACS function: block and tackle room (✔), reveal yellow keycard (✔), causeway ( ).
-* [ ] Lava pits use 3D floors.
+* [✔] Fix deep water (sludge) in sewers: use 3D floors, fix ACS scripts
+* [ ] More fixes for sludge: better texture replacement management
+* [ ] Fix puzzles using Random ACS function: block and tackle room (✔), reveal yellow keycard (✔), causeway ( )
+* [✔] Lava pits use 3D floors
 
 ##### Act 2 (MAP10)
 
@@ -128,13 +133,15 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 2 (MAP12)
 
 * [ ] Solve sound sequence activation issue (using Sector Action triggers)
-* [ ] Fix huts roof using 3D floors
+* [✔] Fix huts roof using 3D floors
+* [ ] Fix bridges using 3D floors
+* [ ] Fix collapsing bridge using advanced ACS mechanism
 
 #### Zone 8: Crystal Palace Zone
 
 ##### Act 1 (MAP15)
 
-* [✔] Use static line portals instead of line teleporters for better connection between palace levels
+* [✔] Use static line portals between palace levels instead of line teleporters for better connection
 
 ##### Act 2 (MAP16)
 
@@ -165,10 +172,12 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP23)
 
+* [✔] Transform all outposts using 3D floor
 * [✔] Solve sound sequence activation issue (using Sector Action triggers)
-* [ ] Replace 3D midtex bridges (and other platforms) using 3D floors
+* [✔] Replace 3D midtex bridges (and other platforms) using 3D floors
 * [ ] Boss platform may have checkerboard pattern when transforming to 3D floor
-* [ ] Use unbreakable glass windows for gatehouses
+* [✔] Use unbreakable glass windows for gatehouses
+* [✔] Street lamps use 3D floor
 
 ##### Act 2 (MAP24)
 
@@ -208,8 +217,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### Other
 
-* [ ] Some keys (skulls) are renamed in DECORATE. ACS of all maps should be checked for key dropping errors.
-* [ ] Consider connecting levels using smarter intermission mechanism instead of direct teleporting.
+* [ ] Some keys (skulls) are renamed in DECORATE. ACS of all maps should be checked for key dropping errors
+* [ ] Consider connecting levels using smarter intermission mechanism instead of direct teleporting
 * [✔] Remaster Railgun sprites
 * [✔] Consider using 3D model for MovingPlatform actors along with sprite
 * [ ] New texture for MovingPlatform 3D model
