@@ -1,5 +1,3 @@
-//#include "zcommon.acs"
-
 int killbonus;
 int killcount;
 int secretbonus;
