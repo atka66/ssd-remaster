@@ -2,6 +2,13 @@ int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
 
+bool tiszaszaki_dw_act_below_surface;
+bool tiszaszaki_dw_act_above_surface;
+
+int script210_wtag, script210_wtid;
+
+int acs904_ang_n=8;
+
 // spawn IDs (by tiszaszaki)
 
 #define T_GREENARMOUR T_GREENARMOR
@@ -42,6 +49,8 @@ bool onWaterSurface[128];
 
 // deep water effect scripts (by tiszaszaki)
 
+// splashing
+
 script "tiszaszaki_deepwater_in" (int i) // in
 {
     if (!inDeepWater[i])
@@ -64,8 +73,11 @@ script 210 (int i, int wtag, int wtid)
 {
     if (!onWaterSurface[i])
     {
+        script210_wtag = wtag;
+        script210_wtid = wtid;
+
         onWaterSurface[i]=true;
-        ACS_NamedExecute("tiszaszaki_deepwater_do", 0, i,wtag,wtid);
+        ACS_NamedExecute("tiszaszaki_deepwater_do_splash", 0, i,wtag,wtid);
     }
 }
 
@@ -77,26 +89,84 @@ script 211 (int i)
     }
 }
 
-script "tiszaszaki_deepwater_do" (int i, int wtag, int wtid)
+// thing activation (e.g. ambients)
+
+script 212 (int i, int tid, int active) // in both ways
+{
+    tiszaszaki_dw_act_below_surface = true;
+    tiszaszaki_dw_act_above_surface = true;
+
+    while (!onWaterSurface[i]) Delay(1);
+    ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+}
+
+script 213 (int i, int tid, int active) // downward only
+{
+    tiszaszaki_dw_act_below_surface = true;
+    tiszaszaki_dw_act_above_surface = false;
+
+    while (!onWaterSurface[i]) Delay(1);
+    ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+}
+
+function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid)
+{
+    int x=GetActorX(wtid);
+    int y=GetActorX(wtid);
+    int sfloor=GetSectorFloorZ(wtag, x,y);
+    int playerEyeHeight=(GetActorZ(activator) - sfloor) + GetActorViewHeight(activator);
+    int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
+    int res=0;
+
+    if (playerEyeHeight < waterSurfaceHeight) res = -1;
+    if (playerEyeHeight > waterSurfaceHeight) res = 1;
+
+    return res;
+}
+
+script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 {
     while (onWaterSurface[i])
     {
-        int x=GetActorX(wtid);
-        int y=GetActorX(wtid);
-        int sfloor=GetSectorFloorZ(wtag, x,y);
-        int playerEyeHeight=(GetActorZ(0) - sfloor) + GetActorViewHeight(0); // ( - GetActorFloorZ(0)) +
-        int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
+        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid);
         int dl=2;
-        if (playerEyeHeight <= waterSurfaceHeight)
+        if (checkVal < 0)
             ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,0,0);
-        else
+        if (checkVal > 0)
             ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,0,0);
-        //Log(d:playerEyeHeight >> 16, s:"<=", d:waterSurfaceHeight >> 16, s:"?");
         Delay(dl);
     }
 }
 
-int acs904_ang_n=8;
+script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
+{
+    int wtag=script210_wtag;
+    int wtid=script210_wtid;
+
+    bool active=false;
+    if (active_i != 0) active=true;
+
+    while (onWaterSurface[i])
+    {
+        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid);
+        int dl=2;
+        if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
+        {
+            if (active)
+                Thing_Activate(tid);
+            else
+                Thing_Deactivate(tid);
+        }
+        if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
+        {
+            if (active)
+                Thing_Deactivate(tid);
+            else
+                Thing_Activate(tid);
+        }
+        Delay(dl);
+    }
+}
 
 script 904 (int target_tid, int target_pitch, int freeze_activator) // generic face to actor
 {

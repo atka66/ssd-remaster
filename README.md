@@ -64,6 +64,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Create gradient lighting in huts similar to MAP02
 * [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
 * [✔] Highlight pathways in automap using 3D floor
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 ##### Act 2 (MAP04)
 
@@ -72,7 +73,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [ ] Improve anti-aircraft gun near main outpost
 * [✔] Fix issue: anti-aircraft gun approaching action ruined rails on nearby stairs
 * [✔] Highlight road strips in automap using 3D floor
-* [ ] Transform swamp using 3D floors and apply friction effect on them
+* [✔] Transform swamp using 3D floors and apply friction effect on them
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 #### Zone 3: Skull Temple Zone
 
@@ -81,14 +83,17 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Some doors don't work because thing (de)activation freezes. Temporarily removed action special from affected linedefs
 * [✔] Solve sound sequence activation issue (using Sector Action triggers)
 * [✔] Fix bridges using 3D floors
-* [ ] Fix entrance stairway by increasing sector height
+* [✔] Fix entrance stairway by increasing sector height
 * [ ] Reduce 3D platform objects
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 ##### Act 2 (MAP06)
 
-* [ ] Solve sound sequence activation issue
-* [ ] Fix collapsing bridge using advanced ACS mechanism
+* [✔] Solve sound sequence activation issue
+* [ ] Some sound activation are triggered by water surfaces. Need additional ACS scripts to solve this issue
+* [ ] Fix collapsing bridge using 3D floors and advanced ACS mechanism
 * [✔] In four-switch puzzle, wrong switch can be picked randomly (actually, from two switches)
+* [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 #### Zone 4: Nightmare Zone
 
