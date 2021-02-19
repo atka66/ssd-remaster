@@ -71,7 +71,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix outpost building upstairs using 3D floors
 * [✔] Set lighting of outpost downstairs to darker
 * [ ] Improve anti-aircraft gun near main outpost
-* [✔] Fix issue: anti-aircraft gun approaching action ruined rails on nearby stairs
+* [✔] Fix issue: anti-aircraft gun approaching action ruined railing on nearby stairs
 * [✔] Highlight road strips in automap using 3D floor
 * [✔] Transform swamp using 3D floors and apply friction effect on them
 * [✔] Water splash sound effects issue should be solved by additional ACS scripts
@@ -84,14 +84,14 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Solve sound sequence activation issue (using Sector Action triggers)
 * [✔] Fix bridges using 3D floors
 * [✔] Fix entrance stairway by increasing sector height
-* [ ] Reduce 3D platform objects
+* [✔] Issue: 3D platform objects stuck
 * [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
 ##### Act 2 (MAP06)
 
 * [✔] Solve sound sequence activation issue
 * [ ] Some sound activation are triggered by water surfaces. Need additional ACS scripts to solve this issue
-* [ ] Fix collapsing bridge using 3D floors and advanced ACS mechanism
+* [ ] Fix collapsing bridge using 3D floors and advanced ACS mechanism (collapse by pieces)
 * [✔] In four-switch puzzle, wrong switch can be picked randomly (actually, from two switches)
 * [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
@@ -100,7 +100,8 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 ##### Act 1 (MAP07)
 
 * [ ] Solve sound sequence activation issue
-* [ ] Issue in boss sequence: projected monsters fail to pass through pit ledge (only affects GZDoom, not Zandronum)
+* [✔] Issue in boss sequence: projected monsters fail to pass through pit ledge (only affects GZDoom, not Zandronum)
+	Solved by tiszaszaki: temporarily created elevated arena for boss battle (two teleporters placed for two-way access)
 
 ##### Act 2 (MAP08)
 
