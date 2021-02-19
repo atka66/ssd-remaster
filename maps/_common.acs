@@ -210,7 +210,7 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
 
 script "tiszaszaki_common" OPEN
 {
-	script212_log = true;
+	script212_log = false;
 
 	script904_ang_n = 8;
 
