@@ -7,7 +7,9 @@ bool tiszaszaki_dw_act_above_surface;
 
 int script210_wtag, script210_wtid;
 
-int acs904_ang_n=8;
+bool script212_log;
+
+int script904_ang_n;
 
 // spawn IDs (by tiszaszaki)
 
@@ -148,60 +150,70 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
     while (onWaterSurface[i])
     {
+        bool activated=!GetActorProperty(tid, APROP_Dormant);
         int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid);
         int dl=2;
         if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
         {
-            if (active)
+            if (!activated && active)
+            {
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
                 Thing_Activate(tid);
-            else
+            }
+            if (activated && !active)
+            {
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
                 Thing_Deactivate(tid);
+            }
         }
         if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
         {
-            if (active)
+            if (activated && active)
+            {
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
                 Thing_Deactivate(tid);
-            else
+            }
+            if (!activated && !active)
+            {
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
                 Thing_Activate(tid);
+            }
         }
         Delay(dl);
     }
 }
 
-script 904 (int target_tid, int target_pitch, int freeze_activator) // generic face to actor
+script 904 (int target_tid, int target_pitch) // generic face to actor
 {
         int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
         int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
         int ang_d=ang1-ang0, pit_d=pit1-pit0;
-        int i=0, ang_n=acs904_ang_n;
-
-	bool freeze=false;
-	if (freeze_activator != 0) freeze=true;
-
-        if (freeze) setplayerproperty (0, TRUE, PROP_TOTALLYFROZEN);
-        delay(15);
+        int i=0, ang_n=script904_ang_n;
+	int dl=1;
 
         //Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
         //Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
         
         for (i=0;i<ang_n;i++)
         {
-            int i_fixed=fixeddiv((i+1) << 16,ang_n << 16);
-            int ang=ang0 + fixedmul(ang_d,i_fixed), pit=pit0 + fixedmul(pit_d,i_fixed);
+            int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
+            int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
 
             //Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
 
-            setactorangle(0, ang);
-            setactorpitch(0, pit);
+            SetActorAngle(0, ang);
+            SetActorPitch(0, pit);
 
-            delay(1);
+            Delay(dl);
         }
-
-        if (freeze) setplayerproperty (0, FALSE, PROP_TOTALLYFROZEN);
 }
 
 script "tiszaszaki_common" OPEN
 {
+	script212_log = true;
+
+	script904_ang_n = 8;
+
 	for (int i=0;i<deepWaterN;i++)
 	{
 		inDeepWater[i] = false;
