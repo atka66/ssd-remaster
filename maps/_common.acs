@@ -114,7 +114,7 @@ script 213 (int i, int tid, int active) // downward only
 function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid)
 {
     int x=GetActorX(wtid);
-    int y=GetActorX(wtid);
+    int y=GetActorY(wtid);
     int sfloor=GetSectorFloorZ(wtag, x,y);
     int playerEyeHeight=(GetActorZ(activator) - sfloor) + GetActorViewHeight(activator);
     int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
