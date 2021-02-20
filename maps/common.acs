@@ -1,3 +1,4 @@
+#library "common"
 #include "zcommon.acs"
 
 int zone;
@@ -7,41 +8,39 @@ bool onWaterSurface[128];
 
 // spawn IDs (by tiszaszaki)
 
-#define T_GREENARMOUR T_GREENARMOR
+#libdefine T_BOOM 161
+#libdefine T_ICEJET 223
+#libdefine T_FIREJET 224
+#libdefine T_MINE 20077
+#libdefine T_HEXENARROW 209
 
-#define T_BOOM 161
-#define T_ICEJET 223
-#define T_FIREJET 224
-#define T_MINE 20077
-#define T_HEXENARROW 209
+#libdefine T_REIVERFIREBALL 207
+#libdefine T_REIVERFIREBALL2 212
+#libdefine T_IMPFIREBALL2 201
+#libdefine T_CACOFIREBALL 126
+#libdefine T_CACOFIREBALL2 202
+#libdefine T_ARACHNOTRONPLASMA2 205
+#libdefine T_MANCUBUSFIREBALL 204
+#libdefine T_BARONFIREBALL 203
+#libdefine T_BLOODSCOURGESHOT 208
 
-#define T_REIVERFIREBALL 207
-#define T_REIVERFIREBALL2 212
-#define T_IMPFIREBALL2 201
-#define T_CACOFIREBALL 126
-#define T_CACOFIREBALL2 202
-#define T_ARACHNOTRONPLASMA2 205
-#define T_MANCUBUSFIREBALL 204
-#define T_BARONFIREBALL 203
-#define T_BLOODSCOURGESHOT 208
+#libdefine T_BANBALL 215
+#libdefine T_BANIPBALL 216
 
-#define T_BANBALL 215
-#define T_BANIPBALL 216
+#libdefine T_ENHANCEDDEMON 30017
+#libdefine T_ENHANCEDCACODEMON 30020
+#libdefine T_ENHANCEDIMP 30015
+#libdefine T_MINICYBERDEMON 23
 
-#define T_ENHANCEDDEMON 30017
-#define T_ENHANCEDCACODEMON 30020
-#define T_ENHANCEDIMP 30015
-#define T_MINICYBERDEMON 23
+#libdefine T_FIREBOMB 217
+#libdefine T_MACE2 211
+#libdefine T_ROCKET2 116
+#libdefine T_TRACER2 9
 
-#define T_FIREBOMB 217
-#define T_MACE2 211
-#define T_ROCKET2 116
-#define T_TRACER2 9
+#libdefine T_PLASMABOLT2 206
 
-#define T_PLASMABOLT2 206
-
-#define T_SPHERE 189
-#define T_RING 167
+#libdefine T_SPHERE 189
+#libdefine T_RING 167
 
 // deep water effect scripts (by tiszaszaki)
 
@@ -481,7 +480,7 @@ int pack;
 int health;
 int armour;
 
-#define T_BAZOOKA 170
+#libdefine T_BAZOOKA 170
 
 script 233 ENTER					// player TID changer
 
@@ -948,4 +947,151 @@ function int max(int a, int b)
 	int res=b;
 	if (a > b) res = a;
 	return res;
+}
+
+//// SCORES.ACS
+
+int killbonus;
+int killcount;
+int secretbonus;
+int secretcount;
+int killtarget;
+int mins;
+int secs;
+global int 1:score;
+int timebonus_unit_down = 50;
+int timebonus_unit = 1000;
+int timebonus = 100000;
+int killbonus_unit = 250;
+int secretbonus_unit = 250;
+int rundown_dl=2;
+
+script 231 (int killtarget2,int killcount2)					// killtarget checker
+
+{
+print(d:killtarget2);
+delay(105);
+print(d:killcount2);
+}
+
+script 232 (int killtarget2)					// killtarget
+
+{
+killtarget2++;
+}
+
+script 300 (void)						// score display
+
+{
+setfont ("BigFont");
+hudmessage (s:"score:    \cc",d:score; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+delay(1);
+Restart;
+}
+
+script 400 (int skipbonus)					// time display
+
+{
+setfont ("BigFont");
+secs += 1;
+if(secs < 10)
+{
+    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+else
+{
+    hudmessage (s:"time:    \cb",d:mins,s:":",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+if(secs > 59)
+{
+    mins += 1;
+    secs = 0;
+    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+}
+
+if((!skipbonus) && (timebonus!=0))
+{
+	if(timebonus < timebonus_unit_down)
+	{
+		timebonus = 0;
+	}
+	else
+	{
+		timebonus -= timebonus_unit_down;
+	}
+}
+delay(35);
+Restart;
+}
+
+script 500 (void)					// time bonus rundown
+
+{
+if(timebonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(rundown_dl);
+	//terminate;
+}
+else
+{
+	int timebonus_temp=timebonus;
+	if(timebonus <= timebonus_unit)
+		timebonus = 0;
+	else
+		timebonus -= timebonus_unit;
+	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	score += min(timebonus_unit,timebonus_temp);
+	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
+}
+}
+
+script 600 (void)					// kill bonus rundown
+
+{
+if(killbonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(rundown_dl);
+	//terminate;
+}
+else
+{
+	int killbonus_temp=killbonus;
+	if (killbonus <= killbonus_unit)
+		killbonus = 0;
+	else
+		killbonus -= killbonus_unit;
+	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+	score += min(killbonus_unit,killbonus_temp);
+	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
+}
+}
+
+script 700 (void)					// secret bonus rundown
+
+{
+if(secretbonus == 0)
+{
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	delay(rundown_dl);
+	//terminate;
+}
+else
+{
+	int secretbonus_temp=secretbonus;
+	if (secretbonus <= secretbonus_unit)
+		secretbonus = 0;
+	else
+		secretbonus -= secretbonus_unit;
+	hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
+	score += min(secretbonus_unit,secretbonus_temp);
+	activatorsound ("button1", 127);
+	delay(rundown_dl);
+	Restart;
+}
 }

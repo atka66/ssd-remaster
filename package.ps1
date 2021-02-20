@@ -1,6 +1,6 @@
 $zip = "ssd-remaster.zip"
 $pk3 = "ssd-remaster.pk3"
-$source = "acs/", "flats/", "graphics/", "maps/", "models/", "music/", "sounds/", "sprites/", "textures/", "ANIMDEFS", "DECALDEF", "DECORATE", "DEHACKED", "DOOMDEFS", "GAMEINFO", "KEYCONF", "LOCKDEFS", "MAPINFO", "MODELDEF", "PNAMES", "SNDINFO", "SNDSEQ", "STARS", "TEXTURE1"
+$source = "acs/", "flats/", "graphics/", "maps/", "models/", "music/", "sounds/", "sprites/", "textures/", "ANIMDEFS", "DECALDEF", "DECORATE", "DEHACKED", "DOOMDEFS", "GAMEINFO", "KEYCONF", "LOADACS", "LOCKDEFS", "MAPINFO", "MODELDEF", "PNAMES", "SNDINFO", "SNDSEQ", "STARS", "TEXTURE1"
 
 if (Test-Path $zip) {
   Remove-Item $zip
@@ -11,7 +11,6 @@ if (Test-Path $pk3) {
 
 New-Item -Path "mapstemp/" -ItemType Directory -Force
 
-Move-Item "maps/*.acs" -Destination "mapstemp/" -Force
 Move-Item "maps/*.dbs" -Destination "mapstemp/" -Force
 Move-Item "maps/*.wad.backup*" -Destination "mapstemp/" -Force
 
