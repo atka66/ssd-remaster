@@ -2,6 +2,8 @@
 #include "zcommon.acs"
 
 int zone;
+bool ready;
+
 int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
@@ -212,21 +214,56 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
         }
 }
 
-script "tiszaszaki_common" OPEN
+function int tiszaszaki_levelinfo(void)
 {
-	int level_num_temp=GetLevelInfo(LEVELINFO_LEVELNUM);
+	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
+
+	if ((res >= 1) && (res <= 30))
+		zone = (res - 1) / 2 + 1;
+	else
+		zone = 0;
+
+	return res;
+}
+
+script "tiszaszaki_common_init" OPEN
+{
+	int level_num_temp=tiszaszaki_levelinfo();
 
 	script212_log = false;
 
 	script904_ang_n = 8;
 
-	Log(s:"Entering level ",d:level_num_temp,s:"...");
+	Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
 
 	for (int i=0;i<deepWaterN;i++)
 	{
 		inDeepWater[i] = false;
 		onWaterSurface[i] = false;
 	}
+
+	// story levels
+	if ((level_num_temp >=  1) && (level_num_temp <= 30))
+	{
+		
+	}
+	// bonus levels
+	if ((level_num_temp >= 31) && (level_num_temp <= 35))
+	{
+		setmusic ("z_bonus");
+		SetWeapon ("Fist");
+		TakeInventory ("PowerInvisibility", 1);
+		TakeInventory ("PowerIronFeet", 1);
+		SetPlayerProperty (1, 0, 5);
+		SetActorProperty(0, APROP_Speed, 65536);
+	}
+
+	ready = true;
+}
+
+script "tiszaszaki_common_final" UNLOADING
+{
+	ready = false;
 }
 
 //// translations
