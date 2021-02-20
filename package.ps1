@@ -11,10 +11,10 @@ if (Test-Path $pk3) {
 
 New-Item -Path "mapstemp/" -ItemType Directory -Force
 
-Move-Item "maps/compile.bat" -Destination "mapstemp/" -Force
-Move-Item "maps/compile.sh" -Destination "mapstemp/" -Force
-Move-Item "maps/*.dbs" -Destination "mapstemp/" -Force
-Move-Item "maps/*.wad.backup*" -Destination "mapstemp/" -Force
+Move-Item "maps/compile.bat" -Destination "mapstemp/" -Force -ErrorAction:Ignore
+Move-Item "maps/compile.sh" -Destination "mapstemp/" -Force -ErrorAction:Ignore
+Move-Item "maps/*.dbs" -Destination "mapstemp/" -Force -ErrorAction:Ignore
+Move-Item "maps/*.wad.backup*" -Destination "mapstemp/" -Force -ErrorAction:Ignore
 
 Compress-Archive -Path $source -DestinationPath $zip
 Rename-Item -Path $zip -NewName $pk3

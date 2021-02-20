@@ -2,7 +2,15 @@
 #include "zcommon.acs"
 
 int zone;
+
+int killbonus;
+int killcount;
+int secretbonus;
+int secretcount;
+int killtarget;
+
 bool ready;
+bool time_running;
 
 int deepWaterN = 128;
 bool inDeepWater[128];
@@ -245,7 +253,27 @@ script "tiszaszaki_common_init" OPEN
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
-		
+		killtarget = 0;
+
+		if (level_num_temp >= 2)
+		{
+			killcount = 0;
+			secretcount = 0;
+
+			TakeInventory ("BlueCard2", 1);
+			TakeInventory ("RedCard2", 1);
+			TakeInventory ("YellowCard2", 1);
+			TakeInventory ("GreenCard", 1);
+			TakeInventory ("PurpleCard", 1);
+			TakeInventory ("OrangeCard", 1);
+
+			TakeInventory ("PowerStrength", 1);
+			TakeInventory ("PowerInvisibility", 1);
+			TakeInventory ("PowerIronFeet", 1);
+
+			SetPlayerProperty (1, 0, 5);
+			SetActorProperty(0, APROP_Speed, 65536);
+		}
 	}
 	// bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
@@ -264,6 +292,7 @@ script "tiszaszaki_common_init" OPEN
 script "tiszaszaki_common_final" UNLOADING
 {
 	ready = false;
+	time_running = false;
 }
 
 //// translations
@@ -1110,11 +1139,6 @@ function int max(int a, int b)
 
 //// SCORES.ACS
 
-int killbonus;
-int killcount;
-int secretbonus;
-int secretcount;
-int killtarget;
 int mins;
 int secs;
 global int 1:score;
@@ -1151,6 +1175,9 @@ Restart;
 script 400 (int skipbonus)					// time display
 
 {
+time_running = true;
+while (time_running)
+{
 setfont ("BigFont");
 secs += 1;
 if(secs < 10)
@@ -1180,7 +1207,7 @@ if((!skipbonus) && (timebonus!=0))
 	}
 }
 delay(35);
-Restart;
+}
 }
 
 script 500 (void)					// time bonus rundown
