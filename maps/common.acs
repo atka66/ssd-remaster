@@ -4,6 +4,8 @@
 int zone;
 int act;
 
+int mins, secs;
+
 int killbonus;
 int killcount;
 int secretbonus;
@@ -262,6 +264,8 @@ script "tiszaszaki_common_init" OPEN
 	{
 		killtarget = 0;
 
+		mins = 0, secs = 0;
+
 		if (level_num_temp >= 2)
 		{
 			killcount = 0;
@@ -300,6 +304,12 @@ script "tiszaszaki_common_final" UNLOADING
 {
 	ready = false;
 	time_running = false;
+}
+
+script "tiszaszaki_common_return" REOPEN
+{
+	time_running = true;
+	ACS_Execute(400, 0, 0,0,0);
 }
 
 //// translations
@@ -1146,8 +1156,6 @@ function int max(int a, int b)
 
 //// SCORES.ACS
 
-int mins;
-int secs;
 global int 1:score;
 int timebonus_unit_down = 50;
 int timebonus_unit = 1000;
