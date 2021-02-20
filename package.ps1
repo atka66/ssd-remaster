@@ -11,6 +11,8 @@ if (Test-Path $pk3) {
 
 New-Item -Path "mapstemp/" -ItemType Directory -Force
 
+Move-Item "maps/compile.bat" -Destination "mapstemp/" -Force
+Move-Item "maps/compile.sh" -Destination "mapstemp/" -Force
 Move-Item "maps/*.dbs" -Destination "mapstemp/" -Force
 Move-Item "maps/*.wad.backup*" -Destination "mapstemp/" -Force
 
