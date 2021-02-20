@@ -2,6 +2,7 @@
 #include "zcommon.acs"
 
 int zone;
+int act;
 
 int killbonus;
 int killcount;
@@ -227,9 +228,15 @@ function int tiszaszaki_levelinfo(void)
 	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
 
 	if ((res >= 1) && (res <= 30))
+	{
 		zone = (res - 1) / 2 + 1;
+		act = (res - 1) % 2 + 1;
+	}
 	else
+	{
 		zone = 0;
+		act = 0;
+	}
 
 	return res;
 }
