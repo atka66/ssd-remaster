@@ -13,7 +13,26 @@ int secretcount;
 int killtarget;
 
 bool ready;
+bool show_hud;
 bool time_running;
+
+str zone_titles[15]={
+	"Sunset Island Zone"  , // zone  1
+	"Sunset Forest Zone"  , // zone  2
+	"Skull Temple Zone"   , // zone  3
+	"Nightmare Zone"      , // zone  4
+	"Forest Fortress Zone", // zone  5
+	"Active Volcano Zone" , // zone  6
+	"Ocean City Zone"     , // zone  7
+	"Crystal Palace Zone" , // zone  8
+	"Nautical Mines Zone" , // zone  9
+	"Steel Works Zone"    , // zone 10
+	"Industrial Zone"     , // zone 11
+	"Sky City Zone"       , // zone 12
+	"Space Chase Zone"    , // zone 13
+	"Doom Star Zone"      , // zone 14
+	"Final Battle Zone"   , // zone 15
+	};
 
 int deepWaterN = 128;
 bool inDeepWater[128];
@@ -251,7 +270,9 @@ script "tiszaszaki_common_init" OPEN
 
 	script904_ang_n = 8;
 
-	Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
+	show_hud = false;
+
+	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
 
 	for (int i=0;i<deepWaterN;i++)
 	{
@@ -298,6 +319,24 @@ script "tiszaszaki_common_init" OPEN
 	}
 
 	ready = true;
+
+	while (!show_hud) Delay(1);
+
+	// show title in story levels
+	if ((level_num_temp >=  1) && (level_num_temp <= 30))
+	{
+		str title_str=zone_titles[zone-1];
+		ACS_Execute (300, 0, 0, 0, 0);
+		setfont ("BigFont");
+		hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		delay(5);
+		hudmessage (s:title_str; 2, 0, CR_WHITE, 0.5, 0.46, 5.0, 0.01, 1.0);
+		delay(6);
+		hudmessage (s:"act   "; 2, 0, CR_BLUE, 0.5, 0.53, 4.83, 0.01, 1.0);
+		hudmessage (s:StrParam(s:"     ",d:act); 2, 0, CR_WHITE, 0.5, 0.53, 4.83, 0.01, 1.0);
+		delay(24);
+		ACS_Execute (400, 0, 0, 0, 0);
+	}
 }
 
 script "tiszaszaki_common_final" UNLOADING
