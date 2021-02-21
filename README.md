@@ -172,7 +172,12 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ##### Act 1 (MAP21)
 
+* [ ] Crashes due to VM execution
+* [ ] Improve teleport landing sequence: floating should be real actor movement rather than floor lowering
+
 ##### Act 2 (MAP22)
+
+* [ ] Crashes due to VM execution
 
 #### Zone 12: Sky City Zone
 
@@ -184,6 +189,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [ ] Boss platform may have checkerboard pattern when transforming to 3D floor
 * [✔] Use unbreakable glass windows for gatehouses
 * [✔] Street lamps use 3D floor
+* [ ] Improve teleport landing sequence: floating should be real actor movement rather than floor lowering
 
 ##### Act 2 (MAP24)
 
