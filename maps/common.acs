@@ -435,20 +435,44 @@ script "tiszaszaki_common_init" OPEN
 
 	while (!show_hud) Delay(1);
 
-	// show title in story levels
+	// show HUD in story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
 		str title_str=zone_titles[zone-1];
 		ACS_Execute (300, 0, 0, 0, 0);
 		setfont ("BigFont");
-		hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		hudmessage (s:"Time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 		delay(5);
 		hudmessage (s:title_str; 2, 0, CR_WHITE, 0.5, 0.46, 5.0, 0.01, 1.0);
 		delay(6);
-		hudmessage (s:"act   "; 2, 0, CR_BLUE, 0.5, 0.53, 4.83, 0.01, 1.0);
+		hudmessage (s:"Act   "; 2, 0, CR_BLUE, 0.5, 0.53, 4.83, 0.01, 1.0);
 		hudmessage (s:StrParam(s:"     ",d:act); 2, 0, CR_WHITE, 0.5, 0.53, 4.83, 0.01, 1.0);
 		delay(24);
 		ACS_Execute (400, 0, 0, 0, 0);
+	}
+	// show HUD in bonus levels
+	if ((level_num_temp >= 31) && (level_num_temp <= 35))
+	{
+		int bonus_lev_num=level_num_temp - 30;
+		str title_str_prefix="Bonus Stage";
+		//ACS_Execute (300, 0, 0, 0, 0); ?
+		setfont ("BigFont");
+		if ((level_num_temp >= 32) && (level_num_temp <= 33))
+		{
+			str time_str="Time:    \cb";
+
+			if (secs < 10)
+				time_str = StrParam(s:time_str,d:mins,s:":0",d:secs);
+			else
+				time_str = StrParam(s:time_str,d:mins,s:":",d:secs);
+
+			hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+
+			delay(5);
+		}
+		hudmessage (s:StrParam(s:title_str_prefix,s:"\cf ",d:bonus_lev_num); 2, 0, CR_WHITE, 0.5, 0.46, 3.0, 0.01, 1.0);
+		delay(6);
+
 	}
 }
 
@@ -1339,42 +1363,63 @@ delay(1);
 Restart;
 }
 
-script 400 (int skipbonus)					// time display
+script 400 (int skipbonus, int reverse_i)			// time display
 
 {
-time_running = true;
-while (time_running)
-{
-setfont ("BigFont");
-secs += 1;
-if(secs < 10)
-{
-    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
-}
-else
-{
-    hudmessage (s:"time:    \cb",d:mins,s:":",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
-}
-if(secs > 59)
-{
-    mins += 1;
-    secs = 0;
-    hudmessage (s:"time:    \cb",d:mins,s:":0",d:secs; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
-}
+	bool reverse=(reverse_i != 0);
 
-if((!skipbonus) && (timebonus!=0))
-{
-	if(timebonus < timebonus_unit_down)
+	time_running = true;
+
+	while (time_running)
 	{
-		timebonus = 0;
+		str time_str="Time:    \cb";
+
+		setfont ("BigFont");
+
+		if (reverse)
+			secs -= 1;
+		else
+			secs += 1;
+
+		if ((secs >= 0) && (secs <= 59))
+		{
+			if(secs < 10)
+				time_str = StrParam(s:time_str,d:mins,s:":0",d:secs);
+			else
+				time_str = StrParam(s:time_str,d:mins,s:":",d:secs);
+
+			hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		}
+
+		if(reverse && (mins == 0) && (secs == 0))
+			terminate;
+
+		if ((secs < 0) || (secs > 59))
+		{
+			if (reverse  && (secs <  0))
+			{
+				mins -= 1, secs = 59;
+				time_str = StrParam(s:time_str,d:mins,s:":",d:secs);
+			}
+			if (!reverse && (secs > 59))
+			{
+				mins += 1, secs =  0;
+				time_str = StrParam(s:time_str,d:mins,s:":0",d:secs);
+			}
+
+			hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		}
+
+		if((!skipbonus) && (timebonus != 0))
+		{
+			if(timebonus < timebonus_unit_down)
+				timebonus = 0;
+			else
+				timebonus -= timebonus_unit_down;
+		}
+
+		delay(35);
 	}
-	else
-	{
-		timebonus -= timebonus_unit_down;
-	}
-}
-delay(35);
-}
 }
 
 script 500 (void)					// time bonus rundown
