@@ -39,11 +39,14 @@ bool inDeepWater[128];
 bool onWaterSurface[128];
 
 int forceFieldN = 32;
-int  forceField_lid   [32];
-int  forceField_anim_n[32];
-str  forceField_texStr[32];
-int  forceField_cd    [32];
-bool forceField_active[32];
+int  forceField_lid    [32];
+int  forceField_anim_n [32];
+int  forceField_anim_dl[32];
+int  forceField_trans  [32];
+str  forceField_texStr [32];
+int  forceField_cd     [32];
+bool forceField_hurt   [32];
+bool forceField_active [32];
 
 bool tiszaszaki_dw_act_below_surface;
 bool tiszaszaki_dw_act_above_surface;
@@ -228,60 +231,107 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
 script 904 (int target_tid, int target_pitch) // generic face to actor
 {
-        int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
-        int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
-        int ang_d=ang1-ang0, pit_d=pit1-pit0;
-        int i=0, ang_n=script904_ang_n;
+	int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
+	int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
+	int ang_d=ang1-ang0, pit_d=pit1-pit0;
+	int i=0, ang_n=script904_ang_n;
 	int dl=1;
 
-        //Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
-        //Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
+	//Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
+	//Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
 
-        for (i=0;i<ang_n;i++)
-        {
-            int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
-            int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
+	for (i=0;i<ang_n;i++)
+	{
+		int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
+		int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
 
-            //Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
+		//Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
 
-            SetActorAngle(0, ang);
-            SetActorPitch(0, pit);
+		SetActorAngle(0, ang);
+		SetActorPitch(0, pit);
 
-            Delay(dl);
-        }
+		Delay(dl);
+	}
 }
 
 // forcefield management
 
-script 230 (int ff_i)
+script 230 (int ff_i, int test_mode_i)
 {
-	if (!forceField_active[ff_i])
+	bool test_mode=(test_mode_i != 0);
+
+	if (test_mode || !forceField_active[ff_i])
 	{
-		// TODO: forcefield logic
+		int  lid     =forceField_lid   [ff_i];
+		int  trans_am=forceField_trans [ff_i];
+		str  texStr  =forceField_texStr[ff_i];
+		int  cd      =forceField_cd    [ff_i];
+		bool hurt    =forceField_hurt  [ff_i];
+
+		str texClr="-";
+		int tr_add=NO;
+
+		int i,n=forceField_anim_n[ff_i];
+		int anim_dl=forceField_anim_dl[ff_i];
+
+		forceField_active[ff_i] = true;
+
+		if (!test_mode && hurt) ForceField();
+
+		SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
+		SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
+
+		for (i=0;i<=n;i++)
+		{
+			int i_fixed=FixedDiv((n-i) << 16,n << 16);
+			int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
+
+			//if (test_mode) Log(d:i,s:" ->",d:temp_trans);
+
+			TranslucentLine(lid, temp_trans, tr_add);
+			Delay(anim_dl);
+		}
+
+		SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
+		SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
+
+		if (!test_mode && (cd > 0)) Delay(cd);
+
+		forceField_active[ff_i] = false;
 	}
 }
 
 function void clear_forcefield_entry(int ff_i)
 {
-	forceField_lid   [ff_i] = 0;
-	forceField_anim_n[ff_i] = 0;
-	forceField_texStr[ff_i] = "";
-	forceField_cd    [ff_i] = 0;
-	forceField_active[ff_i] = false;
+	forceField_lid    [ff_i] = 0;
+	forceField_anim_n [ff_i] = 0;
+	forceField_anim_dl[ff_i] = 0;
+	forceField_trans  [ff_i] = 0;
+	forceField_texStr [ff_i] = "";
+	forceField_cd     [ff_i] = 0;
+	forceField_hurt   [ff_i] = false;
+	forceField_active [ff_i] = false;
 }
 
-function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, str texStr, int cd)
+function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int anim_dl, int trans_am, str texStr, int cd, int blktype, bool hurt)
 {
 	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_lid[ff_i] == 0)
-		&& (lid > 0) && (anim_n > 0) && (texStr != "") && (cd >= 0))
+		&& (lid > 0) && (anim_n > 0) && (anim_dl > 0) && (anim_dl <= 8) && (trans_am > 0)
+		&& (texStr != "") && (cd >= 0) && (blktype > BLOCK_NOTHING))
 	{
-		forceField_lid   [ff_i] = lid;
-		forceField_anim_n[ff_i] = anim_n;
-		forceField_texStr[ff_i] = texStr;
-		forceField_cd    [ff_i] = cd;
+		forceField_lid    [ff_i] = lid;
+		forceField_anim_n [ff_i] = anim_n;
+		forceField_anim_dl[ff_i] = anim_dl;
+		forceField_trans  [ff_i] = trans_am;
+		forceField_texStr [ff_i] = texStr;
+		forceField_cd     [ff_i] = cd;
+		forceField_hurt   [ff_i] = hurt;
 
-		SetLineSpecial(lid, 226, 230,0,ff_i,0,0);
+		SetLineBlocking(lid, blktype);
+		SetLineSpecial(lid, 226, 230,0,ff_i,NO,0);
 		SetLineActivation(lid, SPAC_Push);
+
+		ACS_ExecuteAlways(230, 0, ff_i,YES,0);
 	}
 }
 
@@ -293,8 +343,11 @@ function void tiszaszaki_remove_forcefield(int ff_i)
 
 		if (lid > 0)
 		{
+			SetLineBlocking(lid, BLOCK_NOTHING);
 			SetLineSpecial(lid, 0, 0,0,0,0,0);
 			SetLineActivation(lid, SPAC_Cross);
+
+			clear_forcefield_entry(ff_i);
 		}
 	}
 }
