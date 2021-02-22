@@ -38,6 +38,13 @@ int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
 
+int forceFieldN = 32;
+int  forceField_lid   [32];
+int  forceField_anim_n[32];
+str  forceField_texStr[32];
+int  forceField_cd    [32];
+bool forceField_active[32];
+
 bool tiszaszaki_dw_act_below_surface;
 bool tiszaszaki_dw_act_above_surface;
 
@@ -244,6 +251,54 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
         }
 }
 
+// forcefield management
+
+script 230 (int ff_i)
+{
+	if (!forceField_active[ff_i])
+	{
+		// TODO: forcefield logic
+	}
+}
+
+function void clear_forcefield_entry(int ff_i)
+{
+	forceField_lid   [ff_i] = 0;
+	forceField_anim_n[ff_i] = 0;
+	forceField_texStr[ff_i] = "";
+	forceField_cd    [ff_i] = 0;
+	forceField_active[ff_i] = false;
+}
+
+function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, str texStr, int cd)
+{
+	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_lid[ff_i] == 0)
+		&& (lid > 0) && (anim_n > 0) && (texStr != "") && (cd >= 0))
+	{
+		forceField_lid   [ff_i] = lid;
+		forceField_anim_n[ff_i] = anim_n;
+		forceField_texStr[ff_i] = texStr;
+		forceField_cd    [ff_i] = cd;
+
+		SetLineSpecial(lid, 226, 230,0,ff_i,0,0);
+		SetLineActivation(lid, SPAC_Push);
+	}
+}
+
+function void tiszaszaki_remove_forcefield(int ff_i)
+{
+	if ((ff_i >= 0) && (ff_i < forceFieldN))
+	{
+		int lid=forceField_lid[ff_i];
+
+		if (lid > 0)
+		{
+			SetLineSpecial(lid, 0, 0,0,0,0,0);
+			SetLineActivation(lid, SPAC_Cross);
+		}
+	}
+}
+
 function int tiszaszaki_levelinfo(void)
 {
 	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
@@ -264,6 +319,8 @@ function int tiszaszaki_levelinfo(void)
 
 script "tiszaszaki_common_init" OPEN
 {
+	int i;
+
 	int level_num_temp=tiszaszaki_levelinfo();
 
 	script212_log = false;
@@ -274,11 +331,14 @@ script "tiszaszaki_common_init" OPEN
 
 	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
 
-	for (int i=0;i<deepWaterN;i++)
+	for (i=0;i<deepWaterN;i++)
 	{
 		inDeepWater[i] = false;
 		onWaterSurface[i] = false;
 	}
+
+	for (i=0;i<forceFieldN;i++)
+		clear_forcefield_entry(i);
 
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
