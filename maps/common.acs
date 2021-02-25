@@ -106,19 +106,24 @@ int bonus_stage_state;
 
 // common
 
-function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid)
+function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool log_check)
 {
-    int x=GetActorX(wtid);
-    int y=GetActorY(wtid);
-    int sfloor=GetSectorFloorZ(wtag, x,y);
-    int playerEyeHeight=(GetActorZ(activator) - sfloor) + GetActorViewHeight(activator);
-    int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
-    int res=0;
+	int x=GetActorX(wtid);
+	int y=GetActorY(wtid);
 
-    if (playerEyeHeight < waterSurfaceHeight) res = -1;
-    if (playerEyeHeight > waterSurfaceHeight) res = 1;
+	int sfloor=GetSectorFloorZ(wtag, x,y);
+	int playerEyeHeight=(GetActorZ(activator) - sfloor) + GetActorViewHeight(activator);
+	int waterSurfaceHeight=GetSectorCeilingZ(wtag, x,y) - sfloor;
 
-    return res;
+	int res=0;
+
+	if (log_check)
+		Log(s:"tiszaszaki_deepwater_check: ",d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
+
+	if (playerEyeHeight < waterSurfaceHeight) res = -1;
+	if (playerEyeHeight > waterSurfaceHeight) res = 1;
+
+	return res;
 }
 
 // splashing
@@ -145,7 +150,7 @@ script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 {
     while (onWaterSurface[i])
     {
-        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid);
+        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid, false);
         int dl=2;
         if (checkVal < 0)
             ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,0,0);
@@ -206,7 +211,7 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
     while (onWaterSurface[i])
     {
         bool activated=!GetActorProperty(tid, APROP_Dormant);
-        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid);
+        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid, false);
         int dl=2;
         if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
         {
@@ -1374,6 +1379,54 @@ delay(1);
 Restart;
 }
 
+function void tiszaszaki_time_run_seconds(int s, bool reverse)
+{
+	if ((mins >= 0) && (secs >= 0) && ((reverse && (s <= (mins * 60 + secs))) || !reverse))
+	{
+		if (reverse)
+			secs -= s;
+		else
+			secs += s;
+
+		if ((secs < 0) || (secs > 59))
+		{
+			if (reverse)
+			{
+				while ((secs < 0) && (mins > 0))
+					mins -= 1, secs += 60;
+			}
+			if (!reverse)
+			{
+				while (secs >= 60)
+					mins += 1, secs -= 60;
+			}
+		}
+	}
+}
+
+function str tiszaszaki_get_time_string(bool reverse)
+{
+	str res="Time:    \cb";
+	
+	if ((secs >= 0) && (secs <= 59))
+	{
+		if(secs < 10)
+			res = StrParam(s:res,d:mins,s:":0",d:secs);
+		else
+			res = StrParam(s:res,d:mins,s:":",d:secs);
+	}
+
+	if ((secs < 0) || (secs > 59))
+	{
+		if (reverse  && (secs <  0))
+			res = StrParam(s:res,d:mins,s:":",d:secs);
+		if (!reverse && (secs > 59))
+			res = StrParam(s:res,d:mins,s:":0",d:secs);
+	}
+
+	return res;
+}
+
 script 400 (int skipbonus, int reverse_i)			// time display
 
 {
@@ -1383,43 +1436,13 @@ script 400 (int skipbonus, int reverse_i)			// time display
 
 	while (time_running)
 	{
-		str time_str="Time:    \cb";
+		str time_str=tiszaszaki_get_time_string(reverse);
+
+		tiszaszaki_time_run_seconds(1, reverse);
 
 		setfont ("BigFont");
 
-		if (reverse)
-			secs -= 1;
-		else
-			secs += 1;
-
-		if ((secs >= 0) && (secs <= 59))
-		{
-			if(secs < 10)
-				time_str = StrParam(s:time_str,d:mins,s:":0",d:secs);
-			else
-				time_str = StrParam(s:time_str,d:mins,s:":",d:secs);
-
-			hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
-		}
-
-		if(reverse && (mins == 0) && (secs == 0))
-			terminate;
-
-		if ((secs < 0) || (secs > 59))
-		{
-			if (reverse  && (secs <  0))
-			{
-				mins -= 1, secs = 59;
-				time_str = StrParam(s:time_str,d:mins,s:":",d:secs);
-			}
-			if (!reverse && (secs > 59))
-			{
-				mins += 1, secs =  0;
-				time_str = StrParam(s:time_str,d:mins,s:":0",d:secs);
-			}
-
-			hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
-		}
+		hudmessage (s:time_str; 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 
 		if((!skipbonus) && (timebonus != 0))
 		{
@@ -1428,6 +1451,9 @@ script 400 (int skipbonus, int reverse_i)			// time display
 			else
 				timebonus -= timebonus_unit_down;
 		}
+
+		if(reverse && (mins == 0) && (secs == 0))
+			terminate;
 
 		delay(35);
 	}
