@@ -93,6 +93,15 @@ int script904_ang_n;
 #libdefine T_SPHERE 189
 #libdefine T_RING 167
 
+// bonus stage related defines (by tiszaszaki)
+
+int bonus_stage_state;
+
+#libdefine BONUS_STAGE_PLAYING 0
+#libdefine BONUS_STAGE_WIN 1
+#libdefine BONUS_STAGE_LOSE 2
+#libdefine NOT_A_BONUS_STAGE -1
+
 // deep water effect scripts (by tiszaszaki)
 
 // common
@@ -377,7 +386,6 @@ script "tiszaszaki_common_init" OPEN
 	int level_num_temp=tiszaszaki_levelinfo();
 
 	script212_log = false;
-
 	script904_ang_n = 8;
 
 	show_hud = false;
@@ -396,6 +404,8 @@ script "tiszaszaki_common_init" OPEN
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
+		bonus_stage_state = NOT_A_BONUS_STAGE;
+
 		killtarget = 0;
 
 		mins = 0, secs = 0;
@@ -413,23 +423,24 @@ script "tiszaszaki_common_init" OPEN
 			TakeInventory ("OrangeCard", 1);
 
 			TakeInventory ("PowerStrength", 1);
-			TakeInventory ("PowerInvisibility", 1);
-			TakeInventory ("PowerIronFeet", 1);
-
-			SetPlayerProperty (1, 0, 5);
-			SetActorProperty(0, APROP_Speed, 65536);
 		}
 	}
 	// bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
 	{
+		bonus_stage_state = BONUS_STAGE_PLAYING;
+
 		setmusic ("z_bonus");
+
 		SetWeapon ("Fist");
-		TakeInventory ("PowerInvisibility", 1);
-		TakeInventory ("PowerIronFeet", 1);
-		SetPlayerProperty (1, 0, 5);
-		SetActorProperty(0, APROP_Speed, 65536);
 	}
+
+	// common part of all levels starting
+	TakeInventory ("PowerInvisibility", 1);
+	TakeInventory ("PowerIronFeet", 1);
+
+	SetPlayerProperty (1, 0, 5);
+	SetActorProperty(0, APROP_Speed, 65536);
 
 	ready = true;
 
