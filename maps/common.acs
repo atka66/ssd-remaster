@@ -12,6 +12,10 @@ int secretbonus;
 int secretcount;
 int killtarget;
 
+int rings;
+int ringcount;
+int ringbonus;
+
 bool ready;
 bool show_hud;
 bool time_running;
@@ -47,6 +51,10 @@ str  forceField_texStr [32];
 int  forceField_cd     [32];
 bool forceField_hurt   [32];
 bool forceField_active [32];
+
+int tiszaszaki_dw_chk_water_id;
+
+bool tiszaszaki_dw_splash_log;
 
 bool tiszaszaki_dw_act_below_surface;
 bool tiszaszaki_dw_act_above_surface;
@@ -118,7 +126,8 @@ function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool 
 	int res=0;
 
 	if (log_check)
-		Log(s:"tiszaszaki_deepwater_check: ",d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
+		Log(s:"tiszaszaki_deepwater_check (water id:",d:tiszaszaki_dw_chk_water_id,s:"): ",
+			d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
 
 	if (playerEyeHeight < waterSurfaceHeight) res = -1;
 	if (playerEyeHeight > waterSurfaceHeight) res = 1;
@@ -128,19 +137,27 @@ function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool 
 
 // splashing
 
-script "tiszaszaki_deepwater_in" (int i) // in
+script "tiszaszaki_deepwater_in" (int i, int log_i) // in
 {
+	bool log_splash=(log_i != 0);
+
     if (!inDeepWater[i])
     {
+		if (log_splash) Log(s:"tiszaszaki_deepwater_in: splashing (water id:",d:i,s:")");
+
         PlaySound(0,"splash");
         inDeepWater[i]=true;
     }
 }
 
-script "tiszaszaki_deepwater_out" (int i) // out
+script "tiszaszaki_deepwater_out" (int i, int log_i) // out
 {
+	bool log_splash=(log_i != 0);
+
     if (inDeepWater[i])
     {
+		if (log_splash) Log(s:"tiszaszaki_deepwater_out: splashing (water id:",d:i,s:")");
+
         PlaySound(0,"splash");
         inDeepWater[i]=false;
     }
@@ -150,12 +167,18 @@ script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 {
     while (onWaterSurface[i])
     {
-        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid, false);
+        int checkVal;
         int dl=2;
+
+		tiszaszaki_dw_chk_water_id = i;
+
+		checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, tiszaszaki_dw_splash_log);
+
         if (checkVal < 0)
-            ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,0,0);
+            ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,tiszaszaki_dw_splash_log,0);
         if (checkVal > 0)
-            ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,0,0);
+            ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,tiszaszaki_dw_splash_log,0);
+
         Delay(dl);
     }
 }
@@ -210,19 +233,24 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
     while (onWaterSurface[i])
     {
+        int checkVal;
         bool activated=!GetActorProperty(tid, APROP_Dormant);
-        int checkVal=tiszaszaki_deepwater_check(0, wtag, wtid, false);
         int dl=2;
+
+		tiszaszaki_dw_chk_water_id = i;
+
+		checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, tiszaszaki_dw_splash_log);
+
         if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
         {
             if (!activated && active)
             {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
                 Thing_Activate(tid);
             }
             if (activated && !active)
             {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
                 Thing_Deactivate(tid);
             }
         }
@@ -230,15 +258,16 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
         {
             if (activated && active)
             {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
                 Thing_Deactivate(tid);
             }
             if (!activated && !active)
             {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_i = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
+                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
                 Thing_Activate(tid);
             }
         }
+
         Delay(dl);
     }
 }
@@ -405,6 +434,8 @@ script "tiszaszaki_common_init" OPEN
 
 	int level_num_temp=tiszaszaki_levelinfo();
 
+	tiszaszaki_dw_splash_log = false;
+
 	script212_log = false;
 	script904_ang_n = 8;
 
@@ -443,6 +474,8 @@ script "tiszaszaki_common_init" OPEN
 			TakeInventory ("OrangeCard", 1);
 
 			TakeInventory ("PowerStrength", 1);
+			TakeInventory ("PowerInvisibility", 1);
+			TakeInventory ("PowerIronFeet", 1);
 		}
 	}
 	// bonus levels
@@ -450,15 +483,21 @@ script "tiszaszaki_common_init" OPEN
 	{
 		bonus_stage_state = BONUS_STAGE_PLAYING;
 
+		rings = 0;
+		ringcount = 0;
+		ringbonus = 0;
+
+		TakeInventory ("PowerInvisibility", 1);
+		TakeInventory ("PowerIronFeet", 1);
+
 		setmusic ("z_bonus");
+
+		//delay(10); // ?
 
 		SetWeapon ("Fist");
 	}
 
 	// common part of all levels starting
-	TakeInventory ("PowerInvisibility", 1);
-	TakeInventory ("PowerIronFeet", 1);
-
 	SetPlayerProperty (1, 0, 5);
 	SetActorProperty(0, APROP_Speed, 65536);
 
@@ -1367,6 +1406,18 @@ int timebonus = 100000;
 int killbonus_unit = 250;
 int secretbonus_unit = 250;
 int rundown_dl=2;
+
+function void tiszaszaki_get_rings(int ring_n, int bonus_am)
+{
+	if (ring_n != 0)
+	{
+		if (rings + ring_n >= 0)
+			rings += ring_n;
+
+		if (ring_n > 0)
+			ringbonus += bonus_am;
+	}
+}
 
 script 231 (int killtarget2,int killcount2)					// killtarget checker
 
