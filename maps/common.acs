@@ -127,8 +127,16 @@ function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool 
 	int res=0;
 
 	if (log_check)
-		Log(s:"tiszaszaki_deepwater_check (water id:",d:tiszaszaki_dw_chk_water_id,s:"): ",
-			d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
+	{
+		str log_str="tiszaszaki_deepwater_check";
+
+		if (tiszaszaki_dw_chk_water_id >= 0)
+			log_str = StrParam(s:log_str,s:" (water id:",d:tiszaszaki_dw_chk_water_id,s:")");
+
+		log_str = StrParam(s:log_str,s:": ",d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
+
+		Log(s:log_str);
+	}
 
 	if (top_down)
 	{
@@ -477,6 +485,8 @@ script "tiszaszaki_common_init" OPEN
 	int i;
 
 	int level_num_temp=tiszaszaki_levelinfo();
+
+	tiszaszaki_dw_chk_water_id = -1;
 
 	tiszaszaki_dw_splash_log = false;
 
