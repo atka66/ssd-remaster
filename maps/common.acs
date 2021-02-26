@@ -1462,12 +1462,14 @@ int killbonus_unit = 250;
 int secretbonus_unit = 250;
 int rundown_dl=2;
 
-function void tiszaszaki_get_rings(int ring_n, int bonus_am)
+function void tiszaszaki_get_rings(int ring_n, int bonus_am, int max_ring_n)
 {
-	if (ring_n != 0)
+	if ((ring_n != 0) && (max_ring_n > 0))
 	{
-		if (rings + ring_n >= 0)
-			rings += ring_n;
+		int new_rings=rings + ring_n;
+
+		if ((new_rings >= 0) && (new_rings <= max_ring_n))
+			rings = new_rings;
 
 		if (ring_n > 0)
 			ringbonus += bonus_am;
