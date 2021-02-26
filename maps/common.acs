@@ -41,6 +41,7 @@ str zone_titles[15]={
 int deepWaterN = 128;
 bool inDeepWater[128];
 bool onWaterSurface[128];
+bool isTopDownWater[128];
 
 int forceFieldN = 32;
 int  forceField_lid    [32];
@@ -114,7 +115,7 @@ int bonus_stage_state;
 
 // common
 
-function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool log_check)
+function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool top_down, bool log_check)
 {
 	int x=GetActorX(wtid);
 	int y=GetActorY(wtid);
@@ -129,8 +130,16 @@ function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool 
 		Log(s:"tiszaszaki_deepwater_check (water id:",d:tiszaszaki_dw_chk_water_id,s:"): ",
 			d:playerEyeHeight >> 16,s:" ? ",d:waterSurfaceHeight >> 16,s:" (",d:sfloor >> 16,s:")");
 
-	if (playerEyeHeight < waterSurfaceHeight) res = -1;
-	if (playerEyeHeight > waterSurfaceHeight) res = 1;
+	if (top_down)
+	{
+		if (playerEyeHeight < 0) res = 1;
+		if (playerEyeHeight > 0) res = -1;
+	}
+	else
+	{
+		if (playerEyeHeight < waterSurfaceHeight) res = -1;
+		if (playerEyeHeight > waterSurfaceHeight) res = 1;
+	}
 
 	return res;
 }
@@ -139,52 +148,68 @@ function int tiszaszaki_deepwater_check(int activator, int wtag, int wtid, bool 
 
 script "tiszaszaki_deepwater_in" (int i, int log_i) // in
 {
-	bool log_splash=(log_i != 0);
+	if ((i >= 0) && (i < deepWaterN))
+	{
+		bool log_splash=(log_i != 0);
 
-    if (!inDeepWater[i])
-    {
-		if (log_splash) Log(s:"tiszaszaki_deepwater_in: splashing (water id:",d:i,s:")");
+		if (!inDeepWater[i])
+		{
+			if (log_splash) Log(s:"tiszaszaki_deepwater_in: splashing (water id:",d:i,s:")");
 
-        PlaySound(0,"splash");
-        inDeepWater[i]=true;
-    }
+			PlaySound(0,"splash");
+			inDeepWater[i]=true;
+		}
+	}
 }
 
 script "tiszaszaki_deepwater_out" (int i, int log_i) // out
 {
-	bool log_splash=(log_i != 0);
+	if ((i >= 0) && (i < deepWaterN))
+	{
+		bool log_splash=(log_i != 0);
 
-    if (inDeepWater[i])
-    {
-		if (log_splash) Log(s:"tiszaszaki_deepwater_out: splashing (water id:",d:i,s:")");
+		if (inDeepWater[i])
+		{
+			if (log_splash) Log(s:"tiszaszaki_deepwater_out: splashing (water id:",d:i,s:")");
 
-        PlaySound(0,"splash");
-        inDeepWater[i]=false;
-    }
+			PlaySound(0,"splash");
+			inDeepWater[i]=false;
+		}
+	}
 }
 
 script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 {
-    while (onWaterSurface[i])
-    {
-        int checkVal;
-        int dl=2;
+	if ((i >= 0) && (i < deepWaterN) && (wtag > 0) && (wtid > 0))
+	{
+		while (onWaterSurface[i])
+		{
+			int checkVal;
+			int dl=2;
 
-		tiszaszaki_dw_chk_water_id = i;
+			tiszaszaki_dw_chk_water_id = i;
 
-		checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, tiszaszaki_dw_splash_log);
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], tiszaszaki_dw_splash_log);
 
-        if (checkVal < 0)
-            ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,tiszaszaki_dw_splash_log,0);
-        if (checkVal > 0)
-            ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,tiszaszaki_dw_splash_log,0);
+			if (checkVal < 0)
+				ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,tiszaszaki_dw_splash_log,0);
+			if (checkVal > 0)
+				ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,tiszaszaki_dw_splash_log,0);
 
-        Delay(dl);
-    }
+			Delay(dl);
+		}
+	}
+}
+
+function void tiszaszaki_deepwater_istopdown(int i, bool b)
+{
+	if ((i >= 0) && (i < deepWaterN))
+		isTopDownWater[i] = b;
 }
 
 script 210 (int i, int wtag, int wtid)
 {
+	if ((i >= 0) && (i < deepWaterN) && (wtag > 0) && (wtid > 0))
     if (!onWaterSurface[i])
     {
         script210_wtag = wtag;
@@ -197,6 +222,7 @@ script 210 (int i, int wtag, int wtid)
 
 script 211 (int i)
 {
+	if ((i >= 0) && (i < deepWaterN))
     if (onWaterSurface[i])
     {
         onWaterSurface[i]=false;
@@ -207,93 +233,105 @@ script 211 (int i)
 
 script 212 (int i, int tid, int active) // in both ways
 {
-    tiszaszaki_dw_act_below_surface = true;
-    tiszaszaki_dw_act_above_surface = true;
+	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
+	{
+		tiszaszaki_dw_act_below_surface = true;
+		tiszaszaki_dw_act_above_surface = true;
 
-    while (!onWaterSurface[i]) Delay(1);
-    ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+		while (!onWaterSurface[i]) Delay(1);
+		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+	}
 }
 
 script 213 (int i, int tid, int active) // downward only
 {
-    tiszaszaki_dw_act_below_surface = true;
-    tiszaszaki_dw_act_above_surface = false;
+	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
+	{
+		tiszaszaki_dw_act_below_surface = true;
+		tiszaszaki_dw_act_above_surface = false;
 
-    while (!onWaterSurface[i]) Delay(1);
-    ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+		while (!onWaterSurface[i]) Delay(1);
+		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
+	}
 }
 
 script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 {
-    int wtag=script210_wtag;
-    int wtid=script210_wtid;
+	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
+	{
+		int wtag=script210_wtag;
+		int wtid=script210_wtid;
 
-    bool active=false;
-    if (active_i != 0) active=true;
+		bool active=false;
+		if (active_i != 0) active=true;
 
-    while (onWaterSurface[i])
-    {
-        int checkVal;
-        bool activated=!GetActorProperty(tid, APROP_Dormant);
-        int dl=2;
+		while (onWaterSurface[i])
+		{
+			int checkVal;
+			bool activated=!GetActorProperty(tid, APROP_Dormant);
+			int dl=2;
 
-		tiszaszaki_dw_chk_water_id = i;
+			tiszaszaki_dw_chk_water_id = i;
 
-		checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, tiszaszaki_dw_splash_log);
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], tiszaszaki_dw_splash_log);
 
-        if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
-        {
-            if (!activated && active)
-            {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
-                Thing_Activate(tid);
-            }
-            if (activated && !active)
-            {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
-                Thing_Deactivate(tid);
-            }
-        }
-        if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
-        {
-            if (activated && active)
-            {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
-                Thing_Deactivate(tid);
-            }
-            if (!activated && !active)
-            {
-                if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
-                Thing_Activate(tid);
-            }
-        }
+			if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
+			{
+				if (!activated && active)
+				{
+					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
+					Thing_Activate(tid);
+				}
+				if (activated && !active)
+				{
+					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
+					Thing_Deactivate(tid);
+				}
+			}
+			if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
+			{
+				if (activated && active)
+				{
+					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
+					Thing_Deactivate(tid);
+				}
+				if (!activated && !active)
+				{
+					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
+					Thing_Activate(tid);
+				}
+			}
 
-        Delay(dl);
-    }
+			Delay(dl);
+		}
+	}
 }
 
 script 904 (int target_tid, int target_pitch) // generic face to actor
 {
-	int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
-	int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
-	int ang_d=ang1-ang0, pit_d=pit1-pit0;
-	int i=0, ang_n=script904_ang_n;
-	int dl=1;
-
-	//Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
-	//Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
-
-	for (i=0;i<ang_n;i++)
+	if (target_tid >= 0)
 	{
-		int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
-		int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
+		int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
+		int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
+		int ang_d=ang1-ang0, pit_d=pit1-pit0;
+		int i=0, ang_n=script904_ang_n;
+		int dl=1;
 
-		//Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
+		//Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
+		//Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
 
-		SetActorAngle(0, ang);
-		SetActorPitch(0, pit);
+		for (i=0;i<ang_n;i++)
+		{
+			int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
+			int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
 
-		Delay(dl);
+			//Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
+
+			SetActorAngle(0, ang);
+			SetActorPitch(0, pit);
+
+			Delay(dl);
+		}
 	}
 }
 
@@ -301,59 +339,65 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
 
 script 230 (int ff_i, int test_mode_i)
 {
-	bool test_mode=(test_mode_i != 0);
-
-	if (test_mode || !forceField_active[ff_i])
+	if ((ff_i >= 0) && (ff_i < forceFieldN))
 	{
-		int  lid     =forceField_lid   [ff_i];
-		int  trans_am=forceField_trans [ff_i];
-		str  texStr  =forceField_texStr[ff_i];
-		int  cd      =forceField_cd    [ff_i];
-		bool hurt    =forceField_hurt  [ff_i];
+		bool test_mode=(test_mode_i != 0);
 
-		str texClr="-";
-		int tr_add=NO;
-
-		int i,n=forceField_anim_n[ff_i];
-		int anim_dl=forceField_anim_dl[ff_i];
-
-		forceField_active[ff_i] = true;
-
-		if (!test_mode && hurt) ForceField();
-
-		SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
-		SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
-
-		for (i=0;i<=n;i++)
+		if (test_mode || !forceField_active[ff_i])
 		{
-			int i_fixed=FixedDiv((n-i) << 16,n << 16);
-			int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
+			int  lid     =forceField_lid   [ff_i];
+			int  trans_am=forceField_trans [ff_i];
+			str  texStr  =forceField_texStr[ff_i];
+			int  cd      =forceField_cd    [ff_i];
+			bool hurt    =forceField_hurt  [ff_i];
 
-			//if (test_mode) Log(d:i,s:" ->",d:temp_trans);
+			str texClr="-";
+			int tr_add=NO;
 
-			TranslucentLine(lid, temp_trans, tr_add);
-			Delay(anim_dl);
+			int i,n=forceField_anim_n[ff_i];
+			int anim_dl=forceField_anim_dl[ff_i];
+
+			forceField_active[ff_i] = true;
+
+			if (!test_mode && hurt) ForceField();
+
+			SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
+			SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
+
+			for (i=0;i<=n;i++)
+			{
+				int i_fixed=FixedDiv((n-i) << 16,n << 16);
+				int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
+
+				//if (test_mode) Log(d:i,s:" ->",d:temp_trans);
+
+				TranslucentLine(lid, temp_trans, tr_add);
+				Delay(anim_dl);
+			}
+
+			SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
+			SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
+
+			if (!test_mode && (cd > 0)) Delay(cd);
+
+			forceField_active[ff_i] = false;
 		}
-
-		SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
-		SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
-
-		if (!test_mode && (cd > 0)) Delay(cd);
-
-		forceField_active[ff_i] = false;
 	}
 }
 
 function void clear_forcefield_entry(int ff_i)
 {
-	forceField_lid    [ff_i] = 0;
-	forceField_anim_n [ff_i] = 0;
-	forceField_anim_dl[ff_i] = 0;
-	forceField_trans  [ff_i] = 0;
-	forceField_texStr [ff_i] = "";
-	forceField_cd     [ff_i] = 0;
-	forceField_hurt   [ff_i] = false;
-	forceField_active [ff_i] = false;
+	if ((ff_i >= 0) && (ff_i < forceFieldN))
+	{
+		forceField_lid    [ff_i] = 0;
+		forceField_anim_n [ff_i] = 0;
+		forceField_anim_dl[ff_i] = 0;
+		forceField_trans  [ff_i] = 0;
+		forceField_texStr [ff_i] = "";
+		forceField_cd     [ff_i] = 0;
+		forceField_hurt   [ff_i] = false;
+		forceField_active [ff_i] = false;
+	}
 }
 
 function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int anim_dl, int trans_am, str texStr, int cd, int blktype, bool hurt)
@@ -447,6 +491,7 @@ script "tiszaszaki_common_init" OPEN
 	{
 		inDeepWater[i] = false;
 		onWaterSurface[i] = false;
+		isTopDownWater[i] = false;
 	}
 
 	for (i=0;i<forceFieldN;i++)
