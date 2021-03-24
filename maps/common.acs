@@ -1624,3 +1624,110 @@ else
 	Restart;
 }
 }
+
+// monitor pickup scripts
+
+script 201 (int arg0)				// health monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+GiveInventory ("HealthBonus", 10);
+activatorsound ("ring", 127);
+}
+
+script 202 (int arg0)				// armour monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+GiveInventory ("ArmorBonus", 10);
+activatorsound ("ishield", 127);
+}
+
+str frames[14] = {"1", "2", "3", "4", "5", "6", "7", "6", "5", "4", "3", "2", "1", "0"};
+
+script 203 (int arg0)               // invincibility monitor 
+
+{
+Thing_Remove (arg0); 
+activatorsound ("monitor", 127); 
+delay(5); 
+SetMusic ("z_invuln"); 
+delay(30);
+SetPlayerProperty (1, 2, 5); 
+ACS_ExecuteAlways (209, 0, 776, 0, 0); 
+delay(3); 
+ACS_ExecuteAlways (209, 0, 777, 0, 0); 
+delay(3); 
+ACS_ExecuteAlways (209, 0, 778, 0, 0);
+delay(3); 
+ACS_ExecuteAlways (209, 0, 779, 0, 0); 
+delay(3); 
+ACS_ExecuteAlways (209, 0, 780, 0, 0);
+delay(700);
+sethudsize (0, 0, 0);
+SetPlayerProperty (1, 0, 5); 
+SetMusic ("zone01a1"); 
+}
+
+script 209 (int arg0) 
+
+{
+for(int time = 0; time < 50; time++)
+{
+sethudsize (512, 384, 0);
+setfont ("Stars"); 
+int x = random(48, 208) * 2.0, y = random(24, 128) * 2.0;
+for(int stars = 0; stars < 14; stars++) 
+{ 
+hudmessage(s:frames[stars]; 0, arg0, -1, x, y, 0.02); 
+delay(1); 
+}
+}
+}
+
+script 204 (int arg0)				// invisibility monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+GiveInventory ("BlurSphere", 1);
+activatorsound ("bshield", 127);
+}
+
+script 205 (int arg0)				// rad monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+GiveInventory ("RadSuit", 1);
+activatorsound ("wshield", 127);
+}
+
+script 206 (int arg0)				// extra life monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+GiveInventory ("Megasphere", 1);
+activatorsound ("powerup", 127);
+}
+
+script 207 (int arg0)				// speed monitor
+
+{
+Thing_Remove (arg0);
+activatorsound ("monitor", 127);
+delay(35);
+activatorsound ("speedon", 127);
+SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) * 2); 
+delay(1050);
+activatorsound ("speedoff", 127);
+SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
+}
