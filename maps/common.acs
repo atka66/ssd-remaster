@@ -4,6 +4,9 @@
 int zone;
 int act;
 
+int endofact;
+int endofstage;
+
 int mins, secs;
 
 int killbonus;
@@ -15,6 +18,8 @@ int killtarget;
 int rings;
 int ringcount;
 int ringbonus;
+
+int bonus_lev_num;
 
 bool ready;
 bool show_hud;
@@ -512,6 +517,8 @@ script "tiszaszaki_common_init" OPEN
 	{
 		bonus_stage_state = NOT_A_BONUS_STAGE;
 
+		endofact = 0;
+
 		killtarget = 0;
 
 		mins = 0, secs = 0;
@@ -538,6 +545,8 @@ script "tiszaszaki_common_init" OPEN
 	{
 		bonus_stage_state = BONUS_STAGE_PLAYING;
 
+		endofstage = 0;
+
 		rings = 0;
 		ringcount = 0;
 		ringbonus = 0;
@@ -550,6 +559,9 @@ script "tiszaszaki_common_init" OPEN
 		//delay(10); // ?
 
 		SetWeapon ("Fist");
+
+		if ((level_num_temp >= 31) && (level_num_temp <= 34))
+			ACS_Execute(999, 0, 0,0,0);
 	}
 
 	// common part of all levels starting
@@ -581,7 +593,7 @@ script "tiszaszaki_common_init" OPEN
 	// show HUD in bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
 	{
-		int bonus_lev_num=level_num_temp - 30;
+		bonus_lev_num = level_num_temp - 30;
 		str title_str_prefix="Bonus Stage";
 
 		setfont ("BigFont");
@@ -1558,7 +1570,7 @@ script 500 (void)					// time bonus rundown
 {
 if(timebonus == 0)
 {
-	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("tiszaszaki_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 	//terminate;
 }
@@ -1582,7 +1594,7 @@ script 600 (void)					// kill bonus rundown
 {
 if(killbonus == 0)
 {
-	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("tiszaszaki_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 	//terminate;
 }
@@ -1606,7 +1618,7 @@ script 700 (void)					// secret bonus rundown
 {
 if(secretbonus == 0)
 {
-	ACS_ExecuteAlways (800, 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("tiszaszaki_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 	//terminate;
 }
@@ -1623,6 +1635,37 @@ else
 	delay(rundown_dl);
 	Restart;
 }
+}
+
+// bonus level specific scripts
+
+script 900 (void)					// ring bonus rundown
+
+{
+if(ringbonus == 0)
+{
+	ACS_NamedExecuteAlways ("tiszaszaki_after_scoring", 0, 0, 0, 0);
+	delay(1);
+	terminate;
+}
+else
+{
+	ringbonus -= 100;
+	hudmessage (s:"ring bonus:   \cc",d:ringbonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	score += 100;
+	activatorsound ("button1", 127);
+}
+delay(1);
+Restart;
+}
+
+script 999 (void)					// ring display
+
+{
+setfont ("BigFont");
+hudmessage (s:"rings:    \cc",d:rings; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+delay(1);
+Restart;
 }
 
 // monitor pickup scripts
@@ -1730,4 +1773,97 @@ SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) * 2);
 delay(1050);
 activatorsound ("speedoff", 127);
 SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
+}
+
+//
+
+script "tiszaszaki_end_scoring" (void)
+{
+if (bonus_stage_state == NOT_A_BONUS_STAGE)
+{
+ACS_Terminate (400, 0);
+SetPlayerProperty (1, 1, 4);
+SetPlayerProperty (1, 2, 5);
+SetWeapon ("Fist");
+SetMusic ("");
+delay(105);
+SetMusic ("z_inter");
+setfont ("BigFont");
+hudmessage (s:"DamaGe        "; 0, 3, CR_GREEN, 0.5, 0.32, 0.0);
+hudmessage (s:"            got"; 0, 4, CR_WHITE, 0.5, 0.32, 0.0);
+hudmessage (s:"through act ",d:act,s:" "; 0, 5, CR_WHITE, 0.5, 0.37, 0.0);
+setfont ("SmallFont");
+delay(35);
+hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+delay(35);
+hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+delay(35);
+hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
+delay(55);
+SetMusic ("");
+delay(35);
+ACS_Execute (500, 0, 0, 0, 0);
+ACS_Execute (600, 0, 0, 0, 0);
+ACS_Execute (700, 0, 0, 0, 0);
+}
+if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
+{
+ACS_Terminate (999, 0);
+ACS_Execute (300, 0, 0, 0, 0);
+SetMusic ("");
+delay(105);
+SetMusic ("z_inter");
+setfont ("BigFont");
+hudmessage (s:"bonus stage ",d:bonus_lev_num; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
+setfont ("SmallFont");
+delay(35);
+hudmessage (s:"ring bonus:   \cc",d:ringbonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+delay(125);
+SetMusic ("");
+delay(35);
+ACS_Execute (900, 0, 0, 0, 0);
+}
+}
+
+script "tiszaszaki_after_scoring" (void)
+{
+if (bonus_stage_state == NOT_A_BONUS_STAGE)
+{
+endofact++;
+if (endofact == 3)
+{
+ambientsound ("endofact", 127);
+delay(105);
+hudmessage (s:""; 0, 3, 0, 0, 0, 0);
+hudmessage (s:""; 0, 4, 0, 0, 0, 0);
+hudmessage (s:""; 0, 5, 0, 0, 0, 0);
+hudmessage (s:""; 0, 6, 0, 0, 0, 0);
+hudmessage (s:""; 0, 7, 0, 0, 0, 0);
+hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+SetPlayerProperty (1, 0, 4);
+SetPlayerProperty (1, 0, 5);
+ACS_ExecuteAlways (800, 0, 0, 0, 0);
+}
+}
+if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
+{
+endofstage++;
+if (endofstage == 1)
+{
+ambientsound ("endofact", 127);
+delay(105);
+hudmessage (s:""; 0, 3, 0, 0, 0, 0);
+hudmessage (s:""; 0, 4, 0, 0, 0, 0);
+hudmessage (s:""; 0, 6, 0, 0, 0, 0);
+hudmessage (s:""; 0, 7, 0, 0, 0, 0);
+hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+if ((bonus_lev_num >= 1) && (bonus_lev_num <= 4))
+SetPlayerProperty (1, 0, 4);
+if (bonus_lev_num >= 4)
+SetPlayerProperty (1, 0, 3);
+activatorsound ("teleport3", 127);
+delay(35);
+ACS_ExecuteAlways (800, 0, 0, 0, 0);
+}
+}
 }
