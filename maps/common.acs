@@ -22,7 +22,12 @@ int rings;
 int ringcount;
 int ringbonus;
 
+int boss_target_hit;
+int boss_target_max;
+
 int bonus_lev_num;
+
+bool boss_fight_level;
 
 str level_music;
 
@@ -505,9 +510,11 @@ function int tiszaszaki_levelinfo(void)
 	return res;
 }
 
+str common_time_display_prefix="Time:      \cb";
+
 function str tiszaszaki_get_time_string(void)
 {
-	str res="Time:    \cb";
+	str res="";
 
 	if ((secs >= 0) && (secs <= 59))
 	{
@@ -584,6 +591,19 @@ script "tiszaszaki_common_init" OPEN
 
 		endofact = 0;
 
+		boss_target_hit = 0;
+
+		if (act == 2)
+		{
+			boss_fight_level = true;
+			boss_target_max = 8;
+		}
+		else
+		{
+			boss_fight_level = false;
+			boss_target_max = 0;
+		}
+
 		killtarget = 0;
 
 		mins = 0, secs = 0;
@@ -611,6 +631,10 @@ script "tiszaszaki_common_init" OPEN
 		bonus_stage_state = BONUS_STAGE_PLAYING;
 
 		endofstage = 0;
+
+		boss_target_hit = 0;
+		boss_target_max = 0;
+		boss_fight_level = false;
 
 		rings = 0;
 		ringcount = 0;
@@ -645,7 +669,7 @@ script "tiszaszaki_common_init" OPEN
 		ACS_Execute (300, 0, 0, 0, 0);
 
 		setfont ("BigFont");
-		hudmessage (s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 		delay(5);
 		hudmessage (s:title_str; 2, 0, CR_WHITE, 0.5, 0.46, 5.0, 0.01, 1.0);
 		delay(6);
@@ -664,7 +688,7 @@ script "tiszaszaki_common_init" OPEN
 		setfont ("BigFont");
 		if ((level_num_temp >= 32) && (level_num_temp <= 33))
 		{
-			hudmessage (s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+			hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 
 			delay(5);
 		}
@@ -1571,7 +1595,7 @@ script 300 (void)						// score display
 
 {
 setfont ("BigFont");
-hudmessage (s:"score:    \cc",d:score; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+hudmessage (s:"score:     \cc",d:score; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
 delay(1);
 Restart;
 }
@@ -1613,7 +1637,7 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		tiszaszaki_time_run_seconds(1, reverse);
 
 		setfont ("BigFont");
-		hudmessage (s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 
 		if((!skipbonus) && (timebonus != 0))
 		{
@@ -1728,7 +1752,26 @@ script 999 (void)					// ring display
 
 {
 setfont ("BigFont");
-hudmessage (s:"rings:    \cc",d:rings; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+hudmessage (s:"rings:      \cc",d:rings; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+delay(1);
+Restart;
+}
+
+script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possible)
+{
+	int new_hit_count=boss_target_max / 2;
+	int min_hit_count=(boss_target_hit + 2);
+
+	if (min_hit_count < 2) min_hit_count = 2;
+
+	if (new_hit_count >= min_hit_count)
+		boss_target_max = new_hit_count;
+}
+
+script "tiszaszaki_display_boss_targets" (void)		// target hit display
+{
+setfont ("BigFont");
+hudmessage (s:"target: \cc",d:boss_target_hit,s:"/",d:boss_target_max; 0, 11, CR_GOLD, 0.96, 0.14, 0.0);
 delay(1);
 Restart;
 }
@@ -1781,7 +1824,7 @@ SetPlayerProperty (1, 0, 5);
 SetMusic (level_music); 
 }
 
-script 209 (int arg0) 
+script 209 (int arg0)
 
 {
 for(int time = 0; time < 50; time++)
@@ -1840,13 +1883,15 @@ activatorsound ("speedoff", 127);
 SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
 }
 
-//
+// end-of-act scripts
 
 script "tiszaszaki_end_scoring" (void)
 {
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 ACS_Terminate (400, 0);
+if (boss_fight_level)
+	ACS_NamedTerminate ("tiszaszaki_display_boss_targets", 0);
 SetPlayerProperty (1, 1, 4);
 SetPlayerProperty (1, 2, 5);
 SetWeapon ("Fist");
@@ -1913,6 +1958,8 @@ hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+if (boss_fight_level)
+	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
 SetPlayerProperty (1, 0, 4);
 SetPlayerProperty (1, 0, 5);
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
