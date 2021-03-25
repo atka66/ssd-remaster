@@ -4,6 +4,9 @@
 int zone;
 int act;
 
+bool tiszaszaki_custom_nametag;
+str tiszaszaki_playername;
+
 int endofact;
 int endofstage;
 
@@ -517,6 +520,27 @@ function str tiszaszaki_get_time_string(void)
 	return res;
 }
 
+function str StrTrimmed(str s)
+{
+	str res=s;
+	int n=StrLen(res);
+
+	while ((n > 0) && (GetChar(res, 0) == ' '))
+	{
+		res = StrRight(res, n-1);
+		n = StrLen(res);
+	}
+	while ((n > 0) && (GetChar(res, n-1) == ' '))
+	{
+		res = StrLeft(res, n-1);
+		n = StrLen(res);
+	}
+
+//	Log(s:"string trim result: '",s:res,s:"'");
+
+	return res;
+}
+
 script "tiszaszaki_common_init" OPEN
 {
 	int i;
@@ -526,6 +550,15 @@ script "tiszaszaki_common_init" OPEN
 	tiszaszaki_dw_chk_water_id = -1;
 
 	tiszaszaki_dw_splash_log = false;
+
+	tiszaszaki_custom_nametag = true;
+
+	if (tiszaszaki_custom_nametag)
+	{
+		tiszaszaki_playername = StrTrimmed(StrParam(n:1));
+
+		if (tiszaszaki_playername == "") tiszaszaki_custom_nametag = false;
+	}
 
 	script212_log = false;
 	script904_ang_n = 8;
@@ -1821,8 +1854,15 @@ SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
 setfont ("BigFont");
+if (tiszaszaki_custom_nametag)
+{
+hudmessage (s:tiszaszaki_playername,s:" got"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
+}
+else
+{
 hudmessage (s:"DamaGe        "; 0, 3, CR_GREEN, 0.5, 0.32, 0.0);
 hudmessage (s:"            got"; 0, 4, CR_WHITE, 0.5, 0.32, 0.0);
+}
 hudmessage (s:"through act ",d:act,s:" "; 0, 5, CR_WHITE, 0.5, 0.37, 0.0);
 setfont ("SmallFont");
 delay(35);
@@ -1867,6 +1907,7 @@ if (endofact == 3)
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
+if (!tiszaszaki_custom_nametag)
 hudmessage (s:""; 0, 4, 0, 0, 0, 0);
 hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
