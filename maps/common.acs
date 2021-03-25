@@ -358,38 +358,48 @@ script 230 (int ff_i, int test_mode_i)
 
 		if (test_mode || !forceField_active[ff_i])
 		{
-			int  lid     =forceField_lid   [ff_i];
-			int  trans_am=forceField_trans [ff_i];
-			str  texStr  =forceField_texStr[ff_i];
-			int  cd      =forceField_cd    [ff_i];
-			bool hurt    =forceField_hurt  [ff_i];
+			int  lid     =forceField_lid    [ff_i];
+			int  trans_am=forceField_trans  [ff_i];
+			str  texStr  =forceField_texStr [ff_i];
+			int  cd      =forceField_cd     [ff_i];
+			bool hurt    =forceField_hurt   [ff_i];
 
-			str texClr="-";
-			int tr_add=NO;
-
-			int i,n=forceField_anim_n[ff_i];
-			int anim_dl=forceField_anim_dl[ff_i];
+			int  n       =forceField_anim_n [ff_i];
+			int  anim_dl =forceField_anim_dl[ff_i];
 
 			forceField_active[ff_i] = true;
 
 			if (!test_mode && hurt) ForceField();
 
-			SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
-			SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
-
-			for (i=0;i<=n;i++)
+			if ((n > 0) && (texStr != "-"))
 			{
-				int i_fixed=FixedDiv((n-i) << 16,n << 16);
-				int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
+				int i;
 
-				//if (test_mode) Log(d:i,s:" ->",d:temp_trans);
+				str texClr="-";
+				int tr_add=NO;
 
-				TranslucentLine(lid, temp_trans, tr_add);
-				Delay(anim_dl);
+				SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
+				SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
+
+				if (n > 1)
+				{
+					for (i=0;i<=n;i++)
+					{
+						int i_fixed=FixedDiv((n-i) << 16,n << 16);
+						int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
+
+						//if (test_mode) Log(d:i,s:" -> ",d:temp_trans);
+
+						TranslucentLine(lid, temp_trans, tr_add);
+						Delay(anim_dl);
+					}
+				}
+				else
+					Delay(anim_dl);
+
+				SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
+				SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
 			}
-
-			SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
-			SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
 
 			if (!test_mode && (cd > 0)) Delay(cd);
 
