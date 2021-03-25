@@ -46,6 +46,7 @@ levelnum 4
 next MAP05
 secretnext MAP31
 sky1 SKY02 0
+allowmonstertelefrags
 cluster 8
 evenlighting
 nointermission
