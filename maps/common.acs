@@ -381,7 +381,7 @@ script 230 (int ff_i, int test_mode_i)
 				SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texStr);
 				SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texStr);
 
-				if (n > 1)
+				if ((n > 1) && (trans_am > 0))
 				{
 					for (i=0;i<=n;i++)
 					{
@@ -391,11 +391,13 @@ script 230 (int ff_i, int test_mode_i)
 						//if (test_mode) Log(d:i,s:" -> ",d:temp_trans);
 
 						TranslucentLine(lid, temp_trans, tr_add);
-						Delay(anim_dl);
+						if (anim_dl > 0) Delay(anim_dl);
 					}
 				}
 				else
-					Delay(anim_dl);
+				{
+					if (anim_dl > 0) Delay(anim_dl);
+				}
 
 				SetLineTexture(lid, SIDE_FRONT, TEXTURE_MIDDLE, texClr);
 				SetLineTexture(lid, SIDE_BACK,  TEXTURE_MIDDLE, texClr);
@@ -426,7 +428,7 @@ function void clear_forcefield_entry(int ff_i)
 function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int anim_dl, int trans_am, str texStr, int cd, int blktype, bool hurt)
 {
 	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_lid[ff_i] == 0)
-		&& (lid > 0) && (anim_n > 0) && (anim_dl > 0) && (anim_dl <= 8) && (trans_am > 0)
+		&& (lid > 0) && (anim_n >= 0) && (anim_dl >= 0) && (anim_dl <= 8) && (trans_am >= 0)
 		&& (texStr != "") && (cd >= 0) && (blktype > BLOCK_NOTHING))
 	{
 		forceField_lid    [ff_i] = lid;
@@ -447,10 +449,10 @@ function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int ani
 
 function void tiszaszaki_remove_forcefield(int ff_i)
 {
-	if ((ff_i >= 0) && (ff_i < forceFieldN))
-	{
-		int lid=forceField_lid[ff_i];
+	int lid=forceField_lid[ff_i];
 
+	if ((ff_i >= 0) && (ff_i < forceFieldN) && (lid > 0))
+	{
 		if (lid > 0)
 		{
 			SetLineBlocking(lid, BLOCK_NOTHING);
