@@ -21,6 +21,8 @@ int ringbonus;
 
 int bonus_lev_num;
 
+str level_music;
+
 bool ready;
 bool show_hud;
 bool time_running;
@@ -472,11 +474,29 @@ function int tiszaszaki_levelinfo(void)
 	{
 		zone = (res - 1) / 2 + 1;
 		act = (res - 1) % 2 + 1;
+
 	}
 	else
 	{
 		zone = 0;
 		act = 0;
+	}
+
+	level_music = "";
+	if ((res >= 31) && (res <= 35))
+		level_music = "z_bonus";
+	if ((res >=  1) && (res <= 30))
+	{
+		str music_zone_str="";
+
+		level_music = "zone";
+
+		if (zone < 10)
+			music_zone_str = StrParam(s:"0",d:zone);
+		else
+			music_zone_str = StrParam(d:zone);
+
+		level_music = StrParam(s:level_music,s:music_zone_str,s:"a",d:act);
 	}
 
 	return res;
@@ -1725,7 +1745,7 @@ ACS_ExecuteAlways (209, 0, 780, 0, 0);
 delay(700);
 sethudsize (0, 0, 0);
 SetPlayerProperty (1, 0, 5); 
-SetMusic ("zone01a1"); 
+SetMusic (level_music); 
 }
 
 script 209 (int arg0) 
