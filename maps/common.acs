@@ -709,6 +709,8 @@ script "tiszaszaki_common_init" OPEN
 		delay(24);
 
 		ACS_Execute (400, 0, 0, 0, 0);
+		if (level_num_temp == 30)
+			ACS_NamedExecute("tiszaszaki_display_boss_targets", 0, 0,0,0);
 	}
 	// show HUD in bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
@@ -1815,11 +1817,16 @@ script "tiszaszaki_display_boss_targets" (void)		// target hit display
 if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
 {
 	boss_battle_state = BOSS_BATTLE_ENCOUNTER;
+	ACS_NamedExecute("tiszaszaki_display_boss_target_loop", 0, 0,0,0);
+}
+}
+
+script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (looped function)
+{
 	setfont ("BigFont");
 	hudmessage (s:"target: \cc",d:boss_target_hit,s:"/",d:boss_target_max; 0, 11, CR_GOLD, 0.96, 0.14, 0.0);
 	delay(1);
 	Restart;
-}
 }
 
 // monitor pickup scripts
@@ -1931,13 +1938,26 @@ SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
 
 // end-of-act scripts
 
+script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 30 only
+{
+	if (boss_battle_level)
+	{
+		ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
+		Delay(5);
+		hudmessage (s:""; 0, 11, 0, 0, 0, 0);
+	}
+}
+
 script "tiszaszaki_end_scoring" (void)
 {
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 ACS_Terminate (400, 0);
-if (boss_battle_level)
-	ACS_NamedTerminate ("tiszaszaki_display_boss_targets", 0);
+if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_ENCOUNTER))
+{
+	boss_battle_state = BOSS_BATTLE_FINALE;
+	ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
+}
 SetPlayerProperty (1, 1, 4);
 SetPlayerProperty (1, 2, 5);
 SetWeapon ("Fist");
@@ -1995,8 +2015,6 @@ if (bonus_stage_state == NOT_A_BONUS_STAGE)
 endofact++;
 if (endofact == 3)
 {
-if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_ENCOUNTER))
-	boss_battle_state = BOSS_BATTLE_FINALE;
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
