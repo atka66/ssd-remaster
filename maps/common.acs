@@ -45,7 +45,7 @@ int boss_target_min_count[15]={
 
 int bonus_lev_num;
 
-bool boss_fight_level;
+bool boss_battle_level;
 
 str level_music;
 
@@ -143,6 +143,15 @@ int bonus_stage_state;
 #libdefine BONUS_STAGE_WIN 1
 #libdefine BONUS_STAGE_LOSE 2
 #libdefine NOT_A_BONUS_STAGE -1
+
+// boss battle level related defines (by tiszaszaki)
+
+int boss_battle_state;
+
+#libdefine BOSS_BATTLE_STANDBY 0
+#libdefine BOSS_BATTLE_ENCOUNTER 1
+#libdefine BOSS_BATTLE_FINALE 2
+#libdefine NOT_A_BOSS_BATTLE_LEVEL -1
 
 // deep water effect scripts (by tiszaszaki)
 
@@ -613,12 +622,14 @@ script "tiszaszaki_common_init" OPEN
 
 		if (act == 2)
 		{
-			boss_fight_level = true;
+			boss_battle_level = true;
+			boss_battle_state = BOSS_BATTLE_STANDBY;
 			boss_target_max = 8;
 		}
 		else
 		{
-			boss_fight_level = false;
+			boss_battle_level = false;
+			boss_battle_state = NOT_A_BOSS_BATTLE_LEVEL;
 			boss_target_max = 0;
 		}
 
@@ -650,9 +661,11 @@ script "tiszaszaki_common_init" OPEN
 
 		endofstage = 0;
 
+		boss_battle_level = false;
+		boss_battle_state = NOT_A_BOSS_BATTLE_LEVEL;
+
 		boss_target_hit = 0;
 		boss_target_max = 0;
-		boss_fight_level = false;
 
 		rings = 0;
 		ringcount = 0;
@@ -1775,25 +1788,38 @@ delay(1);
 Restart;
 }
 
+script "tiszaszaki_query_boss_target_num" (void)
+{
+	if (boss_battle_level)
+		Log(d:boss_target_max);
+}
+
 script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possible)
 {
-	int new_hit_count=boss_target_max / 2;
-	int boss_target_min_temp=boss_target_min_count[zone-1];
-	int min_hit_count=(boss_target_hit + boss_target_min_temp);
+	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
+	{
+		int new_hit_count=boss_target_max / 2;
+		int boss_target_min_temp=boss_target_min_count[zone-1];
+		int min_hit_count=(boss_target_hit + boss_target_min_temp);
 
-	if (min_hit_count < boss_target_min_temp)
-		min_hit_count = boss_target_min_temp;
+		if (min_hit_count < boss_target_min_temp)
+			min_hit_count = boss_target_min_temp;
 
-	if (new_hit_count >= min_hit_count)
-		boss_target_max = new_hit_count;
+		if (new_hit_count >= min_hit_count)
+			boss_target_max = new_hit_count;
+	}
 }
 
 script "tiszaszaki_display_boss_targets" (void)		// target hit display
 {
-setfont ("BigFont");
-hudmessage (s:"target: \cc",d:boss_target_hit,s:"/",d:boss_target_max; 0, 11, CR_GOLD, 0.96, 0.14, 0.0);
-delay(1);
-Restart;
+if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
+{
+	boss_battle_state = BOSS_BATTLE_ENCOUNTER;
+	setfont ("BigFont");
+	hudmessage (s:"target: \cc",d:boss_target_hit,s:"/",d:boss_target_max; 0, 11, CR_GOLD, 0.96, 0.14, 0.0);
+	delay(1);
+	Restart;
+}
 }
 
 // monitor pickup scripts
@@ -1910,7 +1936,7 @@ script "tiszaszaki_end_scoring" (void)
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 ACS_Terminate (400, 0);
-if (boss_fight_level)
+if (boss_battle_level)
 	ACS_NamedTerminate ("tiszaszaki_display_boss_targets", 0);
 SetPlayerProperty (1, 1, 4);
 SetPlayerProperty (1, 2, 5);
@@ -1969,6 +1995,8 @@ if (bonus_stage_state == NOT_A_BONUS_STAGE)
 endofact++;
 if (endofact == 3)
 {
+if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_ENCOUNTER))
+	boss_battle_state = BOSS_BATTLE_FINALE;
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
@@ -1978,7 +2006,7 @@ hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
-if (boss_fight_level)
+if (boss_battle_level)
 	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
 SetPlayerProperty (1, 0, 4);
 SetPlayerProperty (1, 0, 5);
