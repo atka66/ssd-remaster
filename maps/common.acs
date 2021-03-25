@@ -25,6 +25,24 @@ int ringbonus;
 int boss_target_hit;
 int boss_target_max;
 
+int boss_target_min_count[15]={
+	2, // zone  1
+	1, // zone  2
+	4, // zone  3
+	8, // zone  4
+	8, // zone  5
+	8, // zone  6
+	8, // zone  7
+	8, // zone  8
+	8, // zone  9
+	8, // zone 10
+	8, // zone 11
+	8, // zone 12
+	8, // zone 13
+	8, // zone 14
+	8, // zone 15
+	};
+
 int bonus_lev_num;
 
 bool boss_fight_level;
@@ -1760,9 +1778,11 @@ Restart;
 script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possible)
 {
 	int new_hit_count=boss_target_max / 2;
-	int min_hit_count=(boss_target_hit + 2);
+	int boss_target_min_temp=boss_target_min_count[zone-1];
+	int min_hit_count=(boss_target_hit + boss_target_min_temp);
 
-	if (min_hit_count < 2) min_hit_count = 2;
+	if (min_hit_count < boss_target_min_temp)
+		min_hit_count = boss_target_min_temp;
 
 	if (new_hit_count >= min_hit_count)
 		boss_target_max = new_hit_count;
