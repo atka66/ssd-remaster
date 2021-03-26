@@ -247,13 +247,15 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 
 ### Other
 
-* [ ] Some keys (skulls) are renamed in DECORATE. ACS of all maps should be checked for key dropping errors
+* [ ] ISSUE: Some keys (skulls) are renamed in DECORATE. ACS of all maps should be checked for key dropping errors
 * [ ] Consider connecting levels using smarter intermission mechanism instead of direct teleporting
 * [✔] Remaster Railgun sprites
 * [✔] Consider using 3D model for MovingPlatform actors along with sprite
 * [ ] New texture for MovingPlatform 3D model
-* [ ] Some map features should be moved to common scripts (e.g. welcome message, end-of-act scoring). This applies also for bonus levels.
-* [ ] Show hits count for target-based boss levels (maps with even number between 1-30).
+* [ ] Some map features should be moved to common scripts (e.g. welcome message, end-of-act scoring). This applies also for bonus levels
+* [ ] Show hits count for target-based boss levels (maps with even number between 1-30)
+* [ ] Create blocking forcefield walls for some purposes (e.g. in boss battles). All forcefield walls are managed using common ACS routines (e.g. create, destroy, trigger)
+* [ ] Smash trigger lines should also be externed. Different types of smash actions should be managed with common ACS routines similar to forcefields
 
 ## Suggested editing tools
 
