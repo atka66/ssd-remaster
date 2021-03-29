@@ -365,31 +365,96 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 	}
 }
 
+function int tiszaszaki_get_facing_angle(int tid_from, int tid_to)
+{
+	int x0,x1;
+	int y0,y1;
+	int res=0;
+
+	if ((tid_from >= 0) && (tid_to >= 0) && (tid_from != tid_to))
+	{
+		x0 = GetActorX(tid_from); y0 = GetActorY(tid_from);
+		x1 = GetActorX(tid_to); y1 = GetActorY(tid_to);
+		res = VectorAngle(x1-x0,y1-y0);
+	}
+
+	return res;
+}
+
 script 904 (int target_tid, int target_pitch) // generic face to actor
 {
 	if (target_tid >= 0)
 	{
-		int ang0=GetActorAngle(0), ang1=VectorAngle(GetActorX(target_tid)-GetActorX(0),GetActorY(target_tid)-GetActorY(0));
+		int ang0=GetActorAngle(0), ang1=tiszaszaki_get_facing_angle(0, target_tid);
 		int pit0=GetActorPitch(0), pit1=FixedDiv(target_pitch << 16,360 << 16);
-		int ang_d=ang1-ang0, pit_d=pit1-pit0;
 		int i=0, ang_n=script904_ang_n;
 		int dl=1;
+
+		int fixed_n=FixedDiv(1 << 16,ang_n << 16);
+		int ang_dir=1;
+
+		int ang_d,pit_d,	ang_step,pit_step,	ang,pit;
 
 		//Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
 		//Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
 
+		ang_d = ang1-ang0, pit_d = pit1-pit0;
+
+		if (ang_d < 0.0)
+		{
+			ang_d = -ang_d;
+			ang_dir = -1;
+		}
+		if (ang_d > 0.5) ang_d = 1.0 - ang_d;
+
+		ang_step = FixedMul(ang_d,fixed_n), pit_step = FixedMul(pit_d,fixed_n);
+
+		ang = ang0, pit = pit0;
+
 		for (i=0;i<ang_n;i++)
 		{
-			int i_fixed=FixedDiv((i+1) << 16,ang_n << 16);
-			int ang=ang0 + FixedMul(ang_d,i_fixed), pit=pit0 + FixedMul(pit_d,i_fixed);
-
 			//Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
 
-			SetActorAngle(0, ang);
-			SetActorPitch(0, pit);
+			ang += ang_dir * ang_step, pit += pit_step;
+
+			SetActorAngle(0, ang); SetActorPitch(0, pit);
 
 			Delay(dl);
 		}
+	}
+}
+
+//
+
+script 228 (int tid1, int tid2, int do_deact_i) // simultaneous handling of thing activation or deactivation (ideal for ambient sound changes)
+{
+	bool do_deact=(do_deact_i != 0);
+
+	if (do_deact)
+	{
+		Thing_Deactivate(tid1);
+		Thing_Deactivate(tid2);
+	}
+	else
+	{
+		Thing_Activate(tid1);
+		Thing_Activate(tid2);
+	}
+}
+
+script 229 (int tid1, int tid2, int reversed_i)	// simultaneous handling of thing activation and deactivation (ideal for ambient sound changes)
+{
+	bool reversed=(reversed_i != 0);
+
+	if (reversed)
+	{
+		Thing_Deactivate(tid1);
+		Thing_Activate(tid2);
+	}
+	else
+	{
+		Thing_Activate(tid1);
+		Thing_Deactivate(tid2);
 	}
 }
 
