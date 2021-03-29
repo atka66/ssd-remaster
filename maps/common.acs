@@ -10,7 +10,15 @@ str tiszaszaki_playername;
 int endofact;
 int endofstage;
 
-int mins, secs;
+global int 1:score;
+global int 2:tsz_timestamp;
+global int 3:tsz_timestamp_backup;
+
+bool show_hours;
+bool show_frac_seconds;
+
+int tic_per_frac;
+int frac_per_seconds;
 
 int killbonus;
 int killcount;
@@ -501,6 +509,8 @@ function void tiszaszaki_remove_forcefield(int ff_i)
 	}
 }
 
+// other useful functions
+
 function int tiszaszaki_levelinfo(void)
 {
 	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
@@ -537,21 +547,111 @@ function int tiszaszaki_levelinfo(void)
 	return res;
 }
 
-str common_time_display_prefix="Time:      \cb";
+str common_time_display_prefix="Time:   \cb";
 
-function str tiszaszaki_get_time_string(void)
+function bool checkTimeParams(int hours, int mins, int secs)
+{
+	bool res=true;
+
+	res &= (hours >= 0);
+	res &= ((mins >= 0) && (mins < 60));
+	res &= ((secs >= 0) && (secs < 60));
+
+	return res;
+}
+
+function int getTimestamp(int hours, int mins, int secs)
+{
+	int res=-1;
+
+	if (checkTimeParams(hours, mins, secs))
+		res = frac_per_seconds*(secs + 60*(mins + 60*hours));
+
+	return res;
+}
+
+function void setupTime(int hours, int mins, int secs)
+{
+	int res=getTimestamp(hours, mins, secs);
+
+	if (res >= 0)
+		tsz_timestamp = res;
+}
+
+function void backupTime(void)
+{
+	tsz_timestamp_backup = tsz_timestamp;
+}
+
+function void restoreTime(void)
+{
+	tsz_timestamp = tsz_timestamp_backup;
+}
+
+function bool checkTime(int hours, int mins, int secs)
+{
+	bool res=true;
+
+	res &= (checkTimeParams(hours, mins, secs));
+
+	if (res) res &= (tsz_timestamp == getTimestamp(hours, mins, secs));
+
+	return res;
+}
+
+function str tiszaszaki_get_time_string(int timestamp)
 {
 	str res="";
 
-	if ((secs >= 0) && (secs <= 59))
+	if (timestamp >= 0)
 	{
-		if(secs < 10)
-			res = StrParam(s:res,d:mins,s:":0",d:secs);
+		int hours, mins, secs, fracs;
+		int div_temp;
+
+		div_temp = 3600 * frac_per_seconds;
+		hours = timestamp / div_temp;
+		timestamp -= hours * div_temp;
+
+		div_temp = 60 * frac_per_seconds;
+		mins = timestamp / div_temp;
+		timestamp -= mins * div_temp;
+
+		div_temp = frac_per_seconds;
+		secs = timestamp / div_temp;
+		timestamp -= secs * div_temp;
+
+		fracs = timestamp;
+
+		if (show_hours)
+			res = StrParam(s:res,d:hours,s:":");
+
+		if ((show_hours) && (mins < 10))
+			res = StrParam(s:res,s:"0",d:mins);
 		else
-			res = StrParam(s:res,d:mins,s:":",d:secs);
+			res = StrParam(s:res,d:mins);
+
+		if(secs < 10)
+			res = StrParam(s:res,s:":0",d:secs);
+		else
+			res = StrParam(s:res,s:":",d:secs);
+
+		if (show_frac_seconds)
+		{
+			int frac_temp=FixedMul(FixedDiv(fracs << 16,frac_per_seconds << 16),100 << 16) >> 16;
+
+			if(frac_temp < 10)
+				res = StrParam(s:res,s:".0",d:frac_temp);
+			else
+				res = StrParam(s:res,s:".",d:frac_temp);
+		}
 	}
 
 	return res;
+}
+
+function void tiszaszaki_display_time(void)
+{
+	hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(tsz_timestamp); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
 }
 
 function str StrTrimmed(str s)
@@ -597,19 +697,25 @@ script "tiszaszaki_common_init" OPEN
 	script212_log = false;
 	script904_ang_n = 8;
 
+	tic_per_frac = 5;
+	frac_per_seconds = 7;
+
 	show_hud = false;
 
 	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
 
-	for (i=0;i<deepWaterN;i++)
+	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
-		inDeepWater[i] = false;
-		onWaterSurface[i] = false;
-		isTopDownWater[i] = false;
-	}
+		for (i=0;i<deepWaterN;i++)
+		{
+			inDeepWater[i] = false;
+			onWaterSurface[i] = false;
+			isTopDownWater[i] = false;
+		}
 
-	for (i=0;i<forceFieldN;i++)
-		clear_forcefield_entry(i);
+		for (i=0;i<forceFieldN;i++)
+			clear_forcefield_entry(i);
+	}
 
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
@@ -635,7 +741,15 @@ script "tiszaszaki_common_init" OPEN
 
 		killtarget = 0;
 
-		mins = 0, secs = 0;
+		show_hours = true;
+		show_frac_seconds = false;
+
+		if (level_num_temp == 1)
+		{
+			setupTime(00,00,00);
+
+			score = 0;
+		}
 
 		if (level_num_temp >= 2)
 		{
@@ -666,6 +780,11 @@ script "tiszaszaki_common_init" OPEN
 
 		boss_target_hit = 0;
 		boss_target_max = 0;
+
+		show_hours = false;
+		show_frac_seconds = true;
+
+		backupTime();
 
 		rings = 0;
 		ringcount = 0;
@@ -700,7 +819,7 @@ script "tiszaszaki_common_init" OPEN
 		ACS_Execute (300, 0, 0, 0, 0);
 
 		setfont ("BigFont");
-		hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		tiszaszaki_display_time();
 		delay(5);
 		hudmessage (s:title_str; 2, 0, CR_WHITE, 0.5, 0.46, 5.0, 0.01, 1.0);
 		delay(6);
@@ -721,7 +840,7 @@ script "tiszaszaki_common_init" OPEN
 		setfont ("BigFont");
 		if ((level_num_temp >= 32) && (level_num_temp <= 33))
 		{
-			hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+			tiszaszaki_display_time();
 
 			delay(5);
 		}
@@ -1588,7 +1707,6 @@ function int max(int a, int b)
 
 //// SCORES.ACS
 
-global int 1:score;
 int timebonus_unit_down = 50;
 int timebonus_unit = 1000;
 int timebonus = 100000;
@@ -1633,29 +1751,20 @@ delay(1);
 Restart;
 }
 
-function void tiszaszaki_time_run_seconds(int s, bool reverse)
+function void tiszaszaki_time_run_frac_sec(int fs, bool reverse)
 {
-	if ((mins >= 0) && (secs >= 0) && ((reverse && (s <= (mins * 60 + secs))) || !reverse))
+	if ((tsz_timestamp >= 0) && ((reverse && (fs <= tsz_timestamp)) || !reverse))
 	{
 		if (reverse)
-			secs -= s;
+			tsz_timestamp -= fs;
 		else
-			secs += s;
-
-		if ((secs < 0) || (secs > 59))
-		{
-			if (reverse)
-			{
-				while ((secs < 0) && (mins > 0))
-					mins -= 1, secs += 60;
-			}
-			if (!reverse)
-			{
-				while (secs >= 60)
-					mins += 1, secs -= 60;
-			}
-		}
+			tsz_timestamp += fs;
 	}
+}
+
+function void tiszaszaki_time_run_seconds(int s, bool reverse)
+{
+	tiszaszaki_time_run_frac_sec(frac_per_seconds*s, reverse);
 }
 
 script 400 (int skipbonus, int reverse_i)			// time display
@@ -1667,10 +1776,10 @@ script 400 (int skipbonus, int reverse_i)			// time display
 
 	while (time_running)
 	{
-		tiszaszaki_time_run_seconds(1, reverse);
+		tiszaszaki_time_run_frac_sec(1, reverse);
 
 		setfont ("BigFont");
-		hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+		tiszaszaki_display_time();
 
 		if((!skipbonus) && (timebonus != 0))
 		{
@@ -1680,10 +1789,10 @@ script 400 (int skipbonus, int reverse_i)			// time display
 				timebonus -= timebonus_unit_down;
 		}
 
-		if(reverse && (mins == 0) && (secs == 0))
+		if(reverse && checkTime(00,00,00))
 			terminate;
 
-		delay(35);
+		delay(tic_per_frac);
 	}
 }
 
@@ -2049,6 +2158,7 @@ if (bonus_lev_num >= 4)
 SetPlayerProperty (1, 0, 3);
 activatorsound ("teleport3", 127);
 delay(35);
+restoreTime();
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
