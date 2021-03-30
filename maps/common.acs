@@ -768,6 +768,8 @@ script "tiszaszaki_common_set_nametag" (void)
 
 			if (tiszaszaki_playername == "") tiszaszaki_custom_nametag = false;
 		}
+
+		if (tiszaszaki_loop_nametag_change) Delay(5);
 	} while (tiszaszaki_loop_nametag_change);
 }
 
@@ -789,7 +791,7 @@ script "tiszaszaki_common_init" OPEN
 
 	show_hud = false;
 
-	tiszaszaki_loop_nametag_change = false;
+	tiszaszaki_loop_nametag_change = true;
 	ACS_NamedExecute("tiszaszaki_common_set_nametag", 0, 0,0,0);
 
 	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
@@ -2170,8 +2172,11 @@ hudmessage (s:tiszaszaki_playername,s:" got"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
 }
 else
 {
+hudmessage (s:"\cdDamaGe \cjgot"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
+/*
 hudmessage (s:"DamaGe        "; 0, 3, CR_GREEN, 0.5, 0.32, 0.0);
 hudmessage (s:"            got"; 0, 4, CR_WHITE, 0.5, 0.32, 0.0);
+*/ // deprecated
 }
 hudmessage (s:"through act ",d:act,s:" "; 0, 5, CR_WHITE, 0.5, 0.37, 0.0);
 setfont ("SmallFont");
@@ -2217,8 +2222,7 @@ if (endofact == 3)
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
-if (!tiszaszaki_custom_nametag)
-hudmessage (s:""; 0, 4, 0, 0, 0, 0);
+//if (!tiszaszaki_custom_nametag) hudmessage (s:""; 0, 4, 0, 0, 0, 0); // deprecated
 hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
@@ -2252,4 +2256,5 @@ restoreTime();
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
+tiszaszaki_loop_nametag_change = false;
 }
