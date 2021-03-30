@@ -360,11 +360,13 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 				{
 					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
 					Thing_Activate(tid);
+					SetActorProperty(tid, APROP_Dormant, false);
 				}
 				if (activated && !active)
 				{
 					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
 					Thing_Deactivate(tid);
+					SetActorProperty(tid, APROP_Dormant, true);
 				}
 			}
 			if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
@@ -373,11 +375,13 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 				{
 					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
 					Thing_Deactivate(tid);
+					SetActorProperty(tid, APROP_Dormant, true);
 				}
 				if (!activated && !active)
 				{
 					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
 					Thing_Activate(tid);
+					SetActorProperty(tid, APROP_Dormant, false);
 				}
 			}
 
