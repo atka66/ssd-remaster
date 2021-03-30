@@ -1,0 +1,11 @@
+OptionMenu "SonicRemasterSettings"
+{
+	Title "Super Sonic Doom - Remaster Settings"
+
+	Option "Custom player name replaces DamaGe", "tiszaszaki_custom_nametag", "OnOff"
+}
+
+AddListMenu "MainMenu" before "OptionsMenu"
+{
+	TextItem "SSD Advanced Settings", a, "SonicRemasterSettings"
+}

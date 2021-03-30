@@ -4,6 +4,8 @@
 int zone;
 int act;
 
+bool tiszaszaki_loop_nametag_change;
+
 bool tiszaszaki_custom_nametag;
 str tiszaszaki_playername;
 
@@ -740,6 +742,35 @@ function str StrTrimmed(str s)
 	return res;
 }
 
+function str tiszaszaki_common_get_nametag (void)
+{
+	str res="";
+
+	if (tiszaszaki_custom_nametag)
+		res = tiszaszaki_playername;
+	else
+		res = "DamaGe";
+
+	return res;
+}
+
+script "tiszaszaki_common_set_nametag" (void)
+{
+	do
+	{
+		int tiszaszaki_custom_nametag_i=GetCVar("tiszaszaki_custom_nametag");
+
+		tiszaszaki_custom_nametag = (tiszaszaki_custom_nametag_i != 0);
+
+		if (tiszaszaki_custom_nametag)
+		{
+			tiszaszaki_playername = StrTrimmed(StrParam(n:1));
+
+			if (tiszaszaki_playername == "") tiszaszaki_custom_nametag = false;
+		}
+	} while (tiszaszaki_loop_nametag_change);
+}
+
 script "tiszaszaki_common_init" OPEN
 {
 	int i;
@@ -750,15 +781,6 @@ script "tiszaszaki_common_init" OPEN
 
 	tiszaszaki_dw_splash_log = false;
 
-	tiszaszaki_custom_nametag = true;
-
-	if (tiszaszaki_custom_nametag)
-	{
-		tiszaszaki_playername = StrTrimmed(StrParam(n:1));
-
-		if (tiszaszaki_playername == "") tiszaszaki_custom_nametag = false;
-	}
-
 	script212_log = false;
 	script904_ang_n = 8;
 
@@ -766,6 +788,9 @@ script "tiszaszaki_common_init" OPEN
 	frac_per_seconds = 7;
 
 	show_hud = false;
+
+	tiszaszaki_loop_nametag_change = false;
+	ACS_NamedExecute("tiszaszaki_common_set_nametag", 0, 0,0,0);
 
 	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
 
