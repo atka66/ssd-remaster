@@ -53,6 +53,25 @@ int boss_target_min_count[15]={
 	8, // zone 15
 	};
 
+int boss_target_max_count[15]={
+	64, // zone  1
+	64, // zone  2
+	64, // zone  3
+	64, // zone  4
+	64, // zone  5
+	 8, // zone  6
+	 8, // zone  7
+	 8, // zone  8
+	 8, // zone  9
+	 8, // zone 10
+	 8, // zone 11
+	 8, // zone 12
+	 8, // zone 13
+	 8, // zone 14
+	 8, // zone 15
+	};
+
+
 int bonus_lev_num;
 
 bool boss_battle_level;
@@ -746,7 +765,7 @@ function str tiszaszaki_common_get_nametag (void)
 {
 	str res="";
 
-	if (tiszaszaki_custom_nametag)
+	if (tiszaszaki_custom_nametag && (tiszaszaki_playername != ""))
 		res = tiszaszaki_playername;
 	else
 		res = "DamaGe";
@@ -759,14 +778,26 @@ script "tiszaszaki_common_set_nametag" (void)
 	do
 	{
 		int tiszaszaki_custom_nametag_i=GetCVar("tiszaszaki_custom_nametag");
+		str new_playername=StrTrimmed(StrParam(n:1));
+		bool cvar_new_val=(tiszaszaki_custom_nametag_i != 0), cvar_old_val;
 
-		tiszaszaki_custom_nametag = (tiszaszaki_custom_nametag_i != 0);
+		cvar_old_val = tiszaszaki_custom_nametag;
+		tiszaszaki_custom_nametag = cvar_new_val;
 
-		if (tiszaszaki_custom_nametag)
+		/*
+		if (cvar_new_val != cvar_old_val)
 		{
-			tiszaszaki_playername = StrTrimmed(StrParam(n:1));
+			if (tiszaszaki_custom_nametag)
+				Log(s:"Custom nametag is ON.");
+			else
+				Log(s:"Custom nametag is OFF");
+		}
+		*/
 
-			if (tiszaszaki_playername == "") tiszaszaki_custom_nametag = false;
+		if (tiszaszaki_custom_nametag && (new_playername != tiszaszaki_playername))
+		{
+			tiszaszaki_playername = new_playername;
+			//Log(s:"Nametag is: ",s:tiszaszaki_playername);
 		}
 
 		if (tiszaszaki_loop_nametag_change) Delay(5);
@@ -2009,6 +2040,19 @@ script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possibl
 			min_hit_count = boss_target_min_temp;
 
 		if (new_hit_count >= min_hit_count)
+			boss_target_max = new_hit_count;
+	}
+}
+
+script "tiszaszaki_harden_boss_targets" (void)		// double boss hit count (if possible)
+{
+	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
+	{
+		int new_hit_count=boss_target_max * 2;
+		int boss_target_max_temp=boss_target_max_count[zone-1];
+		int max_hit_count=boss_target_max_temp;
+
+		if (new_hit_count <= max_hit_count)
 			boss_target_max = new_hit_count;
 	}
 }
