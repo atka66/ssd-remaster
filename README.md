@@ -62,7 +62,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [✔] Fix bridges using 3D floors
 * [✔] Fix bottom of tree huts
 * [✔] Create gradient lighting in huts similar to MAP02
-* [ ] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
+* [✔] Fix water using 3D floors. Make sure that scrolling effects are applied properly. Create a wind effect giving rivers more realistic physics
 * [✔] Highlight pathways in automap using 3D floor
 * [✔] Water splash sound effects issue should be solved by additional ACS scripts
 
@@ -256,6 +256,7 @@ The project tries to fix these issues and makes the megawad playable on newer ve
 * [ ] Show hits count for target-based boss levels (maps with even number between 1-30)
 * [ ] Create blocking forcefield walls for some purposes (e.g. in boss battles). All forcefield walls are managed using common ACS routines (e.g. create, destroy, trigger)
 * [ ] Smash trigger lines should also be externed. Different types of smash actions should be managed with common ACS routines similar to forcefields
+* [ ] Use 'water current effect' function implemented in common ACS to solve related problems (like rivers in MAP03)
 
 ## Suggested editing tools
 
