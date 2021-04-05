@@ -857,7 +857,7 @@ script "tiszaszaki_common_set_nametag" (void)
 {
 	do
 	{
-		int tiszaszaki_custom_nametag_i=GetCVar("tiszaszaki_custom_nametag");
+		int tiszaszaki_custom_nametag_i=GetCVar("ssdremaster_custom_nametag");
 		str new_playername=StrTrimmed(StrParam(n:1));
 		bool cvar_new_val=(tiszaszaki_custom_nametag_i != 0), cvar_old_val;
 
