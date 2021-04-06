@@ -1,0 +1,102 @@
+//===========================================================================
+// SSD Monitors
+//===========================================================================
+
+MonitorBroken
+{
+DoomEdNum 20000
+Sprite MON0
+Frames "A"
+NoGravity
+Radius 24
+Height 13
+}
+
+MonitorHealth
+{
+DoomEdNum 20001
+Sprite MON1
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorArmour
+{
+DoomEdNum 20002
+Sprite MON2
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorInvincibility
+{
+DoomEdNum 20003
+Sprite MON3
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorInvisibility
+{
+DoomEdNum 20004
+Sprite MON4
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorRadiationSuit
+{
+DoomEdNum 20005
+Sprite MON5
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorExtraLife
+{
+DoomEdNum 20006
+Sprite MON6
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+MonitorSpeed
+{
+DoomEdNum 20036
+Sprite MON7
+Frames "4:A, 1:B"
+Solid
+NoGravity
+Radius 24
+Height 32
+}
+
+pickup MonitorTrigger
+{
+DoomEdNum 20011
+Sprite NONE
+Frames "A"
+PickupMessage "Monitor!"
+PickupSound "silent"
+NoGravity
+Radius 14
+Height 16
+}

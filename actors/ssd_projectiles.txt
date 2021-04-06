@@ -1,0 +1,692 @@
+//===========================================================================
+// SSD Projectiles
+//===========================================================================
+
+projectile ImpFireball2
+
+{
+SpawnNum 201
+Sprite BAL1
+Frames "4:A*B*"
+DeathSprite BAL1
+DeathFrames "6:C*D*E*"
+Radius 3
+Height 8
+Speed 10
+Damage 3
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "imp/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile CacoFireball2
+{
+SpawnNum 202
+Sprite BAL2
+Frames "4:A*B*"
+DeathSprite BAL2
+DeathFrames "6:C*D*E*"
+Radius 3
+Height 8
+Speed 10
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "caco/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile BaronFireball2
+{
+SpawnNum 203
+Sprite BAL7
+Frames "4:A*B*"
+DeathSprite BAL7
+DeathFrames "6:C*D*E*"
+Radius 3
+Height 8
+Speed 15
+Damage 8
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "baron/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile MancubusFireball2
+{
+SpawnNum 204
+Sprite MANF
+Frames "4:A*B*"
+DeathSprite MISL
+DeathFrames "8:B*, 6:C*, 4:D*"
+Radius 3
+Height 8
+Speed 20
+Damage 8
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "fatso/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile ArachnotronPlasma2
+{
+SpawnNum 205
+Sprite APLS
+Frames "5:A*B*"
+DeathSprite APBX
+DeathFrames "5:A*B*C*D*E*"
+Radius 6
+Height 8
+Speed 25
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "imp/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile PlasmaBolt2
+{
+SpawnNum 206
+Sprite PLSS
+Frames "6:A*B*"
+DeathSprite PLSE
+DeathFrames "4:A*B*C*D*E*"
+Radius 6
+Height 8
+Speed 25
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "weapons/shotx"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+ACTOR ReiverFireball
+{
+	SpawnID 207
+	Radius 12
+	Height 19
+	Speed 10
+	FastSpeed 20
+	Damage 4
+	PROJECTILE
+	+FIREDAMAGE
+	SeeSound "HexenFireball5"
+	DeathSound "HexenFireball1"
+	States
+	{
+	Spawn:
+		WRBL ABC 4 BRIGHT
+		Loop
+	Death:
+		WRBX EFGHI 4 BRIGHT
+		Stop
+	}
+}
+
+projectile BloodscourgeShot
+{
+SpawnNum 208
+Sprite MSP2
+Frames "4:A*B*C*D*"
+DeathSprite MSPX
+DeathFrames "4:E*F*G*H*I*"
+Radius 15
+Height 30
+Speed 15
+Damage 7
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenFireball3"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Fire
+DoNotHurtShooter
+}
+
+projectile HexenArrow
+{
+SpawnNum 209
+Sprite AROW
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 4
+Height 8
+Speed 15
+Damage 4
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile HexenBlade
+{
+SpawnNum 210
+Sprite BLAD
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 4
+Height 8
+Speed 15
+Damage 3
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile HexenMace
+{
+SpawnNum 211
+Sprite MACE
+Frames "4:A*B*C*"
+DeathSprite MACX
+DeathFrames "4:E*F*G*H*I*J*K*L*M*"
+Radius 14
+Height 28
+Speed 15
+Damage 2
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenFireball1"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile ReiverFireball2
+{
+SpawnNum 212
+Sprite WRBL
+Frames "4:A*B*C*"
+DeathSprite WRBX
+DeathFrames "4:E*F*G*H*I*"
+Radius 12
+Height 19
+Speed 10
+Damage 4
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenFireball1"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Fire
+DoNotHurtShooter
+}
+
+projectile SpamShot
+{
+SpawnNum 213
+Sprite SPAM
+Frames "A"
+DeathSprite NONE
+DeathFrames "4:A"
+Radius 16
+Height 32
+Speed 10
+Damage 1
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile WarezShot
+{
+SpawnNum 214
+Sprite WARZ
+Frames "A"
+DeathSprite NONE
+DeathFrames "4:A"
+Radius 16
+Height 15
+Speed 10
+Damage 2
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile BanBall
+{
+SpawnNum 215
+Sprite BANB
+Frames "A"
+DeathSprite BANB
+DeathFrames "4:B*C*D*E*F*"
+Radius 15
+Height 28
+Speed 10
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenFireball1"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Fire
+DoNotHurtShooter
+}
+
+projectile BanIPBall
+{
+SpawnNum 216
+Sprite BANB
+Frames "I"
+DeathSprite BANB
+DeathFrames "4:B*C*D*E*F*"
+Radius 15
+Height 28
+Speed 10
+Damage 15
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenFireball1"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Fire
+DoNotHurtShooter
+}
+
+projectile FACFireBomb
+{
+SpawnNum 217
+Sprite FBOM
+Frames "A"
+DeathSprite FBOM
+DeathFrames "4:B*C*D*"
+Radius 60
+Height 64
+Speed 32
+Damage 32
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Explosion1"
+ExplosionRadius 192
+ExplosionDamage 96
+DamageType Fire
+DoNotHurtShooter
+}
+
+projectile HexenIceShard
+{
+SpawnNum 218
+Sprite ICES
+Frames "4:ABC"
+DeathSprite ICES
+DeathFrames "4:DEFGH"
+Radius 5
+Height 10
+Speed 15
+Damage 2
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "HexenIceball2"
+DamageType Ice
+DoNotHurtShooter
+}
+
+projectile FallingRock1
+{
+SpawnNum 219
+Sprite ROK1
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 8
+Height 8
+Speed 15
+Damage 2
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile FallingRock2
+{
+SpawnNum 220
+Sprite ROK2
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 10
+Height 12
+Speed 15
+Damage 3
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile FallingRock3
+{
+SpawnNum 221
+Sprite ROK3
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 15
+Height 19
+Speed 15
+Damage 4
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile FallingRock4
+{
+SpawnNum 222
+Sprite ROK4
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 25
+Height 23
+Speed 15
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile Brick
+{
+SpawnNum 226
+Sprite BRIK
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 15
+Height 8
+Speed 15
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile MetalPlate
+{
+SpawnNum 227
+Sprite MTPL
+Frames "A"
+DeathSprite NONE
+DeathFrames "A"
+Radius 8
+Height 8
+Speed 15
+Damage 6
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound "Chink"
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+projectile SkyCitySpirit
+{
+SpawnNum 228
+Sprite SPIR
+Frames "4:AB"
+DeathSprite SPIR
+DeathFrames "4:KLMNO"
+Radius 32
+Height 15
+Speed 15
+Damage 5
+NoBlockmap
+NoGravity
+ActivatePCross
+ActivateImpact
+DeathSound ""
+ExplosionRadius 0
+ExplosionDamage 0
+DamageType Normal
+DoNotHurtShooter
+}
+
+pickup HexenIceMace
+{
+DoomEdNum 20085
+SpawnNum 225
+Sprite ICPR
+Frames "4:A*B*C*"
+PickupMessage ""
+PickupSound ""
+NoGravity
+Radius 22
+Height 26
+}
+
+ACTOR IceJet 20078
+{
+	SpawnID 223
+	Radius 22
+	Height 26
+	Speed 15
+	Damage 1
+	Projectile
+	+ICEDAMAGE
+	+RIPPER
+	RenderStyle Translucent
+	Alpha 0.5
+	SeeSound icejet
+	States
+	{
+	Spawn:
+		IJET ABCDEFGH 4 BRIGHT
+		IJET H 0 BRIGHT A_Die
+		Stop
+	Death:
+		IJET IJ 4 BRIGHT
+		Stop
+	}
+}
+
+ACTOR FireJet 20079
+{
+	SpawnID 224
+	Radius 22
+	Height 26
+	Speed 15
+	Damage 1
+	Projectile
+	+FIREDAMAGE
+	+RIPPER
+	RenderStyle Translucent
+	Alpha 0.8
+	SeeSound firejet
+	States
+	{
+	Spawn:
+		FJET ABCDEFGH 4 BRIGHT
+		FJET H 0 BRIGHT A_Die
+		Stop
+	Death:
+		FJET IJ 4 BRIGHT
+		Stop
+	}
+}
+
+ACTOR ExplodingRock 20086
+{
+	SpawnID 229
+	Radius 22
+	Height 26
+	Speed 15
+	Scale 2.0
+	Projectile
+	States
+	{
+	Spawn:
+		ROK3 A 10 
+		Goto Death
+	Death:
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -165) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -150) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -135) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -120) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -105) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -90) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -75) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -60) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -45) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -30) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, -15) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 0) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 15) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 30) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 45) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 60) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 75) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 90) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 105) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 120) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 135) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 150) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 165) 
+		ROK2 A 0 A_CustomMissile ("FallingRock2", 32, 0, 180) 
+		ROK2 A 20
+		Stop
+	}
+}
+
+ACTOR RevenantFireball2: RevenantTracer replaces Spectre
+{
+	-SEEKERMISSILE
+	States
+	{
+	Spawn:
+    FATB AB 2 bright
+    Loop
+	}
+}
+
+ACTOR Rocket2: Rocket replaces WolfensteinSS
+{
+
+}
+
+ACTOR MiniVolcanoFireball1 : VolcanoBlast replaces VolcanoBlast
+{
+		States
+		{
+		Spawn:
+			VFBL ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB 4 BRIGHT A_SpawnItemEx("Puffy", 
+			random2[BeastPuff]()*0.015625, random2[BeastPuff]()*0.015625, random2[BeastPuff]()*0.015625, 0,0,0,0,
+			SXF_ABSOLUTEPOSITION, 64)
+			Loop
+		}
+}
+
+ACTOR MiniVolcanoFireball2 : VolcanoTBlast replaces VolcanoTBlast
+{
+
+}

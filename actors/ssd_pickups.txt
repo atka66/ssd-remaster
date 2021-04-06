@@ -1,0 +1,298 @@
+//===========================================================================
+// SSD Pickups
+//===========================================================================
+
+pickup RedArmour
+{
+DoomEdNum 20009
+SpawnNum 159
+Sprite ARM3
+Frames "6:A*B*"
+PickupMessage "Light armour"
+PickupSound "ishield"
+Respawns
+NoGravity
+Radius 15
+Height 17
+}
+
+pickup GoldenHealthPotion
+{
+DoomEdNum 20010
+SpawnNum 160
+Sprite GOLD
+Frames "6:A*B*C*D*"
+PickupMessage "Golden Health Potion!"
+PickupSound "golden"
+Respawns
+NoGravity
+Radius 13
+Height 34
+}
+
+pickup Ring
+
+{
+DoomEdNum 20037
+SpawnNum 167
+Sprite RING
+Frames "4:A*B*C*D*"
+PickupMessage "Health Ring"
+PickupSound "ring"
+Respawns
+NoGravity
+Radius 12
+Height 16
+}
+
+pickup Rocket1
+
+{
+DoomEdNum 20038
+SpawnNum 168
+Sprite ROKT
+Frames "A"
+PickupMessage "Rocket"
+PickupSound "misc/i_pkup"
+Respawns
+NoGravity
+Radius 6
+Height 27
+}
+
+pickup Rocket5
+
+{
+DoomEdNum 20039
+SpawnNum 169
+Sprite RBOX
+Frames "A"
+PickupMessage "Box of rockets"
+PickupSound "misc/i_pkup"
+Respawns
+NoGravity
+Radius 15
+Height 21
+}
+
+pickup Bazookaa
+
+{
+DoomEdNum 20040
+SpawnNum 170
+Sprite WPHX
+Frames "A"
+PickupMessage "Rocket launcher!"
+PickupSound "misc/w_pkup"
+Respawns
+Radius 15
+Height 16
+}
+
+pickup Handgunn
+
+{
+DoomEdNum 20041
+SpawnNum 171
+Sprite PIST
+Frames "A"
+PickupMessage "Pistol!"
+PickupSound "misc/w_pkup"
+Respawns
+Radius 8
+Height 16
+}
+
+pickup MineBonusStage
+
+{
+DoomEdNum 20089
+Sprite MINB
+Frames "A"
+PickupMessage "ring mine"
+PickupSound "collapse1"
+NoGravity
+Radius 16
+Height 32
+}
+
+pickup SphereBonusStage
+
+{
+DoomEdNum 20090
+SpawnNum 189
+Sprite SPHR
+Frames "A"
+PickupMessage "bonus sphere!"
+PickupSound "silent"
+Radius 32
+Height 32
+ActivatePCross
+}
+
+ACTOR Handgun : Handgunn 20092
+{ 
+SpawnID 171
++COUNTITEM  
+States 
+{ 
+	Spawn: 
+		PIST A 0 
+		PIST A -1 Thing_ChangeTID (0, 1002)
+	}
+}
+ACTOR Bazooka : Bazookaa 20093
+{ 
+SpawnID 170
++COUNTITEM  
+States
+{ 
+	Spawn: 
+		WPHX A 0
+		WPHX A -1 Thing_ChangeTID (0, 1005)
+	}
+}
+
+//===========================================================================
+// SSD No-Gravity Weapons and Ammo
+//===========================================================================
+
+pickup Clip2
+{
+DoomEdNum 20031
+SpawnNum 163
+Sprite CLIP
+Frames "A"
+PickupMessage "Clip of bullets"
+PickupSound "misc/i_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Shotgun2
+{
+DoomEdNum 20032
+SpawnNum 164
+Sprite SHOT
+Frames "A"
+PickupMessage "Shotgun!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Chaingun2
+{
+DoomEdNum 20033
+SpawnNum 165
+Sprite MGUN
+Frames "A"
+PickupMessage "Chaingun!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Chainsaw2
+{
+DoomEdNum 20049
+SpawnNum 176
+Sprite CSAW
+Frames "A"
+PickupMessage "Chainsaw!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Handgun2
+{
+DoomEdNum 20050
+SpawnNum 177
+Sprite PIST
+Frames "A"
+PickupMessage "Pistol!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 8
+Height 16
+}
+
+pickup SuperShotgun2
+{
+DoomEdNum 20051
+SpawnNum 178
+Sprite SGN2
+Frames "A"
+PickupMessage "Double-Barrelled Shotgun!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Bazooka2
+{
+DoomEdNum 20052
+SpawnNum 179
+Sprite WPHX
+Frames "A"
+PickupMessage "Rocket Launcher!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 15
+Height 16
+}
+
+pickup PlasmaRifle2
+{
+DoomEdNum 20053
+SpawnNum 180
+Sprite PLAS
+Frames "A"
+PickupMessage "Plasma Gun!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup BFG90002
+{
+DoomEdNum 20054
+SpawnNum 181
+Sprite BFUG
+Frames "A"
+PickupMessage "BFG9000! Oh, yes!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+pickup Railgun2
+{
+DoomEdNum 20055
+SpawnNum 182
+Sprite LAUN
+Frames "A"
+PickupMessage "Railgun!"
+PickupSound "misc/w_pkup"
+NoGravity
+Radius 10
+Height 16
+}
+
+// key actor name replacement (by tiszaszaki)
+
+actor GreenCard : BlueSkull replaces BlueSkull { +NOGRAVITY }
+actor OrangeCard : YellowSkull replaces YellowSkull { +NOGRAVITY }
+actor PurpleCard : RedSkull replaces RedSkull { +NOGRAVITY }
+
+actor BlueCard2 : BlueCard replaces BlueCard { +NOGRAVITY }
+actor YellowCard2 : YellowCard replaces YellowCard { +NOGRAVITY }
+actor RedCard2 : RedCard replaces RedCard { +NOGRAVITY }

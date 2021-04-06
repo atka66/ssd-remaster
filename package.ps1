@@ -1,6 +1,6 @@
 $zip = "ssd-remaster.zip"
 $pk3 = "ssd-remaster.pk3"
-$source = "acs/", "flats/", "graphics/", "maps/", "models/", "music/", "sounds/", "sprites/", "textures/", "ANIMDEFS", "CVARINFO", "DECALDEF", "DECORATE", "DEHACKED", "DOOMDEFS", "GAMEINFO", "KEYCONF", "LOADACS", "LOCKDEFS", "MAPINFO", "MENUDEF", "MODELDEF", "PNAMES", "SNDINFO", "SNDSEQ", "STARS", "TEXTURE1"
+$source = "acs/", "actors/", "flats/", "graphics/", "maps/", "models/", "music/", "sounds/", "sprites/", "textures/", "ANIMDEFS", "CVARINFO", "DECALDEF", "DECORATE", "DEHACKED", "DOOMDEFS", "GAMEINFO", "KEYCONF", "LOADACS", "LOCKDEFS", "MAPINFO", "MENUDEF", "MODELDEF", "PNAMES", "SNDINFO", "SNDSEQ", "STARS", "TEXTURE1"
 
 if (Test-Path $zip) {
   Remove-Item $zip

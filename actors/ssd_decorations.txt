@@ -1,0 +1,661 @@
+//===========================================================================
+// SSD Artificial Scenery
+//===========================================================================
+
+BloodWithEmptySkin
+{
+DoomEdNum 20008
+SpawnNum 158
+Sprite POB3
+Frames "A"
+NoGravity
+Radius 10
+Height 16
+}
+
+BloodSpatter
+{
+DoomEdNum 20027
+SpawnNum 155
+Sprite POB2
+Frames "A"
+Radius 10
+Height 16
+NoGravity
+}
+
+Brains
+{
+DoomEdNum 20029
+SpawnNum 157
+Sprite BRS1
+Frames "A"
+Radius 10
+Height 16
+NoGravity
+}
+
+Chain32
+{
+DoomEdNum 20025
+Sprite CHN1
+Frames "A"
+SpawnCeiling
+NoGravity
+Radius 2
+Height 32
+}
+
+Chain64
+{
+DoomEdNum 20026
+Sprite CHN2
+Frames "A"
+SpawnCeiling
+NoGravity
+Radius 2
+Height 64
+}
+
+EvilEye2
+{
+DoomEdNum 20035
+Sprite DEYE
+Frames "6:A*B*C*"
+Solid
+NoGravity
+Radius 16
+Height 54
+}
+
+HereticWallTorch
+{
+DoomEdNum 20047
+Sprite TRCH
+Frames "6:A*B*C*"
+NoGravity
+Radius 10
+Height 16
+}
+
+HereticChandelier
+{
+DoomEdNum 20048
+Sprite CHND
+Frames "4:ABC"
+Solid
+SpawnCeiling
+NoGravity
+Radius 10
+Height 60
+}
+
+KnightArmour
+{
+DoomEdNum 20070
+Sprite SUIT
+Frames "A"
+Solid
+NoGravity
+Radius 20
+Height 80
+}
+
+NakedLightbulb
+{
+DoomEdNum 20007
+Sprite BULB
+Frames "A"
+SpawnCeiling
+NoGravity
+Radius 4
+Height 32
+}
+
+ACTOR ColumnRed : Column 20101
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnGreen : Column 20102
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnBlue : Column 20103
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnYellow : Column 20104
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnOrange : Column 20105
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnPurple : Column 20106
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnWhite : Column 20107
+{
+	+NOGRAVITY
+}
+
+ACTOR ColumnRainbow : Column 20108
+{
+	+NOGRAVITY
+	States
+	{
+	Spawn:
+		LAM1 A 0
+		LAM1 A 70 BRIGHT
+		LAM2 A 70 BRIGHT
+		LAM3 A 70 BRIGHT
+		LAM4 A 70 BRIGHT
+		LAM5 A 70 BRIGHT
+		LAM6 A 70 BRIGHT
+		LAM7 A 70 BRIGHT
+		Goto Spawn+1
+	}		
+}
+
+ACTOR TallGasLampRed : TechLamp 20109
+{
+
+}
+
+ACTOR TallGasLampGreen : TechLamp 20110
+{
+
+}
+
+ACTOR TallGasLampBlue : TechLamp 20111
+{
+
+}
+
+ACTOR TallGasLampYellow : TechLamp 20112
+{
+
+}
+
+ACTOR TallGasLampOrange : TechLamp 20113
+{
+
+}
+
+ACTOR TallGasLampPurple : TechLamp 20114
+{
+
+}
+
+ACTOR TallGasLampWhite : TechLamp 20115
+{
+
+}
+
+ACTOR SmallGasLampRed : TechLamp2 20116
+{
+
+}
+
+ACTOR SmallGasLampGreen : TechLamp2 20117
+{
+
+}
+
+ACTOR SmallGasLampBlue : TechLamp2 20118
+{
+
+}
+
+ACTOR SmallGasLampYellow : TechLamp2 20119
+{
+
+}
+
+ACTOR SmallGasLampOrange : TechLamp2 20120
+{
+
+}
+
+ACTOR SmallGasLampPurple : TechLamp2 20121
+{
+
+}
+
+ACTOR SmallGasLampWhite : TechLamp2 20122
+{
+
+}
+
+ACTOR YellowTorch : RedTorch 20123
+{
+
+}
+
+ACTOR OrangeTorch : RedTorch 20124
+{
+
+}
+
+ACTOR PurpleTorch : RedTorch 20125
+{
+
+}
+
+ACTOR WhiteTorch : RedTorch 20126
+{
+
+}
+
+ACTOR ShortYellowTorch : ShortRedTorch 20127
+{
+
+}
+
+ACTOR ShortOrangeTorch : ShortRedTorch 20128
+{
+
+}
+
+ACTOR ShortPurpleTorch : ShortRedTorch 20129
+{
+
+}
+
+ACTOR ShortWhiteTorch : ShortRedTorch 20130
+{
+
+}
+
+//===========================================================================
+// SSD Natural Scenery
+//===========================================================================
+
+TreeStump1
+{
+DoomEdNum 20012
+Sprite STM1
+Frames "A"
+Solid
+Radius 16
+Height 40
+}
+
+TreeStump2
+{
+DoomEdNum 20013
+Sprite STM2
+Frames "A"
+Solid
+Radius 16
+Height 33
+}
+
+TreeStump3
+{
+DoomEdNum 20014
+Sprite SMT2
+Frames "A"
+Solid
+Radius 16
+Height 47
+}
+
+Tree1
+{
+DoomEdNum 20015
+Sprite TRE3
+Frames "A"
+Solid
+Radius 20
+Height 136
+}
+
+Tree2
+{
+DoomEdNum 20016
+Sprite TRE4
+Frames "A"
+Solid
+Radius 24
+Height 183
+}
+
+Tree3
+{
+DoomEdNum 20017
+Sprite TRE5
+Frames "A"
+Solid
+Radius 24
+Height 155
+}
+
+Tree4
+{
+DoomEdNum 20018
+Sprite TRE6
+Frames "A"
+Solid
+Radius 32
+Height 189
+}
+
+Tree5
+{
+DoomEdNum 20019
+Sprite TRE7
+Frames "A"
+Solid
+Radius 32
+Height 189
+}
+
+Tree6
+{
+DoomEdNum 20020
+Sprite TRE8
+Frames "A"
+Solid
+Radius 32
+Height 189
+}
+
+Tree7
+{
+DoomEdNum 20021
+Sprite TRE9
+Frames "A"
+Solid
+Radius 16
+Height 151
+}
+
+Tree8
+{
+DoomEdNum 20022
+Sprite TRE0
+Frames "A"
+Solid
+Radius 24
+Height 128
+}
+
+Tree9
+{
+DoomEdNum 20023
+Sprite SMT3
+Frames "A"
+Solid
+Radius 16
+Height 47
+}
+
+HexenStalactite1
+{
+DoomEdNum 20056
+Sprite STC1
+Frames "A"
+Solid
+SpawnCeiling
+NoGravity
+Radius 15
+Height 45
+}
+
+HexenStalactite2
+{
+DoomEdNum 20057
+Sprite STC2
+Frames "A"
+Solid
+SpawnCeiling
+NoGravity
+Radius 13
+Height 55
+}
+
+HexenStalactite3
+{
+DoomEdNum 20058
+Sprite STC3
+Frames "A"
+Solid
+SpawnCeiling
+NoGravity
+Radius 18
+Height 71
+}
+
+HexenStalagmite1
+{
+DoomEdNum 20059
+Sprite STG1
+Frames "A"
+Solid
+Radius 15
+Height 45
+}
+
+HexenStalagmite2
+{
+DoomEdNum 20060
+Sprite STG2
+Frames "A"
+Solid
+Radius 15
+Height 55
+}
+
+HexenStalagmite3
+{
+DoomEdNum 20061
+Sprite STG3
+Frames "A"
+Solid
+Radius 18
+Height 71
+}
+
+HexenStalagtite
+{
+DoomEdNum 20062
+Sprite STGC
+Frames "A"
+Solid
+Radius 19
+Height 128
+}
+
+HexenRock1
+{
+DoomEdNum 20063
+Sprite ROK1
+Frames "A"
+Solid
+Radius 8
+Height 8
+}
+
+HexenRock2
+{
+DoomEdNum 20064
+Sprite ROK2
+Frames "A"
+Solid
+Radius 10
+Height 12
+}
+
+HexenRock3
+{
+DoomEdNum 20065
+Sprite ROK3
+Frames "A"
+Solid
+Radius 15
+Height 19
+}
+
+HexenRock4
+{
+DoomEdNum 20066
+Sprite ROK4
+Frames "A"
+Solid
+Radius 25
+Height 23
+}
+
+//===========================================================================
+// Barrels and Special Effects
+//===========================================================================
+
+FlamingBarrel
+{
+DoomEdNum 20028
+SpawnNum 156
+Sprite FCAN
+Frames "4:A*B*C*"
+Radius 10
+Height 42
+Solid
+Pushable
+CanPass
+}
+
+breakable EmptyBarrel
+{
+DoomEdNum 20030
+SpawnNum 162
+Sprite BAR2
+Frames "A"
+DeathFrames "BCDEF"
+DeathSound "misc_03"
+Radius 11
+Height 32
+Health 20
+Solid
+Pushable
+CanPass
+NoBlood
+DiesAway
+}
+
+SolidBarrel
+{
+DoomEdNum 20043
+SpawnNum 172
+Sprite BAR3
+Frames "A"
+Radius 11
+Height 32
+Solid
+Pushable
+CanPass
+}
+
+HereticBarrel
+{
+DoomEdNum 20044
+SpawnNum 173
+Sprite BAR4
+Frames "A"
+Radius 16
+Height 36
+Solid
+Pushable
+CanPass
+}
+
+HexenBarrel
+{
+DoomEdNum 20045
+SpawnNum 174
+Sprite BAR5
+Frames "A"
+Radius 13
+Height 34
+Solid
+Pushable
+CanPass
+}
+
+Boom
+{
+DoomEdNum 20024
+SpawnNum 161
+Sprite BOOM
+Frames "4:A*, 4:B*, 4:C*, 12:D"
+NoGravity
+Radius 18
+Height 30
+}
+
+MovingPlatform
+{
+DoomEdNum 20034
+SpawnNum 166
+Sprite PLAT
+Frames "A"
+Solid
+NoGravity
+CanPass
+Radius 12
+Height 16
+}
+
+MovingPlatform2
+{
+SpawnNum 226
+Sprite PLAT
+Frames "A"
+NoGravity
+CanPass
+Radius 12
+Height 16
+}
+
+SecurityCam
+{
+DoomEdNum 20042
+Sprite CAMR
+Frames "A"
+Radius 16
+Height 16
+NoGravity
+}
+
+pickup PickupTrigger
+
+{
+DoomEdNum 20046
+SpawnNum 175
+Sprite NONE
+Frames "A"
+PickupMessage " "
+PickupSound "silent"
+Respawns
+NoGravity
+Radius 8
+Height 16
+}
+
+pickup Jetpack
+{
+DoomEdNum 20084
+Sprite JETP
+Frames "A"
+PickupMessage "jetpack!"
+PickupSound "silent"
+Radius 15
+Height 25
+}

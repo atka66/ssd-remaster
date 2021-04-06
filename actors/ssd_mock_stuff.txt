@@ -1,0 +1,157 @@
+//===========================================================================
+// SSD Funneys
+//===========================================================================
+
+Spam
+{
+DoomEdNum 20067
+SpawnNum 183
+Sprite SPAM
+Frames "A"
+Solid
+NoGravity
+Radius 16
+Height 32
+}
+
+Warez
+{
+DoomEdNum 20068
+SpawnNum 184
+Sprite WARZ
+Frames "A"
+Solid
+NoGravity
+Radius 16
+Height 15
+}
+
+Fish
+{
+DoomEdNum 20069
+SpawnNum 185
+Sprite FISH
+Frames "A"
+Solid
+NoGravity
+Radius 18
+Height 34
+}
+
+Fish2
+{
+SpawnNum 230
+Sprite FISH
+Frames "A"
+Radius 18
+Height 34
+}
+
+Badger
+{
+DoomEdNum 20072
+Sprite BADG
+Frames "2:ABCDDDCB"
+Solid
+Radius 16
+Height 32
+}
+
+GrossHack
+{
+DoomEdNum 20073
+SpawnNum 186
+Sprite HACK
+Frames "A"
+Solid
+NoGravity
+Radius 13
+Height 13
+}
+
+GrossHackGravity
+{
+DoomEdNum 20076
+Sprite HACK
+Frames "A"
+Solid
+CanPass
+Radius 13
+Height 13
+}
+
+GrossHack2
+{
+SpawnNum 231
+Sprite HACK
+Frames "A"
+CanPass
+Radius 13
+Height 13
+}
+
+Banana
+{
+DoomEdNum 20074
+Sprite BANA
+Frames "4:ABCDEFGHGFEDCB"
+Solid
+NoGravity
+Radius 13
+Height 33
+}
+
+MexicanJumpingBlueKey
+{
+DoomEdNum 20081
+Sprite MKEY
+Frames "10:AB"
+Solid
+Radius 12
+Height 26
+}
+
+Hissy
+{
+DoomEdNum 20082
+Sprite HISY
+Frames "A"
+Solid
+Radius 10
+Height 21
+}
+
+pickup Flag
+{
+DoomEdNum 20083
+Sprite FLAG
+Frames "A"
+PickupMessage " "
+PickupSound "silent"
+Radius 10
+Height 50
+}
+
+ACTOR NewDoomLamer1 : ScriptedMarine
+{
+		States
+		{
+    	Missile:
+		PLAY E 4 A_FaceTarget
+    	PLAY F 6 BRIGHT A_CustomMissile ("SpamShot", 32, 0, 0)
+    	PLAY A 5
+    	Goto See
+		}
+}
+
+ACTOR NewDoomLamer2 : ScriptedMarine
+{
+		States
+		{
+    	Missile:
+		PLAY E 4 A_FaceTarget
+    	PLAY F 6 BRIGHT A_CustomMissile ("WarezShot", 32, 0, 0)
+    	PLAY A 5
+    	Goto See
+		}
+}

@@ -1,0 +1,633 @@
+//===========================================================================
+// SSD Mercenary Enemies
+//===========================================================================
+
+ACTOR SSDBrawler 30026
+{
+    	Health 200
+    	Radius 16
+    	Height 56
+    	Speed 8
+		Mass 200
+    	PainChance 150
+		ReactionTime 4
+    	MONSTER 
+    	+FLOORCLIP
+    	MeleeSound "weapons/fist"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	HitObituary "%o was floored by a brawler."
+    	MeleeDamage 2
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 1 A_Chase
+        	Loop
+    	Melee:
+        	MERC E 2 A_FaceTarget
+        	MERC F 2 A_MeleeAttack
+        	MERC E 5
+		Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDBerserker 30027
+{
+   		Health 200
+    	Radius 16
+    	Height 56
+    	Speed 10
+		Mass 200
+   		PainChance 150
+		ReactionTime 2
+    	MONSTER 
+    	+FLOORCLIP
+    	MeleeSound "weapons/fist"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	HitObituary "%o was fisted by a berserker."
+    	MeleeDamage 20
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 1 A_Chase
+        	Loop
+    	Melee:
+        	MERC E 2 A_FaceTarget
+        	MERC F 2 A_MeleeAttack
+        	MERC E 5
+		Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 7, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 7, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDChainsawer 30028
+{
+    	Health 200
+    	Radius 16
+    	Height 56
+    	Speed 8
+		Mass 200
+   		PainChance 150
+		ReactionTime 4
+    	MONSTER 
+    	+FLOORCLIP
+    	SeeSound "weapons/sawup"
+    	AttackSound "weapons/sawhit"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	HitObituary "%o was sliced up by a chainsawer."
+    	DropItem Chainsaw
+    	MeleeDamage 3
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 1 A_Chase
+    		MERC AABBCCDD 0 A_PlaySound ("weapons/sawidle")
+        	Loop
+    	Melee:
+        	MERC E 1 A_FaceTarget
+        	MERC F 1 A_MeleeAttack
+		Goto See
+    		Pain:
+       		MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDHandgunner 30029
+{
+    	Health 100
+    	Radius 16
+    	Height 56
+    	Speed 12
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/pistol"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was popped by a handgunner."
+    	DropItem Handgun
+    	Damage 1
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 4 A_FaceTarget
+        	MERC F 6 A_BulletAttack
+        	MERC E 8 A_CPosRefire
+		Goto Missile+1
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+       	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 6, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 6, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDShotgunner 30030
+{
+    	Health 100
+    	Radius 16
+    	Height 56
+    	Speed 12
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/shotgf"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was shot down by a shotgunner."
+    	DropItem Shotgun
+    	Damage 3
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 5 A_FaceTarget
+        	MERC F 7 A_SPosAttack
+        	MERC E 5
+		Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 8, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+       		MERC L 5
+       		MERC M 5
+			MERC N -1
+			Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 8, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDChaingunner 30031
+{
+    	Health 150
+    	Radius 16
+    	Height 56
+    	Speed 12
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/chngun"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was perforated by a chaingunner."
+    	DropItem Chaingun
+    	Damage 1
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 4 A_FaceTarget
+        	MERC F 2 A_BulletAttack
+        	MERC E 2 A_CPosRefire
+		Goto Missile+1
+   		Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 10, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 10, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDSupershotgunner 30032
+{
+    	Health 100
+   		Radius 16
+    	Height 56
+    	Speed 12
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/sshotf"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o ate 2 loads of buckshot from a supershotgunner."
+    	DropItem SuperShotgun
+    	Damage 5
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 5 A_FaceTarget
+        	MERC E 0 A_PlaySound ("weapons/sshotf")
+        	MERC F 14 A_CustomBulletAttack (11, 7, 15, 5, "BulletPuff")
+        	MERC E 14 A_PlaySound ("weapons/sshoto")
+        	MERC E 13 A_PlaySound ("weapons/sshotc")
+        	MERC E 11 A_PlaySound ("weapons/sshotl")
+			Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 12, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 12, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDRocketeer 30033
+{
+    	Health 300
+    	Radius 16
+    	Height 56
+    	Speed 10
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/rocklf"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was blasted into orbit by a rocketeer."
+    	DropItem PhoenixRod
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 8 A_FaceTarget
+        	MERC F 12 A_CustomMissile ("Rocket", 32, 0, 0)
+        	MERC E 8 A_SpidRefire
+		Goto Missile+1
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 14, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 14, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDPlasmagunner 30034
+{
+		SpawnID 192
+    	Health 100
+    	Radius 16
+    	Height 56
+    	Speed 12
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/plasmaf"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was toasted by a plasmagunner."
+    	DropItem PlasmaRifle
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 5 A_FaceTarget
+        	MERC F 2 A_CustomMissile ("PlasmaBall", 32, 0, 0)
+        	MERC E 1 A_SpidRefire
+		Goto Missile+1
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 16, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 16, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDRailgunner 30035
+{
+    	Health 100
+    	Radius 16
+    	Height 56
+    	Speed 10
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	AttackSound "weapons/railgf"
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was shafted by a railgunner."
+    	DropItem RocketLauncher
+    	Damage 100
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 10 A_FaceTarget
+        	MERC F 10 A_MonsterRail
+        	MERC E 40
+		Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+    	Death:
+        	MERC H 5 ACS_ExecuteAlways (200, 0, 18, 0, 0)
+        	MERC I 5 A_Scream
+        	MERC J 5 A_Fall
+        	MERC K 5
+        	MERC L 5
+        	MERC M 5
+        	MERC N -1
+		Stop
+    	XDeath:
+        	MERC O 5 ACS_ExecuteAlways (200, 0, 18, 0, 0)
+        	MERC P 5 A_XScream
+        	MERC Q 5 A_Fall
+        	MERC RSTUV 5
+        	MERC W -1
+        	Stop
+    	Raise:
+        	MERC MLKJIH 5
+        	Goto See
+    	}
+}
+
+ACTOR SSDBigFuckingGunner 30036
+{
+    	Health 100
+    	Radius 16
+    	Height 56
+    	Speed 8
+		Mass 200
+    	PainChance 150
+    	MONSTER 
+    	+FLOORCLIP
+    	PainSound "player/male/pain100_1"
+    	DeathSound "player/male/death1"
+    	Obituary "%o was on the wrong end of a bfg."
+    	DropItem BFG9000
+    	States
+    	{
+		Spawn:
+			MERC A 1 A_Look
+			MERC A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+			MERC AB 10 A_Look
+			Goto Spawn+2
+    	See:
+        	MERC AABBCCDD 2 A_Chase
+        	Loop
+    	Missile:
+        	MERC E 0 A_FaceTarget
+        	MERC E 30 A_PlaySound ("weapons/bfgf")
+        	MERC F 10 A_CustomMissile ("BFGBall", 32, 0, 0)
+        	MERC E 20
+		Goto See
+    	Pain:
+        	MERC G 3
+        	MERC G 3 A_Pain
+        	Goto See
+   	 	Death:
+			MERC H 5 ACS_ExecuteAlways (200, 0, 20, 0, 0)
+			MERC I 5 A_Scream
+			MERC J 5 A_Fall
+			MERC K 5
+			MERC L 5
+			MERC M 5
+			MERC N -1
+			Stop
+		XDeath:
+	        MERC O 5 ACS_ExecuteAlways (200, 0, 20, 0, 0)
+			MERC P 5 A_XScream
+	        MERC Q 5 A_Fall
+	        MERC RSTUV 5
+	        MERC W -1
+	        Stop
+    	Raise:
+        	MERC MLKJIH 5
+	        Goto See
+    	}
+}

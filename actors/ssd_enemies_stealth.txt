@@ -1,0 +1,452 @@
+//===========================================================================
+// SSD Stealth Enemies
+//===========================================================================
+
+ACTOR SSDStealthZombie : ZombieMan 30037
+{
+	SpawnID 102
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a zombieman."
+	DropItem Clip
+	States
+	{
+	Spawn:
+		POSS A 1 A_Look
+		POSS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		POSS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		POSS H 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+		POSS I 5 A_Scream
+		POSS J 5 A_NoBlocking
+		POSS K 5
+		POSS L -1
+		Stop
+	XDeath:
+		POSS M 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+		POSS N 5 A_XScream
+		POSS O 5 A_Fall
+		POSS PQRST 5
+		POSS U -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthShotgunZombie : ShotgunGuy 30038
+{
+	SpawnID 103
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a sergeant."
+	DropItem Shotgun
+	States
+	{
+	Spawn:
+		SPOS A 1 A_Look
+		SPOS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SPOS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		SPOS H 5 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+		SPOS I 5 A_Scream
+		SPOS J 5 A_Fall
+		SPOS K 5
+		SPOS L -1
+		Stop
+	XDeath:
+		SPOS M 5 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+		SPOS N 5 A_XScream
+		SPOS O 5 A_Fall
+		SPOS PQRST 5
+		SPOS U -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthChaingunZombie : ChaingunGuy 30039
+{
+	SpawnID 120
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a commando."
+	DropItem Chaingun
+	States
+	{
+	Spawn:
+		CPOS A 1 A_Look
+		CPOS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		CPOS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		CPOS H 5 ACS_ExecuteAlways (200, 0, 6, 0, 0)
+		CPOS I 5 A_Scream
+		CPOS J 5 A_Fall
+		CPOS KLM 5
+		CPOS N -1
+		Stop
+	XDeath:
+		CPOS O 5 ACS_ExecuteAlways (200, 0, 6, 0, 0)
+		CPOS P 5 A_XScream
+		CPOS Q 5 A_Fall
+		CPOS RS 5
+		CPOS T -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthImp : DoomImp 30040
+{
+	SpawnID 122
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw an imp."
+	MeleeDamage 3
+	States
+	{
+	Spawn:
+		TROO A 1 A_Look
+		TROO A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		TROO AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		TROO I 8 ACS_ExecuteAlways (200, 0, 7, 0, 0)
+		TROO J 8 A_Scream
+		TROO K 6
+		TROO L 6 A_Fall
+		TROO M -1   
+		Stop
+	XDeath:
+		TROO N 5 ACS_ExecuteAlways (200, 0, 7, 0, 0)
+		TROO O 5 A_XScream
+		TROO P 5
+		TROO Q 5 A_Fall
+		TROO RST 5
+		TROO U -1    
+		Stop
+	}
+}
+
+ACTOR SSDStealthLostSoul : LostSoul 30041
+{
+	+STEALTH
+	+NOBLOOD
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a lost soul."
+	States
+	{
+	Spawn:
+		SKUL A 1 BRIGHT A_Look
+		SKUL A 0 BRIGHT ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SKUL AB 10 BRIGHT A_Look
+		Goto Spawn+2
+	Death:
+		SKUL F 0 BRIGHT A_NoGravity
+		SKUL F 6 BRIGHT ACS_ExecuteAlways (200, 0, 9, 0, 0)
+		SKUL G 6 BRIGHT A_Scream
+		SKUL H 6 BRIGHT
+		SKUL I 6 BRIGHT A_Fall
+		SKUL J 6
+		SKUL K 6     
+		Stop
+	}
+}
+
+ACTOR SSDStealthDemon : Demon 30042
+{
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a demon."
+	Speed 8
+	ReactionTime 4
+	States
+	{
+	Spawn:
+		SARG A 1 A_Look
+		SARG A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SARG AB 10 A_Look
+		Goto Spawn+2
+	See:
+		SARG AABBCCDD 1 A_Chase
+		Loop
+	Melee:
+		SARG EF 6 A_FaceTarget
+		SARG G 6 A_SargAttack
+		Goto See
+	Pain:
+		SARG H 1
+		SARG H 1 A_Pain
+		Goto See
+	Death:
+		SARG I 8 ACS_ExecuteAlways (200, 0, 11, 0, 0)
+		SARG J 8 A_Scream
+		SARG K 4
+		SARG L 4 A_Fall
+		SARG M 4
+		SARG N -1    
+		Stop
+	}
+}
+
+ACTOR SSDStealthCacodemon : Cacodemon 30043
+{
+	SpawnID 119
+	BloodColor Blue
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a cacodemon."
+	MeleeDamage 8
+	States
+	{
+	Spawn:
+		HEAD A 1 A_Look
+		HEAD A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		HEAD A 10 A_Look
+		Goto Spawn+2
+	Melee:
+		HEAD B 5 A_FaceTarget
+		HEAD C 5 A_FaceTarget
+		HEAD D 5 A_MeleeAttack
+		Goto See
+	Death:
+		HEAD G 8 ACS_ExecuteAlways (200, 0, 13, 0, 0)
+		HEAD H 8 A_Scream
+		HEAD I 8
+		HEAD J 8    
+		HEAD K 8 A_Fall
+		HEAD L -1 A_SetFloorClip
+		Stop
+	}
+}
+
+ACTOR SSDStealthHellKnight : HellKnight 30044
+{
+	SpawnID 101
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+	Health 500
+	BloodColor DarkOliveGreen
+	SeeSound "knight/sight"
+	ActiveSound "knight/active"
+	MeleeSound "baron/melee"
+	PainSound "knight/pain"
+	DeathSound "knight/death"
+	HitObituary "%o thought he saw a Hell Knight."
+	Obituary "%o thought he saw a Hell Knight."
+	MeleeDamage 10
+	States
+	{
+	Spawn:
+		BOS2 A 1 A_Look
+		BOS2 A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		BOS2 AB 10 A_Look
+		Goto Spawn+2
+	See:
+		BOS2 AABBCCDD 3 A_Chase
+		Loop
+	Melee:
+		BOS2 E 8 A_FaceTarget
+		BOS2 F 8 A_FaceTarget
+		BOS2 G 8 A_MeleeAttack
+		Goto See
+	Missile:
+		BOS2 EF 8 A_FaceTarget
+		BOS2 G 8 A_BruisAttack
+		Goto See
+	Pain:
+		BOS2 H  2
+		BOS2 H  2 A_Pain
+		Goto See
+	Death:
+		BOS2 I  8 ACS_ExecuteAlways (200, 0, 15, 0, 0)
+		BOS2 J  8 A_Scream
+		BOS2 K  8
+		BOS2 L  8 A_Fall
+		BOS2 MN 8
+		BOS2 O -1 
+		Stop
+	Raise:
+		BOS2 O 8
+		BOS2 NMLKJI  8
+		Goto See
+	}
+}
+
+ACTOR SSDStealthPainElemental : PainElemental 30045
+{
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+	States
+	{
+	Spawn:
+		PAIN A 1 A_Look
+		PAIN A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		PAIN A 10 A_Look
+		Goto Spawn+2
+	Death:
+		PAIN H 8 ACS_ExecuteAlways (200, 0, 17, 0, 0)
+		PAIN I 8 A_Scream
+		PAIN JK 8
+		PAIN L 8 A_PainDie
+		PAIN M 8
+		Stop
+	}
+}
+
+ACTOR SSDStealthRevenant : Revenant 30046
+{
+	SpawnID 124
+	+STEALTH
+	Radius 20
+	Height 80
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a revenant."
+	States
+	{
+	Spawn:
+		SKEL A 1 A_Look
+		SKEL A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SKEL AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		SKEL L 7 ACS_ExecuteAlways (200, 0, 21, 0, 0)
+		SKEL M 7 
+		SKEL N 7 A_Scream
+		SKEL O 7 A_Fall
+		SKEL P 7
+		SKEL Q -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthArachnotron : Arachnotron 30047
+{
+	SpawnID 117
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw an arachnotron ."
+	States
+	{
+	Spawn:
+		BSPI A 1 A_Look
+		BSPI A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		BSPI AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		BSPI J 1 ACS_ExecuteAlways (200, 0, 23, 0, 0)
+		BSPI J 19 A_Scream
+		BSPI K 7 A_Fall
+		BSPI LMNO 7
+		BSPI P -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthMancubus : Fatso 30048
+{
+	SpawnID 123
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw a mancubus."
+	States
+	{
+	Spawn:
+		FATT A 1 A_Look
+		FATT A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		FATT AB 15 A_Look
+		Goto Spawn+2
+    	Death:
+		FATT K 6 ACS_ExecuteAlways (200, 0, 27, 0, 0)
+		FATT L 6 A_Scream
+		FATT M 6 A_Fall
+		FATT NOPQRS 6
+		FATT T -1    
+	     	Stop
+	}
+}
+
+ACTOR SSDStealthArchvile : Archvile 30049
+{
+	SpawnID 118
+	Radius 20
+	Height 72
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+    	Obituary "%o thought he saw an archvile."
+	States
+	{
+	Spawn:
+		VILE A 1 A_Look
+		VILE A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		VILE AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		VILE Q 7 ACS_ExecuteAlways (200, 0, 31, 0, 0)
+		VILE R 7 A_Scream
+		VILE S 7 A_Fall
+		VILE TUVWXY 7
+		VILE Z -1
+		Stop
+	}
+}
+
+ACTOR SSDStealthMiniCyberdemon : Cyberdemon 30050
+{
+	+STEALTH
+	RenderStyle Translucent
+	Alpha 0
+	Health 2000
+	Radius 40
+	Height 110
+	Speed 12
+	Mass 700
+	ReactionTime 5
+	Scale 0.7
+	SeeSound boss1_a
+	DeathSound comndr_d
+    	Obituary "%o thought he saw a mini-cyberdemon."
+	States
+	{
+	Spawn:
+		CYBR A 1 A_Look
+		CYBR A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		CYBR AB 10 A_Look
+		Goto Spawn+2
+	See:
+		CYBR A 2 A_Hoof
+		CYBR ABBCC 2 A_Chase
+		CYBR D 2 A_Metal
+		CYBR D 2 A_Chase
+		Loop
+	Missile:
+		CYBR E 4 A_FaceTarget
+		CYBR F 1 A_BSpiAttack
+		CYBR E 1
+		CYBR F 1 A_SpidRefire
+		CYBR E 1
+		Goto Missile+1
+
+	Death:
+		CYBR H 10 ACS_ExecuteAlways (200, 0, 39, 0, 0)
+		CYBR I 10 A_Scream
+		CYBR JKL 10
+		CYBR M 10 A_Fall
+		CYBR NO 10
+		CYBR P 30
+		CYBR P -1
+		Stop
+	}
+}

@@ -1,0 +1,418 @@
+//===========================================================================
+// SSD Basic Enemies
+//===========================================================================
+
+ACTOR SSDZombie : ZombieMan replaces ZombieMan 30001
+{
+	SpawnID 4
+	DropItem Clip
+	States
+	{
+	Spawn:
+		POSS A 1 A_Look
+		POSS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		POSS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		POSS H 5 ACS_ExecuteAlways (200, 0, 1, 0, 0)
+		POSS I 5 A_Scream
+		POSS J 5 A_NoBlocking
+		POSS K 5
+		POSS L -1
+		Stop
+	XDeath:
+		POSS M 5 ACS_ExecuteAlways (200, 0, 1, 0, 0)
+		POSS N 5 A_XScream
+		POSS O 5 A_Fall
+		POSS PQRST 5
+		POSS U -1
+		Stop
+	}
+}
+
+ACTOR SSDShotgunZombie : ShotgunGuy replaces ShotgunGuy 30002
+{
+	SpawnID 1
+	DropItem Shotgun
+	States
+	{
+	Spawn:
+		SPOS A 1 A_Look
+		SPOS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SPOS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		SPOS H 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+		SPOS I 5 A_Scream
+		SPOS J 5 A_Fall
+		SPOS K 5
+		SPOS L -1
+		Stop
+	XDeath:
+		SPOS M 5 ACS_ExecuteAlways (200, 0, 2, 0, 0)
+		SPOS N 5 A_XScream
+		SPOS O 5 A_Fall
+		SPOS PQRST 5
+		SPOS U -1
+		Stop
+	}
+}
+
+ACTOR SSDChaingunZombie : ChaingunGuy replaces ChaingunGuy 30003
+{
+	SpawnID 2
+	DropItem Chaingun
+	Obituary "%o was punctured by a commando."
+	States
+	{
+	Spawn:
+		CPOS A 1 A_Look
+		CPOS A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		CPOS AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		CPOS H 5 ACS_ExecuteAlways (200, 0, 3, 0, 0)
+		CPOS I 5 A_Scream
+		CPOS J 5 A_Fall
+		CPOS KLM 5
+		CPOS N -1
+		Stop
+	XDeath:
+		CPOS O 5 ACS_ExecuteAlways (200, 0, 3, 0, 0)
+		CPOS P 5 A_XScream
+		CPOS Q 5 A_Fall
+		CPOS RS 5
+		CPOS T -1
+		Stop
+	}
+}
+
+ACTOR SSDImp : DoomImp replaces DoomImp 30004
+{
+	SpawnID 191
+	MeleeDamage 3
+	States
+	{
+	Spawn:
+		TROO A 1 A_Look
+		TROO A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		TROO AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		TROO I 8 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+		TROO J 8 A_Scream
+		TROO K 6
+		TROO L 6 A_Fall
+		TROO M -1   
+		Stop
+	XDeath:
+		TROO N 5 ACS_ExecuteAlways (200, 0, 4, 0, 0)
+		TROO O 5 A_XScream
+		TROO P 5
+		TROO Q 5 A_Fall
+		TROO RST 5
+		TROO U -1    
+		Stop
+	}
+}
+
+ACTOR SSDLostSoul : LostSoul replaces LostSoul 30005
+{
+	SpawnID 110
+	+NOBLOOD
+	States
+	{
+	Spawn:
+		SKUL A 1 BRIGHT A_Look
+		SKUL A 0 BRIGHT ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SKUL AB 10 BRIGHT A_Look
+		Goto Spawn+2
+	Death:
+		SKUL F 0 BRIGHT A_NoGravity
+		SKUL F 6 BRIGHT ACS_ExecuteAlways (200, 0, 5, 0, 0)
+		SKUL G 6 BRIGHT A_Scream
+		SKUL H 6 BRIGHT
+		SKUL I 6 BRIGHT A_Fall
+		SKUL J 6
+		SKUL K 6     
+		Stop
+	}
+}
+
+ACTOR SSDDemon : Demon replaces Demon 30006
+{
+	SpawnID 8
+	Speed 8
+	ReactionTime 4
+	States
+	{
+	Spawn:
+		SARG A 1 A_Look
+		SARG A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SARG AB 10 A_Look
+		Goto Spawn+2
+	See:
+		SARG AABBCCDD 1 A_Chase
+		Loop
+	Melee:
+		SARG EF 6 A_FaceTarget
+		SARG G 6 A_SargAttack
+		Goto See
+	Pain:
+		SARG H 1
+		SARG H 1 A_Pain
+		Goto See
+	Death:
+		SARG I 8 ACS_ExecuteAlways (200, 0, 6, 0, 0)
+		SARG J 8 A_Scream
+		SARG K 4
+		SARG L 4 A_Fall
+		SARG M 4
+		SARG N -1    
+		Stop
+	}
+}
+
+ACTOR SSDCacodemon : Cacodemon replaces Cacodemon 30007
+{
+	SpawnID 19
+	MeleeDamage 8
+	BloodColor Blue
+	States
+	{
+	Spawn:
+		HEAD A 1 A_Look
+		HEAD A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		HEAD A 10 A_Look
+		Goto Spawn+2
+	Melee:
+		HEAD B 5 A_FaceTarget
+		HEAD C 5 A_FaceTarget
+		HEAD D 5 A_MeleeAttack
+		Goto See
+	Death:
+		HEAD G 8 ACS_ExecuteAlways (200, 0, 8, 0, 0)
+		HEAD H 8 A_Scream
+		HEAD I 8
+		HEAD J 8    
+		HEAD K 8 A_Fall
+		HEAD L -1 A_SetFloorClip
+		Stop
+	}
+}
+
+ACTOR SSDHellKnight : HellKnight replaces HellKnight 30008
+{
+	SpawnID 113
+	Health 500
+	BloodColor DarkOliveGreen
+	SeeSound "knight/sight"
+	ActiveSound "knight/active"
+	MeleeSound "baron/melee"
+	PainSound "knight/pain"
+	DeathSound "knight/death"
+	HitObituary "%o was gutted by a Hell Knight."
+	Obituary "%o was splayed by a Hell Knight."
+	MeleeDamage 10
+	States
+	{
+	Spawn:
+		BOS2 A 1 A_Look
+		BOS2 A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		BOS2 AB 10 A_Look
+		Goto Spawn+2
+	See:
+		BOS2 AABBCCDD 3 A_Chase
+		Loop	
+	Melee:
+		BOS2 E 8 A_FaceTarget
+		BOS2 F 8 A_FaceTarget
+		BOS2 G 8 A_MeleeAttack
+		Goto See
+
+	Missile:
+		BOS2 EF 8 A_FaceTarget
+		BOS2 G 8 A_BruisAttack
+		Goto See
+	Pain:
+		BOS2 H  2
+		BOS2 H  2 A_Pain
+		Goto See
+	Death:
+		BOS2 I  8 ACS_ExecuteAlways (200, 0, 10, 0, 0)
+		BOS2 J  8 A_Scream
+		BOS2 K  8
+		BOS2 L  8 A_Fall
+		BOS2 MN 8
+		BOS2 O -1 
+		Stop
+	Raise:
+		BOS2 O 8
+		BOS2 NMLKJI  8
+		Goto See
+	}
+}
+
+ACTOR SSDPainElemental : PainElemental replaces PainElemental 30009
+{
+	SpawnID 115
+	States
+	{
+	Spawn:
+		PAIN A 1 A_Look
+		PAIN A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		PAIN A 10 A_Look
+		Goto Spawn+2
+	Missile:
+		PAIN D 5 BRIGHT A_FaceTarget
+		PAIN E 5 BRIGHT A_FaceTarget
+		PAIN F 4 BRIGHT A_FaceTarget
+		PAIN F 1 BRIGHT A_PainAttack
+		Goto See
+	Death:
+		PAIN H 8 ACS_ExecuteAlways (200, 0, 12, 0, 0)
+		PAIN I 8 A_Scream
+		PAIN JK 8
+		PAIN L 8 A_PainDie
+		PAIN M 8
+		Stop
+	}
+}
+
+ACTOR SSDRevenant : Revenant replaces Revenant 30010
+{
+	SpawnID 20
+	Radius 20
+	Height 80
+	States
+	{
+	Spawn:
+		SKEL A 1 A_Look
+		SKEL A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		SKEL AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		SKEL L 7 ACS_ExecuteAlways (200, 0, 14, 0, 0)
+		SKEL M 7 
+		SKEL N 7 A_Scream
+		SKEL O 7 A_Fall
+		SKEL P 7
+		SKEL Q -1
+		Stop
+	}
+}
+
+ACTOR SSDArachnotron : Arachnotron replaces Arachnotron 30011
+{
+	SpawnID 6
+	States
+	{
+	Spawn:
+		BSPI A 1 A_Look
+		BSPI A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		BSPI AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		BSPI J 1 ACS_ExecuteAlways (200, 0, 16, 0, 0)
+		BSPI J 19 A_Scream
+		BSPI K 7 A_Fall
+		BSPI LMNO 7
+		BSPI P -1
+		Stop
+	}
+}
+
+ACTOR SSDMancubus : Fatso replaces Fatso 30012
+{
+	SpawnID 112
+	States
+	{
+	Spawn:
+		FATT A 1 A_Look
+		FATT A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		FATT AB 15 A_Look
+		Goto Spawn+2
+    	Death:
+		FATT K 6 ACS_ExecuteAlways (200, 0, 18, 0, 0)
+		FATT L 6 A_Scream
+		FATT M 6 A_Fall
+		FATT NOPQRS 6
+		FATT T -1    
+	     	Stop
+	}
+}
+
+ACTOR SSDArchvile : Archvile replaces Archvile 30013
+{
+	SpawnID 111
+	Radius 20
+	Height 72
+	States
+	{
+	Spawn:
+		VILE A 1 A_Look
+		VILE A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		VILE AB 10 A_Look
+		Goto Spawn+2
+	Death:
+		VILE Q 7 ACS_ExecuteAlways (200, 0, 22, 0, 0)
+		VILE R 7 A_Scream
+		VILE S 7 A_Fall
+		VILE TUVWXY 7
+		VILE Z -1
+		Stop
+	}
+}
+
+ACTOR SSDMiniCyberdemon 30014
+{
+	SpawnID 23
+	Health 2000
+	Radius 40
+	Height 110
+	Mass 700
+	Speed 12
+	PainChance 20
+	Monster
+	+FLOORCLIP
+	ReactionTime 5
+	Scale 0.7
+	SeeSound boss1_a
+	PainSound "cyber/pain"
+	DeathSound comndr_d
+	ActiveSound "cyber/active"
+	Obituary "%o was deep fried by a mini-cyberdemon."
+	States
+	{
+	Spawn:
+		CYBR A 1 A_Look
+		CYBR A 0 ACS_ExecuteAlways (232, 0, 0, 0, 0)
+		CYBR AB 10 A_Look
+		Goto Spawn+2
+	See:
+		CYBR A 2 A_Hoof
+		CYBR ABBCC 2 A_Chase
+		CYBR D 2 A_Metal
+		CYBR D 2 A_Chase
+		Loop
+	Missile:
+		CYBR E 4 A_FaceTarget
+		CYBR F 1 A_BSpiAttack
+		CYBR E 1
+		CYBR F 1 A_SpidRefire
+		CYBR E 1
+		Goto Missile+1
+	Pain:
+		CYBR G 10 A_Pain
+		Goto See
+	Death:
+		CYBR H 10 ACS_ExecuteAlways (200, 0, 30, 0, 0)
+		CYBR I 10 A_Scream
+		CYBR JKL 10
+		CYBR M 10 A_Fall
+		CYBR NO 10
+		CYBR P 30
+		CYBR P -1
+		Stop
+	}
+}
