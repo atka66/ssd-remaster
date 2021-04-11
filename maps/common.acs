@@ -713,8 +713,6 @@ function int tiszaszaki_levelinfo(void)
 	return res;
 }
 
-str common_time_display_prefix="Time:   \cb";
-
 function bool checkTimeParams(int hours, int mins, int secs)
 {
 	bool res=true;
@@ -815,9 +813,26 @@ function str tiszaszaki_get_time_string(int timestamp)
 	return res;
 }
 
+str common_time_display_prefix="Time:";
+str common_score_display_prefix="Score:";
+str common_ring_display_prefix="Rings:";
+
 function void tiszaszaki_display_time(void)
 {
-	hudmessage (s:common_time_display_prefix,s:tiszaszaki_get_time_string(tsz_timestamp); 0, 10, CR_GOLD, 0.96, 0.08, 0.0);
+	hudmessage (s:common_time_display_prefix;                        0, 10, CR_GOLD, 0.04, 0.08, 0.0);
+	hudmessage (s:"\cb",s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20,       0, 0.20, 0.08, 0.0);
+}
+
+function void tiszaszaki_display_score(void)
+{
+	hudmessage (s:common_score_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
+	hudmessage (s:"\cc",d:score;               0, 19,       0, 0.20, 0.02, 0.0);
+}
+
+function void tiszaszaki_display_ring(void)
+{
+	hudmessage (s:common_ring_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
+	hudmessage (s:"\cc",d:rings;              0, 19,       0, 0.20, 0.02, 0.0);
 }
 
 function str StrTrimmed(str s)
@@ -1951,7 +1966,7 @@ script 300 (void)						// score display
 
 {
 setfont ("BigFont");
-hudmessage (s:"score:     \cc",d:score; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+tiszaszaki_display_score();
 delay(1);
 Restart;
 }
@@ -2099,7 +2114,7 @@ script 999 (void)					// ring display
 
 {
 setfont ("BigFont");
-hudmessage (s:"rings:      \cc",d:rings; 0, 9, CR_GOLD, 0.96, 0.02, 0.0);
+tiszaszaki_display_ring();
 delay(1);
 Restart;
 }
