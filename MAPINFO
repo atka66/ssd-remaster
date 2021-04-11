@@ -1,3 +1,6 @@
+defaultmap
+sucktime 1
+
 map TITLEMAP "Main Title"
 sky1 SKY01 0
 sky2 SKY04 0

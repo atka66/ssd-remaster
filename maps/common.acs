@@ -4,6 +4,9 @@
 int zone;
 int act;
 
+int tiszaszaki_default_sucktime;
+int tiszaszaki_lamertime_hours;
+
 bool tiszaszaki_loop_nametag_change;
 
 bool tiszaszaki_custom_nametag;
@@ -17,6 +20,10 @@ int endofstage;
 global int 1:score;
 global int 2:tsz_timestamp;
 global int 3:tsz_timestamp_backup;
+
+global bool 4:tsz_triggered_lamertime;
+
+global bool 5:tsz_common_init_firsttime;
 
 bool show_hours;
 bool show_frac_seconds;
@@ -677,6 +684,12 @@ function void tiszaszaki_remove_forcefield(int ff_i)
 
 // other useful functions
 
+function void tiszaszaki_leveldefaults(void)
+{
+	tiszaszaki_default_sucktime = GetLevelInfo(LEVELINFO_SUCK_TIME);
+	tiszaszaki_lamertime_hours = tiszaszaki_default_sucktime * 30;
+}
+
 function int tiszaszaki_levelinfo(void)
 {
 	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
@@ -713,13 +726,15 @@ function int tiszaszaki_levelinfo(void)
 	return res;
 }
 
-function bool checkTimeParams(int hours, int mins, int secs)
+function bool checkTimeParams(int hours, int mins, int secs, bool maxOnly)
 {
 	bool res=true;
 
-	res &= (hours >= 0);
-	res &= ((mins >= 0) && (mins < 60));
-	res &= ((secs >= 0) && (secs < 60));
+	if (!maxOnly) res &= (hours >= 0);
+	if (!maxOnly) res &= (mins >= 0);
+	res &= (mins < 60);
+	if (!maxOnly) res &= (secs >= 0);
+	res &= (secs < 60);
 
 	return res;
 }
@@ -728,7 +743,7 @@ function int getTimestamp(int hours, int mins, int secs)
 {
 	int res=-1;
 
-	if (checkTimeParams(hours, mins, secs))
+	if (checkTimeParams(hours, mins, secs, false))
 		res = frac_per_seconds*(secs + 60*(mins + 60*hours));
 
 	return res;
@@ -756,9 +771,33 @@ function bool checkTime(int hours, int mins, int secs)
 {
 	bool res=true;
 
-	res &= (checkTimeParams(hours, mins, secs));
+	res &= (checkTimeParams(hours, mins, secs, true));
 
-	if (res) res &= (tsz_timestamp == getTimestamp(hours, mins, secs));
+	if (res)
+	{
+		int timestamp_temp=tsz_timestamp;
+		int hours_temp, mins_temp, secs_temp;
+
+		timestamp_temp /= frac_per_seconds;
+
+		secs_temp = timestamp_temp % 60;
+		timestamp_temp /= 60;
+
+		mins_temp = timestamp_temp % 60;
+		timestamp_temp /= 60;
+
+		hours_temp = timestamp_temp;
+
+/*
+		Log(s:"HH:",d:hours_temp,s:" ? ",d:hours);
+		Log(s:"MM:",d:mins_temp,s:" ? ",d:mins);
+		Log(s:"SS:",d:secs_temp,s:" ? ",d:secs);
+*/
+
+		if (res && (hours >= 0)) res &= (hours_temp == hours);
+		if (res && (mins  >= 0)) res &= (mins_temp  == mins );
+		if (res && (secs  >= 0)) res &= (secs_temp  == secs );
+	}
 
 	return res;
 }
@@ -819,20 +858,24 @@ str common_ring_display_prefix="Rings:";
 
 function void tiszaszaki_display_time(void)
 {
-	hudmessage (s:common_time_display_prefix;                        0, 10, CR_GOLD, 0.04, 0.08, 0.0);
-	hudmessage (s:"\cb",s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20,       0, 0.20, 0.08, 0.0);
+	hudmessage (s:common_time_display_prefix;                        0, 10, CR_GOLD,  0.04, 0.08, 0.0);
+
+	if (tsz_triggered_lamertime)
+		hudmessage (s:"LAMER!";                                  0, 20, CR_RED,   0.20, 0.08, 0.0);
+	else
+		hudmessage (s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20, CR_WHITE, 0.20, 0.08, 0.0);
 }
 
 function void tiszaszaki_display_score(void)
 {
 	hudmessage (s:common_score_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
-	hudmessage (s:"\cc",d:score;               0, 19,       0, 0.20, 0.02, 0.0);
+	hudmessage (d:score;                       0, 19, CR_TAN,  0.20, 0.02, 0.0);
 }
 
 function void tiszaszaki_display_ring(void)
 {
 	hudmessage (s:common_ring_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
-	hudmessage (s:"\cc",d:rings;              0, 19,       0, 0.20, 0.02, 0.0);
+	hudmessage (d:rings;                      0, 19, CR_TAN,  0.20, 0.02, 0.0);
 }
 
 function str StrTrimmed(str s)
@@ -964,8 +1007,12 @@ script "tiszaszaki_common_init" OPEN
 		show_hours = true;
 		show_frac_seconds = false;
 
-		if (level_num_temp == 1)
+		//if (!tsz_common_init_firsttime)
 		{
+			tsz_common_init_firsttime = true;
+
+			tiszaszaki_leveldefaults();
+
 			setupTime(00,00,00);
 
 			score = 0;
@@ -1982,6 +2029,11 @@ function void tiszaszaki_time_run_frac_sec(int fs, bool reverse)
 	}
 }
 
+script "tiszaszaki_time_warp_one_hour" (void)
+{
+	tiszaszaki_time_run_seconds(3600, false);
+}
+
 function void tiszaszaki_time_run_seconds(int s, bool reverse)
 {
 	tiszaszaki_time_run_frac_sec(frac_per_seconds*s, reverse);
@@ -2011,6 +2063,12 @@ script 400 (int skipbonus, int reverse_i)			// time display
 
 		if(reverse && checkTime(00,00,00))
 			terminate;
+
+		if(!reverse && !tsz_triggered_lamertime && checkTime(tiszaszaki_lamertime_hours,-1,-1))
+		{
+			tsz_triggered_lamertime = true;
+			activatorsound ("noway", 127);
+		}
 
 		delay(tic_per_frac);
 	}
