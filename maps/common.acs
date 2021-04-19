@@ -4,8 +4,6 @@
 int zone;
 int act;
 
-int tiszaszaki_default_sucktime;
-int tiszaszaki_lamertime_hours;
 
 bool tiszaszaki_loop_nametag_change;
 
@@ -17,13 +15,15 @@ int tsz_water_current_base_dir;
 int endofact;
 int endofstage;
 
-global int 1:score;
-global int 2:tsz_timestamp;
-global int 3:tsz_timestamp_backup;
+global int  1:score;
+global int  2:tsz_timestamp;
+global int  3:tsz_timestamp_backup;
 
 global bool 4:tsz_triggered_lamertime;
-
 global bool 5:tsz_common_init_firsttime;
+
+global int  6:tiszaszaki_default_sucktime;
+global int  7:tiszaszaki_lamertime_hours;
 
 bool show_hours;
 bool show_frac_seconds;
@@ -1007,7 +1007,7 @@ script "tiszaszaki_common_init" OPEN
 		show_hours = true;
 		show_frac_seconds = false;
 
-		//if (!tsz_common_init_firsttime)
+		if (!tsz_common_init_firsttime)
 		{
 			tsz_common_init_firsttime = true;
 
