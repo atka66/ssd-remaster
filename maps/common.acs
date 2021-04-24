@@ -142,7 +142,7 @@ int script904_ang_n;
 #libdefine T_BOOM 161
 #libdefine T_ICEJET 223
 #libdefine T_FIREJET 224
-#libdefine T_MINE 20077
+#libdefine T_MINE 135
 #libdefine T_HEXENARROW 209
 
 #libdefine T_REIVERFIREBALL 207
@@ -158,9 +158,9 @@ int script904_ang_n;
 #libdefine T_BANBALL 215
 #libdefine T_BANIPBALL 216
 
-#libdefine T_ENHANCEDDEMON 30017
-#libdefine T_ENHANCEDCACODEMON 30020
-#libdefine T_ENHANCEDIMP 30015
+#libdefine T_ENHANCEDDEMON 138
+#libdefine T_ENHANCEDCACODEMON 199
+#libdefine T_ENHANCEDIMP 137
 #libdefine T_MINICYBERDEMON 23
 
 #libdefine T_FIREBOMB 217
