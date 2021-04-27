@@ -89,7 +89,7 @@ str level_music;
 
 bool ready;
 bool show_hud;
-bool time_running;
+bool tiszaszaki_time_running;
 
 str zone_titles[15]={
 	"Sunset Island Zone"  , // zone  1
@@ -684,6 +684,8 @@ function void tiszaszaki_remove_forcefield(int ff_i)
 
 // other useful functions
 
+// level functions
+
 function void tiszaszaki_leveldefaults(void)
 {
 	tiszaszaki_default_sucktime = GetLevelInfo(LEVELINFO_SUCK_TIME);
@@ -726,15 +728,23 @@ function int tiszaszaki_levelinfo(void)
 	return res;
 }
 
-function bool checkTimeParams(int hours, int mins, int secs, bool maxOnly)
+// time functions
+
+function bool checkTimeParams(int hours, int mins, int secs, int fracs,   bool maxOnly, bool useFrac)
 {
 	bool res=true;
 
 	if (!maxOnly) res &= (hours >= 0);
-	if (!maxOnly) res &= (mins >= 0);
-	res &= (mins < 60);
-	if (!maxOnly) res &= (secs >= 0);
-	res &= (secs < 60);
+	if (!maxOnly) res &= (mins  >= 0);
+	res &= (mins  < 60);
+	if (!maxOnly) res &= (secs  >= 0);
+	res &= (secs  < 60);
+
+	if (useFrac)
+	{
+		if (!maxOnly) res &= (fracs >= 0);
+		res &= (fracs < frac_per_seconds);
+	}
 
 	return res;
 }
@@ -743,7 +753,7 @@ function int getTimestamp(int hours, int mins, int secs)
 {
 	int res=-1;
 
-	if (checkTimeParams(hours, mins, secs, false))
+	if (checkTimeParams(hours, mins, secs, -1,   false, false))
 		res = frac_per_seconds*(secs + 60*(mins + 60*hours));
 
 	return res;
@@ -767,36 +777,38 @@ function void restoreTime(void)
 	tsz_timestamp = tsz_timestamp_backup;
 }
 
-function bool checkTime(int hours, int mins, int secs)
+function bool checkTime(int hours, int mins, int secs, int fracs)
 {
 	bool res=true;
 
-	res &= (checkTimeParams(hours, mins, secs, true));
+	res &= (checkTimeParams(hours, mins, secs, fracs,   true, true));
 
 	if (res)
 	{
 		int timestamp_temp=tsz_timestamp;
-		int hours_temp, mins_temp, secs_temp;
+		int hours_temp, mins_temp, secs_temp, fracs_temp;
 
+		fracs_temp = timestamp_temp % frac_per_seconds;
 		timestamp_temp /= frac_per_seconds;
 
-		secs_temp = timestamp_temp % 60;
+		secs_temp  = timestamp_temp % 60;
 		timestamp_temp /= 60;
 
-		mins_temp = timestamp_temp % 60;
+		mins_temp  = timestamp_temp % 60;
 		timestamp_temp /= 60;
 
 		hours_temp = timestamp_temp;
 
 /*
 		Log(s:"HH:",d:hours_temp,s:" ? ",d:hours);
-		Log(s:"MM:",d:mins_temp,s:" ? ",d:mins);
-		Log(s:"SS:",d:secs_temp,s:" ? ",d:secs);
+		Log(s:"MM:",d:mins_temp, s:" ? ",d:mins );
+		Log(s:"SS:",d:secs_temp, s:" ? ",d:secs );
 */
 
 		if (res && (hours >= 0)) res &= (hours_temp == hours);
 		if (res && (mins  >= 0)) res &= (mins_temp  == mins );
 		if (res && (secs  >= 0)) res &= (secs_temp  == secs );
+		if (res && (fracs >= 0)) res &= (fracs_temp == fracs);
 	}
 
 	return res;
@@ -851,6 +863,8 @@ function str tiszaszaki_get_time_string(int timestamp)
 
 	return res;
 }
+
+// display functions
 
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
@@ -1121,12 +1135,12 @@ script "tiszaszaki_common_init" OPEN
 script "tiszaszaki_common_final" UNLOADING
 {
 	ready = false;
-	time_running = false;
+	tiszaszaki_time_running = false;
 }
 
 script "tiszaszaki_common_return" REOPEN
 {
-	time_running = true;
+	tiszaszaki_time_running = true;
 	ACS_Execute(400, 0, 0,0,0);
 }
 
@@ -2044,9 +2058,9 @@ script 400 (int skipbonus, int reverse_i)			// time display
 {
 	bool reverse=(reverse_i != 0);
 
-	time_running = true;
+	tiszaszaki_time_running = true;
 
-	while (time_running)
+	while (tiszaszaki_time_running)
 	{
 		tiszaszaki_time_run_frac_sec(1, reverse);
 
@@ -2061,10 +2075,13 @@ script 400 (int skipbonus, int reverse_i)			// time display
 				timebonus -= timebonus_unit_down;
 		}
 
-		if(reverse && checkTime(00,00,00))
+		if(reverse && checkTime(00,00,00,00))
+		{
+			tiszaszaki_time_running = false;
 			terminate;
+		}
 
-		if(!reverse && !tsz_triggered_lamertime && checkTime(tiszaszaki_lamertime_hours,-1,-1))
+		if(!reverse && !tsz_triggered_lamertime && checkTime(tiszaszaki_lamertime_hours,-1,-1,-1))
 		{
 			tsz_triggered_lamertime = true;
 			activatorsound ("noway", 127);
