@@ -2120,14 +2120,18 @@ script 400 (int skipbonus, int reverse_i)			// time display
 // scoring and rundown scripts
 
 bool tsz_debug_scoring_secrets=true;
-bool tsz_mock_secret_message_ready;
+bool tsz_reveal_secret_message_ready;
+
+#libdefine TSZ_SECRET_REVEAL_NORMAL 0
+#libdefine TSZ_SECRET_REVEAL_MOCK 1
+#libdefine TSZ_SECRET_REVEAL_BONUS 2
 
 script 100 (int arg0, int arg1, int arg2)		// scoring (secrets)
 
 {
+if ((arg2 >= 0) && (arg1 >= 0))
 if ((story_lev_num >=  1) && (story_lev_num <= 28)) // scored in story levels preceding Final Battle Zone
 {
-bool is_mock_secret=(arg1 != 0);
 
 int max_secretcount=secret_count_per_level[story_lev_num-1];
 
@@ -2136,19 +2140,28 @@ Thing_Remove (arg0);
 score+=1000;
 secretcount++;
 
-if (is_mock_secret)
+if (arg1 != TSZ_SECRET_REVEAL_NORMAL)
 {
 bool is_delayed_message=(arg2 != 0);
 
 activatorsound ("secret", 127);
 
-tsz_mock_secret_message_ready = false;
+tsz_reveal_secret_message_ready = false;
 
 if (is_delayed_message) delay(3*35);
 
-tsz_mock_secret_message_ready = true;
+tsz_reveal_secret_message_ready = true;
 
-activatorsound ("laugh", 127);
+switch (arg1)
+{
+case TSZ_SECRET_REVEAL_MOCK:
+	activatorsound ("laugh", 127);
+	break;
+case TSZ_SECRET_REVEAL_BONUS:
+	activatorsound ("teleport1", 127);
+	break;
+default: break; // unknown secret type
+}
 }
 else
 {
