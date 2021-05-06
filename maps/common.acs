@@ -2161,7 +2161,10 @@ case TSZ_SECRET_REVEAL_MOCK:
 	activatorsound ("laugh", 127);
 	break;
 case TSZ_SECRET_REVEAL_BONUS:
-	activatorsound ("teleport1", 127);
+	{
+		print (s:"\c-you've found a bonus stage!");
+		activatorsound ("teleport1", 127);
+	}
 	break;
 default: break; // unknown secret type
 }
