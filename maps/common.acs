@@ -2144,11 +2144,14 @@ if (arg1 != TSZ_SECRET_REVEAL_NORMAL)
 {
 bool is_delayed_message=(arg2 != 0);
 
+if (is_delayed_message)
+{
 activatorsound ("secret", 127);
 
 tsz_reveal_secret_message_ready = false;
 
-if (is_delayed_message) delay(3*35);
+delay(3*35);
+}
 
 tsz_reveal_secret_message_ready = true;
 
