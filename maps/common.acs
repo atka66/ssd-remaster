@@ -80,7 +80,26 @@ int boss_target_max_count[15]={
 	 8, // zone 15
 	};
 
+int secret_count_per_level[30]=
+	{
+		 4,  2, // zone 1
+		 2,  4, // zone 2
+		 8,  4, // zone 3
+		 5,  6, // zone 4
+		 7,  3, // zone 5
+		 2,  5, // zone 6
+		 3,  8, // zone 7
+		 4,  4, // zone 8
+		 2,  2, // zone 9
+		 7,  6, // zone 10
+		 5,  6, // zone 11
+		 4,  3, // zone 12
+		 2,  2, // zone 13
+		 5,  8, // zone 14
+		 0,  0  // zone 15
+	};
 
+int story_lev_num;
 int bonus_lev_num;
 
 bool boss_battle_level;
@@ -1097,6 +1116,8 @@ script "tiszaszaki_common_init" OPEN
 	{
 		str title_str=zone_titles[zone-1];
 
+		story_lev_num = level_num_temp;
+
 		ACS_Execute (300, 0, 0, 0, 0);
 
 		setfont ("BigFont");
@@ -1115,8 +1136,9 @@ script "tiszaszaki_common_init" OPEN
 	// show HUD in bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
 	{
-		bonus_lev_num = level_num_temp - 30;
 		str title_str_prefix="Bonus Stage";
+
+		bonus_lev_num = level_num_temp - 30;
 
 		setfont ("BigFont");
 		if ((level_num_temp >= 32) && (level_num_temp <= 33))
@@ -1970,7 +1992,7 @@ Restart;
 
 //// end of weapons/items
 
-// useful functions (by tiszaszaki)
+// math functions (by tiszaszaki)
 
 function int min(int a, int b)
 {
@@ -2023,14 +2045,7 @@ script 232 (int killtarget2)					// killtarget
 killtarget2++;
 }
 
-script 300 (void)						// score display
-
-{
-setfont ("BigFont");
-tiszaszaki_display_score();
-delay(1);
-Restart;
-}
+// time manipulation scripts
 
 function void tiszaszaki_time_run_frac_sec(int fs, bool reverse)
 {
@@ -2043,14 +2058,25 @@ function void tiszaszaki_time_run_frac_sec(int fs, bool reverse)
 	}
 }
 
+function void tiszaszaki_time_run_seconds(int s, bool reverse)
+{
+	tiszaszaki_time_run_frac_sec(frac_per_seconds*s, reverse);
+}
+
 script "tiszaszaki_time_warp_one_hour" (void)
 {
 	tiszaszaki_time_run_seconds(3600, false);
 }
 
-function void tiszaszaki_time_run_seconds(int s, bool reverse)
+// display scripts
+
+script 300 (void)						// score display
+
 {
-	tiszaszaki_time_run_frac_sec(frac_per_seconds*s, reverse);
+setfont ("BigFont");
+tiszaszaki_display_score();
+delay(1);
+Restart;
 }
 
 script 400 (int skipbonus, int reverse_i)			// time display
@@ -2089,6 +2115,73 @@ script 400 (int skipbonus, int reverse_i)			// time display
 
 		delay(tic_per_frac);
 	}
+}
+
+// scoring and rundown scripts
+
+bool tsz_debug_scoring_secrets=true;
+bool tsz_mock_secret_message_ready;
+
+script 100 (int arg0, int arg1, int arg2)		// scoring (secrets)
+
+{
+if ((story_lev_num >=  1) && (story_lev_num <= 28)) // scored in story levels preceding Final Battle Zone
+{
+bool is_mock_secret=(arg1 != 0);
+
+int max_secretcount=secret_count_per_level[story_lev_num-1];
+
+Thing_Remove (arg0);
+
+score+=1000;
+secretcount++;
+
+if (is_mock_secret)
+{
+bool is_delayed_message=(arg2 != 0);
+
+activatorsound ("secret", 127);
+
+tsz_mock_secret_message_ready = false;
+
+if (is_delayed_message) delay(3*35);
+
+tsz_mock_secret_message_ready = true;
+
+activatorsound ("laugh", 127);
+}
+else
+{
+activatorsound ("secret", 127);
+}
+
+if(secretcount == max_secretcount)
+{
+	if (tsz_debug_scoring_secrets)
+		Log(s:"You have revealed all secrets successfully.");
+	secretbonus = 10000;
+}
+}
+}
+
+script 200 (int arg0)				// scoring (kills)
+
+{
+if ((story_lev_num >=  1) && (story_lev_num <= 29))
+{
+
+score+=arg0*50;
+if (story_lev_num <= 28) // not for Icon of Skin boss levels
+{
+killcount++;
+
+if(killcount >= killtarget)
+{
+	killbonus = 10000;
+}
+}
+
+}
 }
 
 script 500 (void)					// time bonus rundown
