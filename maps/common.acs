@@ -31,6 +31,28 @@ bool show_frac_seconds;
 int tic_per_frac;
 int frac_per_seconds;
 
+int timebonus_per_level[30]={
+	100000, 100000, // zone  1
+	100000, 100000, // zone  2
+	100000, 100000, // zone  3
+	100000, 100000, // zone  4
+	100000, 100000, // zone  5
+	100000, 100000, // zone  6
+	100000, 100000, // zone  7
+	100000, 100000, // zone  8
+	100000, 100000, // zone  9
+	100000, 100000, // zone 10
+	100000, 100000, // zone 11
+	100000, 100000, // zone 12
+	100000, 100000, // zone 13
+	100000, 100000, // zone 14
+	100000, 100000, // zone 15
+	};
+int timebonus_down_per_gameskill[5]={50,50,50,50,50};
+
+int timebonus;
+int timebonus_ingame_down_unit;
+
 int killbonus;
 int killcount;
 int secretbonus;
@@ -822,6 +844,7 @@ function bool checkTime(int hours, int mins, int secs, int fracs)
 		Log(s:"HH:",d:hours_temp,s:" ? ",d:hours);
 		Log(s:"MM:",d:mins_temp, s:" ? ",d:mins );
 		Log(s:"SS:",d:secs_temp, s:" ? ",d:secs );
+		Log(s:"FS:",d:fracs_temp,s:" ? ",d:fracs);
 */
 
 		if (res && (hours >= 0)) res &= (hours_temp == hours);
@@ -1036,6 +1059,11 @@ script "tiszaszaki_common_init" OPEN
 		}
 
 		killtarget = 0;
+		killcount = 0;
+		secretcount = 0;
+
+		timebonus = timebonus_per_level[level_num_temp-1];
+		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
 
 		show_hours = true;
 		show_frac_seconds = false;
@@ -1053,9 +1081,6 @@ script "tiszaszaki_common_init" OPEN
 
 		if (level_num_temp >= 2)
 		{
-			killcount = 0;
-			secretcount = 0;
-
 			TakeInventory ("BlueCard2", 1);
 			TakeInventory ("RedCard2", 1);
 			TakeInventory ("YellowCard2", 1);
@@ -2010,11 +2035,10 @@ function int max(int a, int b)
 
 //// SCORES.ACS
 
-int timebonus_unit_down = 50;
-int timebonus_unit = 1000;
-int timebonus = 100000;
-int killbonus_unit = 250;
-int secretbonus_unit = 250;
+int timebonus_rundown_unit = 1000;
+int killbonus_rundown_unit = 250;
+int secretbonus_rundown_unit = 250;
+
 int rundown_dl=2;
 
 function void tiszaszaki_get_rings(int ring_n, int bonus_am, int max_ring_n)
@@ -2093,12 +2117,12 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		setfont ("BigFont");
 		tiszaszaki_display_time();
 
-		if((!skipbonus) && (timebonus != 0))
+		if((!skipbonus) && (timebonus != 0) && checkTime(-1,-1,-1,00))
 		{
-			if(timebonus < timebonus_unit_down)
+			if(timebonus < timebonus_ingame_down_unit)
 				timebonus = 0;
 			else
-				timebonus -= timebonus_unit_down;
+				timebonus -= timebonus_ingame_down_unit;
 		}
 
 		if(reverse && checkTime(00,00,00,00))
@@ -2129,16 +2153,27 @@ bool tsz_reveal_secret_message_ready;
 script 100 (int arg0, int arg1, int arg2)		// scoring (secrets)
 
 {
-if ((arg2 >= 0) && (arg1 >= 0))
+int max_secretcount=secret_count_per_level[story_lev_num-1];
+
+if ((arg2 >= 0) && (arg1 >= 0) && (secretcount < max_secretcount))
 if ((story_lev_num >=  1) && (story_lev_num <= 28)) // scored in story levels preceding Final Battle Zone
 {
-
-int max_secretcount=secret_count_per_level[story_lev_num-1];
 
 Thing_Remove (arg0);
 
 score+=1000;
 secretcount++;
+
+if(secretcount == max_secretcount)
+	secretbonus = 10000;
+
+if (tsz_debug_scoring_secrets)
+{
+	if (secretcount == max_secretcount)
+		Log(s:"You have revealed all secrets successfully.");
+	else
+		Log(s:"Secrets revealed ",d:secretcount,s:" of ",d:max_secretcount,s:".");
+}
 
 if (arg1 != TSZ_SECRET_REVEAL_NORMAL)
 {
@@ -2146,9 +2181,9 @@ bool is_delayed_message=(arg2 != 0);
 
 if (is_delayed_message)
 {
-activatorsound ("secret", 127);
-
 tsz_reveal_secret_message_ready = false;
+
+activatorsound ("secret", 127);
 
 delay(3*35);
 }
@@ -2174,12 +2209,6 @@ else
 activatorsound ("secret", 127);
 }
 
-if(secretcount == max_secretcount)
-{
-	if (tsz_debug_scoring_secrets)
-		Log(s:"You have revealed all secrets successfully.");
-	secretbonus = 10000;
-}
 }
 }
 
@@ -2215,12 +2244,12 @@ if(timebonus == 0)
 else
 {
 	int timebonus_temp=timebonus;
-	if(timebonus <= timebonus_unit)
+	if(timebonus <= timebonus_rundown_unit)
 		timebonus = 0;
 	else
-		timebonus -= timebonus_unit;
+		timebonus -= timebonus_rundown_unit;
 	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-	score += min(timebonus_unit,timebonus_temp);
+	score += min(timebonus_rundown_unit,timebonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
 	Restart;
@@ -2239,12 +2268,12 @@ if(killbonus == 0)
 else
 {
 	int killbonus_temp=killbonus;
-	if (killbonus <= killbonus_unit)
+	if (killbonus <= killbonus_rundown_unit)
 		killbonus = 0;
 	else
-		killbonus -= killbonus_unit;
+		killbonus -= killbonus_rundown_unit;
 	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
-	score += min(killbonus_unit,killbonus_temp);
+	score += min(killbonus_rundown_unit,killbonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
 	Restart;
@@ -2263,12 +2292,12 @@ if(secretbonus == 0)
 else
 {
 	int secretbonus_temp=secretbonus;
-	if (secretbonus <= secretbonus_unit)
+	if (secretbonus <= secretbonus_rundown_unit)
 		secretbonus = 0;
 	else
-		secretbonus -= secretbonus_unit;
+		secretbonus -= secretbonus_rundown_unit;
 	hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
-	score += min(secretbonus_unit,secretbonus_temp);
+	score += min(secretbonus_rundown_unit,secretbonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
 	Restart;
