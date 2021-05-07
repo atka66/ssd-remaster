@@ -2443,7 +2443,7 @@ script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (loope
 
 // monitor pickup scripts
 
-script 201 (int arg0)				// health monitor
+script 201 (int arg0, int arg1)				// health monitor
 
 {
 Thing_Remove (arg0);
@@ -2451,9 +2451,11 @@ activatorsound ("monitor", 127);
 delay(35);
 GiveInventory ("HealthBonus", 10);
 activatorsound ("ring", 127);
+if (arg1 > 0) // post pickup trigger
+ACS_Execute(arg1, 0, 0,0,0);
 }
 
-script 202 (int arg0)				// armour monitor
+script 202 (int arg0, int arg1)				// armour monitor
 
 {
 Thing_Remove (arg0);
@@ -2461,17 +2463,19 @@ activatorsound ("monitor", 127);
 delay(35);
 GiveInventory ("ArmorBonus", 10);
 activatorsound ("ishield", 127);
+if (arg1 > 0) // post pickup trigger
+ACS_Execute(arg1, 0, 0,0,0);
 }
 
 str frames[14] = {"1", "2", "3", "4", "5", "6", "7", "6", "5", "4", "3", "2", "1", "0"};
 
-script 203 (int arg0)               // invincibility monitor 
+script 203 (int arg0)	// invincibility monitor 
 
 {
 Thing_Remove (arg0); 
 activatorsound ("monitor", 127); 
 delay(5); 
-SetMusic ("z_invuln"); 
+SetMusic ("z_invuln");
 delay(30);
 SetPlayerProperty (1, 2, 5); 
 ACS_ExecuteAlways (209, 0, 776, 0, 0); 
@@ -2485,7 +2489,7 @@ delay(3);
 ACS_ExecuteAlways (209, 0, 780, 0, 0);
 delay(700);
 sethudsize (0, 0, 0);
-SetPlayerProperty (1, 0, 5); 
+SetPlayerProperty (1, 0, 5);
 SetMusic (level_music); 
 }
 
@@ -2505,7 +2509,7 @@ delay(1);
 }
 }
 
-script 204 (int arg0)				// invisibility monitor
+script 204 (int arg0, int arg1)				// invisibility monitor
 
 {
 Thing_Remove (arg0);
@@ -2513,9 +2517,11 @@ activatorsound ("monitor", 127);
 delay(35);
 GiveInventory ("BlurSphere", 1);
 activatorsound ("bshield", 127);
+if (arg1 > 0) // post pickup trigger
+ACS_Execute(arg1, 0, 0,0,0);
 }
 
-script 205 (int arg0)				// rad monitor
+script 205 (int arg0, int arg1)				// rad monitor
 
 {
 Thing_Remove (arg0);
@@ -2523,9 +2529,11 @@ activatorsound ("monitor", 127);
 delay(35);
 GiveInventory ("RadSuit", 1);
 activatorsound ("wshield", 127);
+if (arg1 > 0) // post pickup trigger
+ACS_Execute(arg1, 0, 0,0,0);
 }
 
-script 206 (int arg0)				// extra life monitor
+script 206 (int arg0, int arg1)				// extra life monitor
 
 {
 Thing_Remove (arg0);
@@ -2533,6 +2541,8 @@ activatorsound ("monitor", 127);
 delay(35);
 GiveInventory ("Megasphere", 1);
 activatorsound ("powerup", 127);
+if (arg1 > 0) // post pickup trigger
+ACS_Execute(arg1, 0, 0,0,0);
 }
 
 script 207 (int arg0)				// speed monitor
