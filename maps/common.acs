@@ -138,6 +138,8 @@ bool ready;
 bool show_hud;
 bool tiszaszaki_time_running;
 
+bool tiszaszaki_rad_used;
+
 str zone_titles[15]={
 	"Sunset Island Zone"  , // zone  1
 	"Sunset Forest Zone"  , // zone  2
@@ -1106,6 +1108,8 @@ script "tiszaszaki_common_init" OPEN
 		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
 
 		tiszaszaki_debug_timebonus = false;
+
+		tiszaszaki_rad_used = false;
 
 		show_hours = true;
 		show_frac_seconds = false;
@@ -2521,14 +2525,23 @@ if (arg1 > 0) // post pickup trigger
 ACS_Execute(arg1, 0, 0,0,0);
 }
 
-script 205 (int arg0, int arg1)				// rad monitor
+script 205 (int arg0, int arg1, int arg2)				// rad monitor
 
 {
+bool check_radsuit_inv=(arg2 != 0);
+
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
+if (check_radsuit_inv)
+	tiszaszaki_rad_used = true;
 GiveInventory ("RadSuit", 1);
 activatorsound ("wshield", 127);
+if (check_radsuit_inv)
+{
+	delay(2100);
+	tiszaszaki_rad_used = false;
+}
 if (arg1 > 0) // post pickup trigger
 ACS_Execute(arg1, 0, 0,0,0);
 }
