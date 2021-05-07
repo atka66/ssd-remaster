@@ -1,5 +1,6 @@
 defaultmap
 sucktime 1
+partime 60
 
 map TITLEMAP "Main Title"
 sky1 SKY01 0

@@ -25,6 +25,12 @@ global bool 5:tsz_common_init_firsttime;
 global int  6:tiszaszaki_default_sucktime;
 global int  7:tiszaszaki_lamertime_hours;
 
+int tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss;
+
+bool tiszaszaki_par_time_reached;
+
+bool tiszaszaki_debug_timebonus;
+
 bool show_hours;
 bool show_frac_seconds;
 
@@ -739,9 +745,27 @@ function int tiszaszaki_levelinfo(void)
 
 	if ((res >= 1) && (res <= 30))
 	{
+		int tiszaszaki_level_par_time=GetLevelInfo(LEVELINFO_PAR_TIME);
+
 		zone = (res - 1) / 2 + 1;
 		act = (res - 1) % 2 + 1;
 
+		if (tiszaszaki_level_par_time > 0)
+		{
+			tiszaszaki_level_par_time_ss = tiszaszaki_level_par_time % 60;
+			tiszaszaki_level_par_time /= 60;
+
+			tiszaszaki_level_par_time_mm = tiszaszaki_level_par_time % 60;
+			tiszaszaki_level_par_time /= 60;
+
+			tiszaszaki_level_par_time_hh = tiszaszaki_level_par_time;
+
+			tiszaszaki_par_time_reached = false;
+		}
+		else
+		{
+			tiszaszaki_par_time_reached = true;
+		}
 	}
 	else
 	{
@@ -911,6 +935,7 @@ function str tiszaszaki_get_time_string(int timestamp)
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
 str common_ring_display_prefix="Rings:";
+str common_timebonus_display_prefix="Time bonus:";
 
 function void tiszaszaki_display_time(void)
 {
@@ -920,6 +945,21 @@ function void tiszaszaki_display_time(void)
 		hudmessage (s:"LAMER!";                                  0, 20, CR_RED,   0.20, 0.10, 0.0);
 	else
 		hudmessage (s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20, CR_WHITE, 0.20, 0.10, 0.0);
+}
+
+function void tiszaszaki_display_timebonus(void)
+{
+	if (tiszaszaki_debug_timebonus)
+	{
+		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.80, 0.20, 0.0);
+		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.96, 0.20, 0.0);
+	}
+}
+
+function void tiszaszaki_clear_timebonus(void)
+{
+	hudmessage (s:""; 0, 40, 0, 0, 0, 0);
+	hudmessage (s:""; 0, 41, 0, 0, 0, 0);
 }
 
 function void tiszaszaki_display_score(void)
@@ -1065,6 +1105,8 @@ script "tiszaszaki_common_init" OPEN
 		timebonus = timebonus_per_level[level_num_temp-1];
 		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
 
+		tiszaszaki_debug_timebonus = false;
+
 		show_hours = true;
 		show_frac_seconds = false;
 
@@ -1147,6 +1189,8 @@ script "tiszaszaki_common_init" OPEN
 
 		setfont ("BigFont");
 		tiszaszaki_display_time();
+		setfont ("BigFont");
+		tiszaszaki_display_timebonus();
 		delay(5);
 		hudmessage (s:title_str; 2, 0, CR_WHITE, 0.5, 0.46, 5.0, 0.01, 1.0);
 		delay(6);
@@ -2117,13 +2161,21 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		setfont ("BigFont");
 		tiszaszaki_display_time();
 
-		if((!skipbonus) && (timebonus != 0) && checkTime(-1,-1,-1,00))
+		if(!reverse && !skipbonus && tiszaszaki_par_time_reached)
+		if((timebonus != 0) && (checkTime(-1,-1,-1,00)))
 		{
 			if(timebonus < timebonus_ingame_down_unit)
 				timebonus = 0;
 			else
-				timebonus -= timebonus_ingame_down_unit;
+				timebonus -= timebonus_ingame_down_unit;		
+
+			setfont ("BigFont");
+			tiszaszaki_display_timebonus();
 		}
+
+		if(!reverse && !tiszaszaki_par_time_reached)
+		if(checkTime(tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss,-1))
+			tiszaszaki_par_time_reached = true;
 
 		if(reverse && checkTime(00,00,00,00))
 		{
@@ -2131,7 +2183,8 @@ script 400 (int skipbonus, int reverse_i)			// time display
 			terminate;
 		}
 
-		if(!reverse && !tsz_triggered_lamertime && checkTime(tiszaszaki_lamertime_hours,-1,-1,-1))
+		if(!reverse && !tsz_triggered_lamertime)
+		if(checkTime(tiszaszaki_lamertime_hours,-1,-1,-1))
 		{
 			tsz_triggered_lamertime = true;
 			activatorsound ("noway", 127);
@@ -2523,6 +2576,10 @@ SetWeapon ("Fist");
 SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
+
+if (tiszaszaki_debug_timebonus)
+	tiszaszaki_clear_timebonus();
+
 setfont ("BigFont");
 if (tiszaszaki_custom_nametag)
 {
