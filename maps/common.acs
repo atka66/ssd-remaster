@@ -914,24 +914,24 @@ str common_ring_display_prefix="Rings:";
 
 function void tiszaszaki_display_time(void)
 {
-	hudmessage (s:common_time_display_prefix;                        0, 10, CR_GOLD,  0.04, 0.08, 0.0);
+	hudmessage (s:common_time_display_prefix;                        0, 10, CR_GOLD,  0.04, 0.10, 0.0);
 
 	if (tsz_triggered_lamertime)
-		hudmessage (s:"LAMER!";                                  0, 20, CR_RED,   0.20, 0.08, 0.0);
+		hudmessage (s:"LAMER!";                                  0, 20, CR_RED,   0.20, 0.10, 0.0);
 	else
-		hudmessage (s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20, CR_WHITE, 0.20, 0.08, 0.0);
+		hudmessage (s:tiszaszaki_get_time_string(tsz_timestamp); 0, 20, CR_WHITE, 0.20, 0.10, 0.0);
 }
 
 function void tiszaszaki_display_score(void)
 {
-	hudmessage (s:common_score_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
-	hudmessage (d:score;                       0, 19, CR_TAN,  0.20, 0.02, 0.0);
+	hudmessage (s:common_score_display_prefix; 0,  9, CR_GOLD, 0.04, 0.04, 0.0);
+	hudmessage (d:score;                       0, 19, CR_TAN,  0.20, 0.04, 0.0);
 }
 
 function void tiszaszaki_display_ring(void)
 {
-	hudmessage (s:common_ring_display_prefix; 0,  9, CR_GOLD, 0.04, 0.02, 0.0);
-	hudmessage (d:rings;                      0, 19, CR_TAN,  0.20, 0.02, 0.0);
+	hudmessage (s:common_ring_display_prefix; 0,  9, CR_GOLD, 0.04, 0.04, 0.0);
+	hudmessage (d:rings;                      0, 19, CR_TAN,  0.20, 0.04, 0.0);
 }
 
 function str StrTrimmed(str s)
@@ -2197,7 +2197,8 @@ case TSZ_SECRET_REVEAL_MOCK:
 	break;
 case TSZ_SECRET_REVEAL_BONUS:
 	{
-		print (s:"\c-you've found a bonus stage!");
+		SetFont("BigFont");
+		hudmessage(s:"You've found a bonus stage!"; 3, 30, CR_YELLOW, 0.5, 0.5, 0.5, 3.0);
 		activatorsound ("teleport1", 127);
 	}
 	break;
