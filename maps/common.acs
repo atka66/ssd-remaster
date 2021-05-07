@@ -122,7 +122,7 @@ int secret_count_per_level[30]=
 		 7,  6, // zone 10
 		 5,  6, // zone 11
 		 4,  3, // zone 12
-		 2,  2, // zone 13
+		 2,  7, // zone 13
 		 5,  8, // zone 14
 		 0,  0  // zone 15
 	};
