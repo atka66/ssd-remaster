@@ -87,7 +87,7 @@ int boss_target_min_count[15]={
 	8, // zone 12
 	8, // zone 13
 	8, // zone 14
-	8, // zone 15
+	2, // zone 15
 	};
 
 int boss_target_max_count[15]={
@@ -934,10 +934,22 @@ function str tiszaszaki_get_time_string(int timestamp)
 
 // display functions
 
+str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
 str common_ring_display_prefix="Rings:";
 str common_timebonus_display_prefix="Time bonus:";
+
+function void tiszaszaki_display_target_hud(void)
+{
+	hudmessage (s:common_target_display_prefix;            0, 11, CR_GOLD, 0.88, 0.14, 0.0);
+	hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 0, 12, CR_TAN,  0.96, 0.14, 0.0);
+}
+
+function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
+{
+	hudmessage (s:boss_name,s:": ",d:boss_health; 0, 13, boss_col, 0.96, 0.08, 0.0);
+}
 
 function void tiszaszaki_display_time(void)
 {
@@ -1554,6 +1566,97 @@ Thing_SetTranslation (719, 19);
 }
 
 //// end of translations
+
+// boss related scripts (boss defines are in order of their encounter)
+
+#libdefine TSZ_SEVENSINNER_BOSS_LUST 0
+#libdefine TSZ_SEVENSINNER_BOSS_ENVY 1
+#libdefine TSZ_SEVENSINNER_BOSS_SLOTH 2
+#libdefine TSZ_SEVENSINNER_BOSS_GREED 3
+#libdefine TSZ_SEVENSINNER_BOSS_VANITY 4
+#libdefine TSZ_SEVENSINNER_BOSS_GLUTTONY 5
+#libdefine TSZ_SEVENSINNER_BOSS_PRIDE 6
+#libdefine TSZ_SEVENSINNER_THEFIRESTARTER 7 // head of the seven sinners
+
+bool tiszaszaki_boss_health_engaged=false;
+
+str tiszaszaki_sevensinner_names[8]=
+	{
+		"Lust",
+		"Envy",
+		"Sloth",
+		"Greed",
+		"Vanity",
+		"Gluttony",
+		"Pride",
+		"The Firestarter"
+	};
+
+int tiszaszaki_sevensinner_tids[8]={57,85,46,22,63,43,230,1336};
+
+int tiszaszaki_sevensinner_col_head[8][2]=
+	{
+		{2,2}, // Lust
+		{2,2}, // Envy
+		{2,2}, // Sloth
+		{2,2}, // Greed
+		{2,2}, // Vanity
+		{1,1}, // Gluttony
+		{1,1}, // Pride
+		{3,2}  // The Firestarter
+	};
+
+int tiszaszaki_sevensinner_col_vals[8][4]=
+	{
+		{ 6,17, 0, 0}, // Lust
+		{ 3,16, 0, 0}, // Envy
+		{ 4,18, 0, 0}, // Sloth
+		{ 7,19, 0, 0}, // Greed
+		{ 2,20, 0, 0}, // Vanity
+		{ 8, 0, 0, 0}, // Gluttony
+		{10, 0, 0, 0}, // Pride
+		{ 6, 8, 5, 0}  // The Firestarter
+	};
+
+script "tiszaszaki_show_seven_sinner_health" (int boss_id)
+{
+	if (!tiszaszaki_boss_health_engaged)
+	if ((boss_id >= 0) && (boss_id <= 7))
+	{
+		str boss_name=tiszaszaki_sevensinner_names[boss_id];
+		int boss_tid=tiszaszaki_sevensinner_tids[boss_id];
+
+		int boss_hud_anim_i=0, boss_hud_anim_n=tiszaszaki_sevensinner_col_head[boss_id][0];
+		int boss_hud_anim_dl=tiszaszaki_sevensinner_col_head[boss_id][1];
+
+		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0))
+		{
+			tiszaszaki_boss_health_engaged = true;
+
+			while (tiszaszaki_boss_health_engaged)
+			{
+				int boss_health=GetActorProperty(boss_tid, APROP_Health);
+				int boss_col=tiszaszaki_sevensinner_col_vals[boss_id][boss_hud_anim_i];
+
+				if (boss_health < 0) boss_health = 0;
+
+				SetFont ("BigFont");
+				tiszaszaki_display_boss_health(boss_name, boss_health, boss_col);
+
+				delay(boss_hud_anim_dl);
+				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
+			}
+
+			hudmessage (s:""; 0, 13, 0, 0, 0, 0);
+		}
+	}
+}
+
+script "tiszaszaki_clear_seven_sinner_health" (void)
+{
+	delay(35);
+	tiszaszaki_boss_health_engaged = false;
+}
 
 script 250 (void)					// water splash
 
@@ -2440,7 +2543,7 @@ if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
 script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (looped function)
 {
 	setfont ("BigFont");
-	hudmessage (s:"target: \cc",d:boss_target_hit,s:"/",d:boss_target_max; 0, 11, CR_GOLD, 0.96, 0.14, 0.0);
+	tiszaszaki_display_target_hud();
 	delay(1);
 	Restart;
 }
@@ -2580,6 +2683,7 @@ script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 30 only
 		ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
 		Delay(5);
 		hudmessage (s:""; 0, 11, 0, 0, 0, 0);
+		hudmessage (s:""; 0, 12, 0, 0, 0, 0);
 	}
 }
 
@@ -2695,4 +2799,4 @@ ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
 tiszaszaki_loop_nametag_change = false;
-}
+}  
