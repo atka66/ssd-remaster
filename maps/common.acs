@@ -1397,75 +1397,115 @@ CreateTranslation (18, 112:114=240:240, 115:124=241:246, 125:127=0:0, 80:84=109:
 CreateTranslation (19, 112:127=112:127, 80:95=152:159);
 }
 
+// boss related defines
+
+#libdefine TSZ_SEVENSINNER_BOSS_ENVY 0
+#libdefine TSZ_SEVENSINNER_BOSS_LUST 1
+#libdefine TSZ_SEVENSINNER_BOSS_SLOTH 2
+#libdefine TSZ_SEVENSINNER_BOSS_GREED 3
+#libdefine TSZ_SEVENSINNER_BOSS_VANITY 4
+#libdefine TSZ_SEVENSINNER_BOSS_GLUTTONY 5
+#libdefine TSZ_SEVENSINNER_BOSS_PRIDE 6
+#libdefine TSZ_SEVENSINNER_THEFIRESTARTER 7 // head of the seven sinners
+
+bool do_tiszaszaki_sevensinner_anim[8];
 
 script 302 open		// Envy	(dark green/natural green)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY])
+	{
 	delay (3);
 	CreateTranslation (20, 112:127=152:159, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (20, 112:119=156:159, 120:127=9:12, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 303 open		// Lust	(red/dark red)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST])
+	{
 	delay (3);
 	CreateTranslation (21, 112:127=176:191, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (21, 112:127=32:47, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 304 open		// Sloth (brown/tan)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH])
+	{
 	delay (3);
 	CreateTranslation (22, 112:127=64:79, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (22, 112:127=128:143, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 305 open		// 	Greed (blue/purple)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED])
+	{
 	delay (3);
 	CreateTranslation (23, 112:127=192:207, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (23, 112:127=250:254, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 306 open		// Vanity (grey/white)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY])
+	{
 	delay (3);
 	CreateTranslation (24, 112:127=96:111, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (24, 112:127=80:95, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 307 open		// Gluttony	(orange/dark orange)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY])
+	{
 	delay (3);
 	CreateTranslation (25, 112:119=220:223, 120:127=232:235, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (25, 112:127=208:223, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 308 open		// Pride (yellow/bright yellow)
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE])
+	{
 	delay (3);
 	CreateTranslation (26, 112:127=160:167, 152:159=128:143, 9:12=236:239);
 	delay (3);
 	CreateTranslation (26, 112:127=224:231, 152:159=128:143, 9:12=236:239);
-	Restart;	
+	}
 }
 
 script 309 open		// Super Mancubus
@@ -1525,6 +1565,10 @@ script 311 open		// Super Cyberdemon
 script 312 open		// The Firestarter
 
 {
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] = true;
+
+	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER])
+	{
 	delay (2);
 	CreateTranslation (30, 112:127=32:47, 152:159=128:143, 9:12=236:239);
 	delay (2);
@@ -1537,7 +1581,7 @@ script 312 open		// The Firestarter
 	CreateTranslation (30, 112:127=160:167, 152:159=128:143, 9:12=236:239);
 	delay (2);
 	CreateTranslation (30, 112:127=224:231, 152:159=128:143, 9:12=236:239);
-	Restart;
+	}
 }
 
 script 313 open		// translation activator
@@ -1567,23 +1611,14 @@ Thing_SetTranslation (719, 19);
 
 //// end of translations
 
-// boss related scripts (boss defines are in order of their encounter)
-
-#libdefine TSZ_SEVENSINNER_BOSS_LUST 0
-#libdefine TSZ_SEVENSINNER_BOSS_ENVY 1
-#libdefine TSZ_SEVENSINNER_BOSS_SLOTH 2
-#libdefine TSZ_SEVENSINNER_BOSS_GREED 3
-#libdefine TSZ_SEVENSINNER_BOSS_VANITY 4
-#libdefine TSZ_SEVENSINNER_BOSS_GLUTTONY 5
-#libdefine TSZ_SEVENSINNER_BOSS_PRIDE 6
-#libdefine TSZ_SEVENSINNER_THEFIRESTARTER 7 // head of the seven sinners
+// boss related scripts
 
 bool tiszaszaki_boss_health_engaged=false;
 
 str tiszaszaki_sevensinner_names[8]=
 	{
-		"Lust",
 		"Envy",
+		"Lust",
 		"Sloth",
 		"Greed",
 		"Vanity",
@@ -1592,12 +1627,12 @@ str tiszaszaki_sevensinner_names[8]=
 		"The Firestarter"
 	};
 
-int tiszaszaki_sevensinner_tids[8]={57,85,46,22,63,43,230,1336};
+int tiszaszaki_sevensinner_tids[8]={85,57,46,22,63,43,230,1336};
 
 int tiszaszaki_sevensinner_col_head[8][2]=
 	{
-		{2,2}, // Lust
 		{2,2}, // Envy
+		{2,2}, // Lust
 		{2,2}, // Sloth
 		{2,2}, // Greed
 		{2,2}, // Vanity
@@ -1608,8 +1643,8 @@ int tiszaszaki_sevensinner_col_head[8][2]=
 
 int tiszaszaki_sevensinner_col_vals[8][4]=
 	{
-		{ 6,17, 0, 0}, // Lust
 		{ 3,16, 0, 0}, // Envy
+		{ 6,17, 0, 0}, // Lust
 		{ 4,18, 0, 0}, // Sloth
 		{ 7,19, 0, 0}, // Greed
 		{ 2,20, 0, 0}, // Vanity
@@ -1656,6 +1691,18 @@ script "tiszaszaki_clear_seven_sinner_health" (void)
 {
 	delay(35);
 	tiszaszaki_boss_health_engaged = false;
+}
+
+script "tiszaszaki_clear_seven_sinner_translation" (int boss_id)
+{
+	if ((boss_id >= 0) && (boss_id <= 7))
+	{
+		int boss_tid=tiszaszaki_sevensinner_tids[boss_id];
+
+		Thing_SetTranslation(boss_tid, -1);
+
+		do_tiszaszaki_sevensinner_anim[boss_id] = false;
+	}
 }
 
 script 250 (void)					// water splash
