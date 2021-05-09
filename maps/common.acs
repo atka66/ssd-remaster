@@ -78,8 +78,8 @@ int boss_target_min_count[15]={
 	2, // zone  1
 	1, // zone  2
 	4, // zone  3
-	8, // zone  4
-	8, // zone  5
+	4, // zone  4
+	4, // zone  5
 	8, // zone  6
 	8, // zone  7
 	2, // zone  8
@@ -2951,4 +2951,4 @@ ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
 tiszaszaki_loop_nametag_change = false;
-}  
+}  
