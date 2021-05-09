@@ -1009,6 +1009,8 @@ function str StrTrimmed(str s)
 	return res;
 }
 
+// nametag functions
+
 function str tiszaszaki_common_get_nametag (void)
 {
 	str res="";
@@ -1051,6 +1053,8 @@ script "tiszaszaki_common_set_nametag" (void)
 		if (tiszaszaki_loop_nametag_change) Delay(5);
 	} while (tiszaszaki_loop_nametag_change);
 }
+
+// map control scripts (e.g. OPEN)
 
 script "tiszaszaki_common_init" OPEN
 {
@@ -1670,29 +1674,41 @@ int tiszaszaki_sevensinner_col_vals[8][4]=
 		{ 6, 8, 5, 0}  // The Firestarter
 	};
 
-script "tiszaszaki_show_seven_sinner_health" (int boss_id)
+function int tiszaszaki_specific_boss_tid(int boss_id)
 {
-	if (!tiszaszaki_boss_health_engaged)
+	int res=0;
+
 	if ((boss_id >= 0) && (boss_id <= 7))
 	{
-		str boss_name=tiszaszaki_sevensinner_names[boss_id];
-		int boss_tid=tiszaszaki_sevensinner_tids[boss_id];
+		res = tiszaszaki_sevensinner_tids[boss_id];
 
 		// level specific appearance of some bosses (e.g. Vanity)
 		if (boss_id == TSZ_SEVENSINNER_BOSS_VANITY)
 		{
 			switch (story_lev_num)
 			{
-				case 17: boss_tid = 108; break;
-				case 20: boss_tid =  63; break;
+				case 17: res = 108; break;
+				case 20: res =  63; break;
 				default: break; // no other levels where Vanity appears
 			}
 		}
+	}
+
+	return res;
+}
+
+script "tiszaszaki_show_seven_sinner_health" (int boss_id)
+{
+	if (!tiszaszaki_boss_health_engaged)
+	if ((boss_id >= 0) && (boss_id <= 7))
+	{
+		str boss_name=tiszaszaki_sevensinner_names[boss_id];
+		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
 
 		int boss_hud_anim_i=0, boss_hud_anim_n=tiszaszaki_sevensinner_col_head[boss_id][0];
 		int boss_hud_anim_dl=tiszaszaki_sevensinner_col_head[boss_id][1];
 
-		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0))
+		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
 		{
 			tiszaszaki_boss_health_engaged = true;
 
@@ -1717,19 +1733,26 @@ script "tiszaszaki_show_seven_sinner_health" (int boss_id)
 
 script "tiszaszaki_clear_seven_sinner_health" (void)
 {
-	delay(35);
-	tiszaszaki_boss_health_engaged = false;
+	if (tiszaszaki_boss_health_engaged)
+	{
+		delay(35);
+		tiszaszaki_boss_health_engaged = false;
+	}
 }
 
 script "tiszaszaki_clear_seven_sinner_translation" (int boss_id)
 {
 	if ((boss_id >= 0) && (boss_id <= 7))
+	if (do_tiszaszaki_sevensinner_anim[boss_id])
 	{
-		int boss_tid=tiszaszaki_sevensinner_tids[boss_id];
+		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
 
-		Thing_SetTranslation(boss_tid, -1);
+		if (boss_tid > 0)
+		{
+			Thing_SetTranslation(boss_tid, -1);
 
-		do_tiszaszaki_sevensinner_anim[boss_id] = false;
+			do_tiszaszaki_sevensinner_anim[boss_id] = false;
+		}
 	}
 }
 
@@ -2315,7 +2338,8 @@ function void tiszaszaki_time_run_seconds(int s, bool reverse)
 
 script "tiszaszaki_time_warp_one_hour" (void)
 {
-	tiszaszaki_time_run_seconds(3600, false);
+	if (bonus_stage_state == NOT_A_BONUS_STAGE)
+		tiszaszaki_time_run_seconds(3600, false);
 }
 
 // display scripts
