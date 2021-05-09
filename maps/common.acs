@@ -25,6 +25,8 @@ global bool 5:tsz_common_init_firsttime;
 global int  6:tiszaszaki_default_sucktime;
 global int  7:tiszaszaki_lamertime_hours;
 
+int tsz_timestamp_level;
+
 int tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss;
 
 bool tiszaszaki_par_time_reached;
@@ -826,6 +828,14 @@ function int getTimestamp(int hours, int mins, int secs)
 	return res;
 }
 
+function void setupLevelTime(int hours, int mins, int secs)
+{
+	int res=getTimestamp(hours, mins, secs);
+
+	if (res >= 0)
+		tsz_timestamp_level = res;
+}
+
 function void setupTime(int hours, int mins, int secs)
 {
 	int res=getTimestamp(hours, mins, secs);
@@ -878,6 +888,21 @@ function bool checkTime(int hours, int mins, int secs, int fracs)
 		if (res && (secs  >= 0)) res &= (secs_temp  == secs );
 		if (res && (fracs >= 0)) res &= (fracs_temp == fracs);
 	}
+
+	return res;
+}
+
+function bool checkLevelTime(int hours, int mins, int secs, int fracs)
+{
+	bool res=true;
+
+	backupTime();
+
+	tsz_timestamp = tsz_timestamp_level;
+
+	res &= (checkTime(hours, mins, secs, fracs));
+
+	restoreTime();
 
 	return res;
 }
@@ -944,6 +969,12 @@ function void tiszaszaki_display_target_hud(void)
 {
 	hudmessage (s:common_target_display_prefix;            0, 11, CR_GOLD, 0.88, 0.14, 0.0);
 	hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 0, 12, CR_TAN,  0.96, 0.14, 0.0);
+}
+
+function void tiszaszaki_clear_target_hud(void)
+{
+	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
+	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
 }
 
 function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
@@ -1140,6 +1171,8 @@ script "tiszaszaki_common_init" OPEN
 
 			score = 0;
 		}
+
+		setupLevelTime(00,00,00);
 
 		if (level_num_temp >= 2)
 		{
@@ -2327,7 +2360,10 @@ function void tiszaszaki_time_run_frac_sec(int fs, bool reverse)
 		if (reverse)
 			tsz_timestamp -= fs;
 		else
+		{
 			tsz_timestamp += fs;
+			tsz_timestamp_level += fs;
+		}
 	}
 }
 
@@ -2368,7 +2404,7 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		tiszaszaki_display_time();
 
 		if(!reverse && !skipbonus && tiszaszaki_par_time_reached)
-		if((timebonus != 0) && (checkTime(-1,-1,-1,00)))
+		if((timebonus != 0) && (checkLevelTime(-1,-1,-1,00)))
 		{
 			if(timebonus < timebonus_ingame_down_unit)
 				timebonus = 0;
@@ -2380,7 +2416,7 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		}
 
 		if(!reverse && !tiszaszaki_par_time_reached)
-		if(checkTime(tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss,-1))
+		if(checkLevelTime(tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss,-1))
 			tiszaszaki_par_time_reached = true;
 
 		if(reverse && checkTime(00,00,00,00))
@@ -2601,10 +2637,12 @@ script "tiszaszaki_query_boss_target_num" (void)
 		Log(d:boss_target_max);
 }
 
-script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possible)
+script "tiszaszaki_ease_boss_targets" (int minimal_i)		// half boss hit count (if possible)
 {
 	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
 	{
+		bool minimal=(minimal_i != 0);
+
 		int new_hit_count=boss_target_max / 2;
 		int boss_target_min_temp=boss_target_min_count[zone-1];
 		int min_hit_count=(boss_target_hit + boss_target_min_temp);
@@ -2612,21 +2650,37 @@ script "tiszaszaki_ease_boss_targets" (void)		// half boss hit count (if possibl
 		if (min_hit_count < boss_target_min_temp)
 			min_hit_count = boss_target_min_temp;
 
-		if (new_hit_count >= min_hit_count)
-			boss_target_max = new_hit_count;
+		if (minimal)
+		{
+			boss_target_max = min_hit_count;
+		}
+		else
+		{
+			if (new_hit_count >= min_hit_count)
+				boss_target_max = new_hit_count;
+		}
 	}
 }
 
-script "tiszaszaki_harden_boss_targets" (void)		// double boss hit count (if possible)
+script "tiszaszaki_harden_boss_targets" (int maximal_i)		// double boss hit count (if possible)
 {
 	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
 	{
+		bool maximal=(maximal_i != 0);
+
 		int new_hit_count=boss_target_max * 2;
 		int boss_target_max_temp=boss_target_max_count[zone-1];
 		int max_hit_count=boss_target_max_temp;
 
-		if (new_hit_count <= max_hit_count)
-			boss_target_max = new_hit_count;
+		if (maximal)
+		{
+			boss_target_max = max_hit_count;
+		}
+		else
+		{
+			if (new_hit_count <= max_hit_count)
+				boss_target_max = new_hit_count;
+		}
 	}
 }
 
@@ -2781,8 +2835,7 @@ script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 30 only
 	{
 		ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
 		Delay(5);
-		hudmessage (s:""; 0, 11, 0, 0, 0, 0);
-		hudmessage (s:""; 0, 12, 0, 0, 0, 0);
+		tiszaszaki_clear_target_hud();
 	}
 }
 
@@ -2869,7 +2922,7 @@ hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
 if (boss_battle_level)
-	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
+	tiszaszaki_clear_target_hud();
 SetPlayerProperty (1, 0, 4);
 SetPlayerProperty (1, 0, 5);
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
