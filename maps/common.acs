@@ -71,6 +71,11 @@ int rings;
 int ringcount;
 int ringbonus;
 
+bool do_tiszaszaki_check_boss_prefs;
+
+bool do_tiszaszaki_show_target_hud;
+bool do_tiszaszaki_show_monsters_hud;
+
 int boss_target_hit;
 int boss_target_max;
 
@@ -983,36 +988,42 @@ str common_timebonus_display_prefix="Time bonus:";
 
 function void tiszaszaki_display_monsters_hud(void)
 {
-	int hud_x=0,hud_y=0;
-	str killed_str="";
-
-	if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
-		hud_y = 0.20;
-	else
-		hud_y = 0.14;
-
-	if (monsters_battle_total >= 0)
+	if (do_tiszaszaki_show_monsters_hud)
 	{
-		killed_str = StrParam(s:killed_str,d:(monsters_battle_total - monsters_battle_killed));
-		killed_str = StrParam(s:killed_str,s:"/",d:monsters_battle_total);
+		int hud_x=0,hud_y=0;
+		str killed_str="";
 
-		hud_x = 0.80;
+		if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
+			hud_y = 0.20;
+		else
+			hud_y = 0.14;
+
+		if (monsters_battle_total >= 0)
+		{
+			killed_str = StrParam(s:killed_str,d:(monsters_battle_total - monsters_battle_killed));
+			killed_str = StrParam(s:killed_str,s:"/",d:monsters_battle_total);
+
+			hud_x = 0.80;
+		}
+		else
+		{
+			killed_str = StrParam(s:killed_str,d:monsters_battle_killed);
+
+			hud_x = 0.84;
+		}
+
+		hudmessage (s:common_monster_display_prefix; 0, 14, CR_RED, hud_x, hud_y, 0.0);
+		hudmessage (s:killed_str;                    0, 15, CR_TAN, 0.96,  hud_y, 0.0);
 	}
-	else
-	{
-		killed_str = StrParam(s:killed_str,d:monsters_battle_killed);
-
-		hud_x = 0.84;
-	}
-
-	hudmessage (s:common_monster_display_prefix; 0, 14, CR_RED, hud_x, hud_y, 0.0);
-	hudmessage (s:killed_str;                    0, 15, CR_TAN, 0.96,  hud_y, 0.0);
 }
 
 function void tiszaszaki_display_target_hud(void)
 {
-	hudmessage (s:common_target_display_prefix;            0, 11, CR_GOLD, 0.88, 0.14, 0.0);
-	hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 0, 12, CR_TAN,  0.96, 0.14, 0.0);
+	if (do_tiszaszaki_show_target_hud)
+	{
+		hudmessage (s:common_target_display_prefix;            0, 11, CR_GOLD, 0.88, 0.14, 0.0);
+		hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 0, 12, CR_TAN,  0.96, 0.14, 0.0);
+	}
 }
 
 function void tiszaszaki_clear_target_hud(void)
@@ -1135,6 +1146,30 @@ script "tiszaszaki_common_set_nametag" (void)
 	} while (tiszaszaki_loop_nametag_change);
 }
 
+script "tiszaszaki_common_set_boss_prefs" (void)
+{
+	do
+	{
+		bool cvar_new_val, cvar_old_val;
+
+		cvar_new_val = (GetCVar("ssdremaster_show_boss_target_hud") != 0);
+		cvar_old_val = do_tiszaszaki_show_target_hud;
+		do_tiszaszaki_show_target_hud = cvar_new_val;
+
+		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
+			tiszaszaki_clear_target_hud();
+
+		cvar_new_val = (GetCVar("ssdremaster_show_monster_count_hud") != 0);
+		cvar_old_val = do_tiszaszaki_show_monsters_hud;
+		do_tiszaszaki_show_monsters_hud = cvar_new_val;
+
+		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
+			tiszaszaki_clear_monsters_hud();
+
+		if (do_tiszaszaki_check_boss_prefs) Delay(1);
+	} while (do_tiszaszaki_check_boss_prefs);
+}
+
 // map control scripts (e.g. OPEN)
 
 script "tiszaszaki_common_init" OPEN
@@ -1181,6 +1216,9 @@ script "tiszaszaki_common_init" OPEN
 		bonus_stage_state = NOT_A_BONUS_STAGE;
 
 		endofact = 0;
+
+		do_tiszaszaki_check_boss_prefs = true;
+		ACS_NamedExecute("tiszaszaki_common_set_boss_prefs", 0, 0,0,0);
 
 		boss_target_hit = 0;
 
@@ -3233,4 +3271,5 @@ ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
 tiszaszaki_loop_nametag_change = false;
+do_tiszaszaki_check_boss_prefs = false;
 }  
