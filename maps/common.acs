@@ -216,6 +216,7 @@ int script904_ang_n;
 
 #libdefine T_FIREBOMB 217
 #libdefine T_MACE2 211
+#libdefine T_ICEMACE 225
 #libdefine T_ROCKET2 116
 #libdefine T_TRACER2 9
 
@@ -1707,6 +1708,12 @@ int tiszaszaki_sevensinner_col_vals[8][4]=
 		{ 6, 8, 5, 0}  // The Firestarter
 	};
 
+bool do_tiszaszaki_sevensinner_death[8];
+
+int tiszaszaki_sevensinner_keydrop[8]={1,1,0,1,0,0,0,7};
+int tiszaszaki_sevensinner_postdead[8]={21,16, 9,20, 0,31,39, 5};
+int tiszaszaki_sevensinner_stop_acs[8]={36,33,42,32, 0,33,40, 0};
+
 function int tiszaszaki_specific_boss_tid(int boss_id)
 {
 	int res=0;
@@ -1782,9 +1789,89 @@ script "tiszaszaki_clear_seven_sinner_translation" (int boss_id)
 
 		if (boss_tid > 0)
 		{
-			Thing_SetTranslation(boss_tid, -1);
+			Thing_SetTranslation(boss_tid, 0);
 
 			do_tiszaszaki_sevensinner_anim[boss_id] = false;
+		}
+	}
+}
+
+script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
+{
+	if ((boss_id >= 0) && (boss_id <= 7))
+	if (!do_tiszaszaki_sevensinner_death[boss_id])
+	{
+		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
+		int boss_keydrop_id=tiszaszaki_sevensinner_keydrop[boss_id];
+		int boss_stop_acs=tiszaszaki_sevensinner_stop_acs[boss_id];
+		int post_death_acs=tiszaszaki_sevensinner_postdead[boss_id];
+		bool extreme=(extreme_i != 0);
+
+		do_tiszaszaki_sevensinner_death[boss_id] = true;
+
+		if (extreme)
+			ACS_NamedExecute("tiszaszaki_clear_seven_sinner_translation", 0, boss_id,0,0);
+
+		if (boss_stop_acs > 0)
+			ACS_Execute(boss_stop_acs, 0, 0,0,0);
+
+		if (boss_tid > 0)
+		{
+			switch (boss_keydrop_id)
+			{
+				case 1: Thing_SpawnNoFog(boss_tid, T_REDKEYCARD, 0, 0); break; // red key
+				case 2: Thing_SpawnNoFog(boss_tid, T_BLUEKEYCARD, 0, 0); break; // blue key
+				case 3: Thing_SpawnNoFog(boss_tid, T_YELLOWKEYCARD, 0, 0); break; // yellow key
+				case 4: Thing_SpawnNoFog(boss_tid, T_REDSKULLKEY, 0, 0); break; // purple key
+				case 5: Thing_SpawnNoFog(boss_tid, T_BLUESKULLKEY, 0, 0); break; // green key
+				case 6: Thing_SpawnNoFog(boss_tid, T_YELLOWSKULLKEY, 0, 0); break; // orange key
+				case 7:
+				{
+					Thing_SpawnNoFog(boss_tid, T_REDKEYCARD, 0, 0);
+					Thing_SpawnNoFog(boss_tid, T_BLUEKEYCARD, 0, 0);
+					Thing_SpawnNoFog(boss_tid, T_YELLOWKEYCARD, 0, 0);
+					Thing_SpawnNoFog(boss_tid, T_REDSKULLKEY, 0, 0);
+					Thing_SpawnNoFog(boss_tid, T_BLUESKULLKEY, 0, 0);
+					Thing_SpawnNoFog(boss_tid, T_YELLOWSKULLKEY, 0, 0);
+				}; break; // all keys above
+				default: break; // no drop
+			}
+
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 32, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 64, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 96, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 128, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 160, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 192, 16, -1);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 224, 16, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+			delay(2);
+			Thing_ProjectileGravity (boss_tid, T_BRAINS, 0, 0, -1);
+
+			if (post_death_acs)
+			{
+				delay(15);
+
+				ACS_Execute(post_death_acs, 0, 0,0,0);
+			}
 		}
 	}
 }

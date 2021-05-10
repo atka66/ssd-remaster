@@ -59,7 +59,8 @@ ACTOR SSDEnvy 30051
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 50, 0, 0)
-        	PLAY I 5 A_Scream
+			PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 0,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -68,7 +69,7 @@ ACTOR SSDEnvy 30051
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 50, 0, 0)
-			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 0,0,0)
+			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 0,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -150,7 +151,8 @@ ACTOR SSDLust 30052
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 90, 0, 0)
-        	PLAY I 5 A_Scream
+			PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 1,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -159,7 +161,7 @@ ACTOR SSDLust 30052
 		Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 90, 0, 0)
-			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 1,0,0)
+			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 1,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -207,7 +209,8 @@ ACTOR SSDSloth 30053
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 130, 0, 0)
-        	PLAY I 5 A_Scream
+			PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 2,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -216,7 +219,7 @@ ACTOR SSDSloth 30053
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 130, 0, 0)
-			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 2,0,0)
+			PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 2,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -263,7 +266,8 @@ ACTOR SSDGreed 30054
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 170, 0, 0)
-        	PLAY I 5 A_Scream
+        	PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 3,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -272,7 +276,7 @@ ACTOR SSDGreed 30054
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 170, 0, 0)
-        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 3,0,0)
+        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 3,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -319,7 +323,8 @@ ACTOR SSDVanity 30055
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 210, 0, 0)
-        	PLAY I 5 A_Scream
+        	PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 4,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -328,7 +333,7 @@ ACTOR SSDVanity 30055
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 210, 0, 0)
-        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 4,0,0)
+        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 4,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -411,7 +416,8 @@ ACTOR SSDGluttony 30056
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 250, 0, 0)
-        	PLAY I 5 A_Scream
+        	PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 5,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -420,7 +426,7 @@ ACTOR SSDGluttony 30056
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 250, 0, 0)
-        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 5,0,0)
+        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 5,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -467,7 +473,8 @@ ACTOR SSDPride 30057
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 290, 0, 0)
-        	PLAY I 5 A_Scream
+        	PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 6,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -476,7 +483,7 @@ ACTOR SSDPride 30057
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 290, 0, 0)
-        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 6,0,0)
+        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 6,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
@@ -720,7 +727,8 @@ ACTOR SSDTheFirestarter 30061
 			Goto See
     	Death:
         	PLAY H 5 ACS_ExecuteAlways (200, 0, 400, 0, 0)
-        	PLAY I 5 A_Scream
+        	PLAY I 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 7,0,0)
+        	PLAY I 4 A_Scream
         	PLAY J 5 A_Fall
         	PLAY K 5
         	PLAY L 5
@@ -729,7 +737,7 @@ ACTOR SSDTheFirestarter 30061
 			Stop
     	XDeath:
         	PLAY O 5 ACS_ExecuteAlways (200, 0, 400, 0, 0)
-        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_clear_seven_sinner_translation", 0, 7,0,0)
+        	PLAY P 1 ACS_NamedExecuteAlways("tiszaszaki_seven_sinner_death_trigger", 0, 7,1,0)
         	PLAY P 4 A_XScream
         	PLAY Q 5 A_Fall
         	PLAY RSTUV 5
