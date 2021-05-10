@@ -980,7 +980,9 @@ function str tiszaszaki_get_time_string(int timestamp)
 
 // display functions
 
-str common_monster_display_prefix="Monsters:";
+str common_monster_disp_pref_def="Monsters:";
+str common_monster_display_prefix="Monsters:"; // redundant var declarations
+
 str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
@@ -1044,9 +1046,15 @@ function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int
 	hudmessage (s:boss_name,s:": ",d:boss_health; 0, 13, boss_col, 0.96, 0.08, 0.0);
 }
 
-function void tiszaszaki_clear_boss_health(void)
+function void tiszaszaki_clear_boss_health(bool is_normal_boss)
 {
-	hudmessage (s:""; 0, 13, 0, 0, 0, 0);
+	bool do_clear=true;
+
+	if (is_normal_boss)
+		do_clear &= (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER);
+
+	if (do_clear)
+		hudmessage (s:""; 0, 13, 0, 0, 0, 0);
 }
 
 function void tiszaszaki_display_time(void)
@@ -1176,8 +1184,8 @@ script "tiszaszaki_common_set_boss_prefs" (void)
 		cvar_old_val = do_tsz_show_normal_boss_health;
 		do_tsz_show_normal_boss_health = cvar_new_val;
 
-		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val) && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER))
-			tiszaszaki_clear_boss_health();
+		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
+			tiszaszaki_clear_boss_health(TRUE);
 
 		if (do_tiszaszaki_check_boss_prefs) Delay(1);
 	} while (do_tiszaszaki_check_boss_prefs);
@@ -1878,7 +1886,7 @@ script "tiszaszaki_show_seven_sinner_health" (int boss_id)
 				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
 			}
 
-			tiszaszaki_clear_boss_health();
+			tiszaszaki_clear_boss_health(FALSE);
 		}
 	}
 }
@@ -2012,29 +2020,37 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 // boss related scripts - other
 
 #libdefine TSZ_OTHER_BOSS_GIANTMANCUBUS 0
-#libdefine TSZ_OTHER_BOSS_SUPERMANCUBUS 1
-#libdefine TSZ_OTHER_BOSS_SUPERSPIDERDEMON 2
-#libdefine TSZ_OTHER_BOSS_SUPERCYBERDEMON 3
+#libdefine TSZ_OTHER_BOSS_SPIDERDEMON 1
+#libdefine TSZ_OTHER_BOSS_CYBERDEMON 2
+#libdefine TSZ_OTHER_BOSS_SUPERMANCUBUS 3
+#libdefine TSZ_OTHER_BOSS_SUPERSPIDERDEMON 4
+#libdefine TSZ_OTHER_BOSS_SUPERCYBERDEMON 5
 
-int tiszaszaki_other_boss_names[4]=
+int tiszaszaki_other_boss_names[6]=
 	{
 		"Giant Mancubus",
+		"Spider Mastermind",
+		"Cyberdemon",
 		"Super Mancubus",
 		"Super Spiderdemon",
 		"Super Cyberdemon"
 	};
 
-int tiszaszaki_other_boss_col_head[8][2]=
+int tiszaszaki_other_boss_col_head[6][2]=
 	{
 		{2,2}, // Giant Mancubus
+		{2,2}, // Spider Mastermind
+		{2,2}, // Cyberdemon
 		{6,2}, // Super Mancubus
 		{6,2}, // Super Spiderdemon
 		{6,2}, // Super Cyberdemon
 	};
 
-int tiszaszaki_other_boss_col_vals[8][8]=
+int tiszaszaki_other_boss_col_vals[6][8]=
 	{
 		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Giant Mancubus
+		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Spider Mastermind
+		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Cyberdemon
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Mancubus
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Spiderdemon
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Cyberdemon
@@ -2045,7 +2061,7 @@ bool do_tiszaszaki_other_boss_death;
 script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 {
 	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
-	if ((boss_id >= 0) && (boss_id <= 4))
+	if ((boss_id >= 0) && (boss_id <= 6))
 	{
 		str boss_name=tiszaszaki_other_boss_names[boss_id];
 
@@ -2077,9 +2093,9 @@ script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 				monster_alive = (boss_health > 0);
 			}
 
-			monsters_battle_state = MONSTERS_BATTLE_FINALE;
+			tiszaszaki_clear_boss_health(TRUE);
 
-			hudmessage (s:""; 0, 13, 0, 0, 0, 0);
+			monsters_battle_state = MONSTERS_BATTLE_FINALE;
 		}
 	}
 }
@@ -3007,6 +3023,16 @@ script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (loope
 }
 
 // boss related scripts - monster-based
+
+function void tiszaszaki_setCommonMonsDispTag(str new_tag)
+{
+	common_monster_display_prefix = StrParam(s:StrTrimmed(new_tag),s:":");
+}
+
+function void tiszaszaki_defCommonMonsDispTag(void)
+{
+	common_monster_display_prefix = common_monster_disp_pref_def;
+}
 
 function int getMonstersCount(void)
 {
