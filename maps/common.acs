@@ -74,6 +74,12 @@ int ringbonus;
 int boss_target_hit;
 int boss_target_max;
 
+int monsters_battle_group_N=3;
+int monsters_battle_group_tids[3];
+
+int monsters_battle_killed;
+int monsters_battle_total;
+
 int boss_target_min_count[15]={
 	2, // zone  1
 	1, // zone  2
@@ -242,6 +248,14 @@ int boss_battle_state;
 #libdefine BOSS_BATTLE_ENCOUNTER 1
 #libdefine BOSS_BATTLE_FINALE 2
 #libdefine NOT_A_BOSS_BATTLE_LEVEL -1
+
+int monsters_battle_state;
+
+#libdefine MONSTERS_BATTLE_STANDBY 0
+#libdefine MONSTERS_BATTLE_READY 1
+#libdefine MONSTERS_BATTLE_ENCOUNTER 2
+#libdefine MONSTERS_BATTLE_FINALE 3
+#libdefine MONSTERS_BATTLE_UNAVAILABLE -1
 
 // deep water effect scripts (by tiszaszaki)
 
@@ -960,11 +974,40 @@ function str tiszaszaki_get_time_string(int timestamp)
 
 // display functions
 
+str common_monster_display_prefix="Monsters:";
 str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
 str common_ring_display_prefix="Rings:";
 str common_timebonus_display_prefix="Time bonus:";
+
+function void tiszaszaki_display_monsters_hud(void)
+{
+	int hud_x=0,hud_y=0;
+	str killed_str="";
+
+	if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
+		hud_y = 0.20;
+	else
+		hud_y = 0.14;
+
+	if (monsters_battle_total >= 0)
+	{
+		killed_str = StrParam(s:killed_str,d:(monsters_battle_total - monsters_battle_killed));
+		killed_str = StrParam(s:killed_str,s:"/",d:monsters_battle_total);
+
+		hud_x = 0.80;
+	}
+	else
+	{
+		killed_str = StrParam(s:killed_str,d:monsters_battle_killed);
+
+		hud_x = 0.84;
+	}
+
+	hudmessage (s:common_monster_display_prefix; 0, 14, CR_RED, hud_x, hud_y, 0.0);
+	hudmessage (s:killed_str;                    0, 15, CR_TAN, 0.96,  hud_y, 0.0);
+}
 
 function void tiszaszaki_display_target_hud(void)
 {
@@ -976,6 +1019,12 @@ function void tiszaszaki_clear_target_hud(void)
 {
 	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
 	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
+}
+
+function void tiszaszaki_clear_monsters_hud(void)
+{
+	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
+	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
 }
 
 function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
@@ -1148,6 +1197,11 @@ script "tiszaszaki_common_init" OPEN
 			boss_target_max = 0;
 		}
 
+		monsters_battle_killed = 0;
+		monsters_battle_total = -1;
+
+		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
+
 		killtarget = 0;
 		killcount = 0;
 		secretcount = 0;
@@ -1201,6 +1255,11 @@ script "tiszaszaki_common_init" OPEN
 
 		boss_target_hit = 0;
 		boss_target_max = 0;
+
+		monsters_battle_state = MONSTERS_BATTLE_UNAVAILABLE;
+
+		monsters_battle_killed = 0;
+		monsters_battle_total = -1;
 
 		show_hours = false;
 		show_frac_seconds = true;
@@ -2739,6 +2798,8 @@ delay(1);
 Restart;
 }
 
+// boss related scripts - target-based
+
 script "tiszaszaki_query_boss_target_num" (void)
 {
 	if (boss_battle_level)
@@ -2807,6 +2868,119 @@ script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (loope
 	tiszaszaki_display_target_hud();
 	delay(1);
 	Restart;
+}
+
+// boss related scripts - monster-based
+
+function int getMonstersCount(void)
+{
+	int res=-1;
+
+	if (monsters_battle_state >= MONSTERS_BATTLE_READY)
+	{
+		int i,n=monsters_battle_group_N;
+
+		res = 0;
+
+		for (i=0;i<n;i++)
+		{
+			int monster_tid=monsters_battle_group_tids[i];
+
+			if (monster_tid > 0)
+			{
+				int temp=ThingCount(0, monster_tid);
+
+				res += temp;
+			}
+		}
+	}
+
+	return res;
+}
+
+function bool checkMonstersCount(bool ignore_value)
+{
+	bool res=true;
+
+	res &= (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER);
+	if (res) 
+	{
+		int count=getMonstersCount();
+
+		monsters_battle_killed = count;
+
+		res &= (ignore_value || (count > 0));
+	}
+
+	return res;
+}
+
+function void tiszaszaki_setupMonstersBattle(int tid1, int tid2, int tid3, bool unlimited)
+{
+	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+	{
+		monsters_battle_group_tids[0] = tid1;
+		monsters_battle_group_tids[1] = tid2;
+		monsters_battle_group_tids[2] = tid3;
+
+		monsters_battle_state = MONSTERS_BATTLE_READY;
+
+		if (!unlimited) monsters_battle_total = getMonstersCount();
+	}
+}
+
+script "tiszaszaki_display_monsters_hud_loop" (void)
+{
+	while (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER)
+	{
+		SetFont("BigFont");
+		tiszaszaki_display_monsters_hud();
+		delay(1);
+		Restart;
+	}
+	delay(35);
+	tiszaszaki_clear_monsters_hud();
+}
+
+script "tiszaszaki_encounterMonstersBattle" (int ended_manually_i)
+{
+	if (monsters_battle_state == MONSTERS_BATTLE_READY)
+	{
+		bool loop=true;
+		bool ended_manually=(ended_manually_i != 0);
+
+		monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
+
+		ACS_NamedExecute("tiszaszaki_display_monsters_hud_loop", 0, 0,0,0);
+
+		while (loop)
+		{
+			loop = true;
+			loop &= (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER);
+			loop &= (checkMonstersCount(ended_manually));
+			delay(1);
+		}
+
+		delay(35);
+
+		monsters_battle_state = MONSTERS_BATTLE_FINALE;
+	}
+}
+
+function void tiszaszaki_clearMonstersBattle(void)
+{
+	if (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER)
+	{
+		int i,n=monsters_battle_group_N;
+
+		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
+
+		for (i=0;i<n;i++)
+			monsters_battle_group_tids[0] = 0;
+
+		monsters_battle_killed = 0;
+		monsters_battle_total = -1;
+	}
 }
 
 // monitor pickup scripts
