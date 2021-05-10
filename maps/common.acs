@@ -1243,11 +1243,17 @@ script "tiszaszaki_common_init" OPEN
 
 		boss_target_hit = 0;
 
-		if (act == 2)
+		if ((act == 2) || (level_num_temp == 29))
 		{
 			boss_battle_level = true;
 			boss_battle_state = BOSS_BATTLE_STANDBY;
 			boss_target_max = 8;
+
+			if (level_num_temp == 29)
+			{
+				boss_target_min_count[15] = 8;
+				boss_target_max_count[15] = 8;
+			}
 		}
 		else
 		{
@@ -3273,7 +3279,7 @@ SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
 
 // end-of-act scripts
 
-script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 30 only
+script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 29-30 only
 {
 	if (boss_battle_level)
 	{
