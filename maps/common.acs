@@ -4,7 +4,6 @@
 int zone;
 int act;
 
-
 bool tiszaszaki_loop_nametag_change;
 
 bool tiszaszaki_custom_nametag;
@@ -85,6 +84,8 @@ int monsters_battle_group_tids[3];
 
 int monsters_battle_killed;
 int monsters_battle_total;
+
+int monsters_battle_running;
 
 int boss_target_min_count[15]={
 	2, // zone  1
@@ -189,14 +190,14 @@ bool forceField_active [32];
 
 int tiszaszaki_dw_chk_water_id;
 
-bool tiszaszaki_dw_splash_log;
+//bool tiszaszaki_dw_splash_log;
 
 bool tiszaszaki_dw_act_below_surface;
 bool tiszaszaki_dw_act_above_surface;
 
 int script210_wtag, script210_wtid;
 
-bool script212_log;
+//bool script212_log;
 
 int script904_ang_n;
 
@@ -214,7 +215,7 @@ int script904_ang_n;
 #libdefine T_CACOFIREBALL 126
 #libdefine T_CACOFIREBALL2 202
 #libdefine T_ARACHNOTRONPLASMA2 205
-#libdefine T_MANCUBUSFIREBALL 204
+#libdefine T_MANCUBUSFIREBALL2 204
 #libdefine T_BARONFIREBALL 203
 #libdefine T_BLOODSCOURGESHOT 208
 
@@ -225,6 +226,7 @@ int script904_ang_n;
 #libdefine T_ENHANCEDCACODEMON 199
 #libdefine T_ENHANCEDIMP 137
 #libdefine T_MINICYBERDEMON 23
+#libdefine T_SUICIDALSOUL 149
 
 #libdefine T_FIREBOMB 217
 #libdefine T_MACE2 211
@@ -236,6 +238,7 @@ int script904_ang_n;
 
 #libdefine T_SPHERE 189
 #libdefine T_RING 167
+#libdefine T_SOLIDBARREL 172
 
 // bonus stage related defines (by tiszaszaki)
 
@@ -258,9 +261,10 @@ int boss_battle_state;
 int monsters_battle_state;
 
 #libdefine MONSTERS_BATTLE_STANDBY 0
-#libdefine MONSTERS_BATTLE_READY 1
-#libdefine MONSTERS_BATTLE_ENCOUNTER 2
-#libdefine MONSTERS_BATTLE_FINALE 3
+#libdefine MONSTERS_BATTLE_COMBINED 1
+#libdefine MONSTERS_BATTLE_READY 2
+#libdefine MONSTERS_BATTLE_ENCOUNTER 3
+#libdefine MONSTERS_BATTLE_FINALE 4
 #libdefine MONSTERS_BATTLE_UNAVAILABLE -1
 
 // deep water effect scripts (by tiszaszaki)
@@ -349,12 +353,12 @@ script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 
 			tiszaszaki_dw_chk_water_id = i;
 
-			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], tiszaszaki_dw_splash_log);
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], FALSE); // tiszaszaki_dw_splash_log
 
 			if (checkVal < 0)
-				ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,tiszaszaki_dw_splash_log,0);
+				ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,FALSE,0); // tiszaszaki_dw_splash_log
 			if (checkVal > 0)
-				ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,tiszaszaki_dw_splash_log,0);
+				ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,FALSE,0); // tiszaszaki_dw_splash_log
 
 			Delay(dl);
 		}
@@ -489,19 +493,19 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
 			tiszaszaki_dw_chk_water_id = i;
 
-			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], tiszaszaki_dw_splash_log);
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], FALSE); // tiszaszaki_dw_splash_log
 
 			if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
 			{
 				if (!activated && active)
 				{
-					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
+					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
 					Thing_Activate(tid);
 					SetActorProperty(tid, APROP_Dormant, false);
 				}
 				if (activated && !active)
 				{
-					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
+					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
 					Thing_Deactivate(tid);
 					SetActorProperty(tid, APROP_Dormant, true);
 				}
@@ -510,13 +514,13 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 			{
 				if (activated && active)
 				{
-					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
+					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
 					Thing_Deactivate(tid);
 					SetActorProperty(tid, APROP_Dormant, true);
 				}
 				if (!activated && !active)
 				{
-					if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
+					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
 					Thing_Activate(tid);
 					SetActorProperty(tid, APROP_Dormant, false);
 				}
@@ -1201,9 +1205,9 @@ script "tiszaszaki_common_init" OPEN
 
 	tiszaszaki_dw_chk_water_id = -1;
 
-	tiszaszaki_dw_splash_log = false;
+	//tiszaszaki_dw_splash_log = false;
 
-	script212_log = false;
+	//script212_log = false;
 	script904_ang_n = 8;
 
 	tic_per_frac = 5;
@@ -1264,6 +1268,8 @@ script "tiszaszaki_common_init" OPEN
 
 		monsters_battle_killed = 0;
 		monsters_battle_total = -1;
+
+		monsters_battle_running = 0;
 
 		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
 
@@ -1746,7 +1752,7 @@ script 312 (void)		// The Firestarter
 
 {
 	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] &= ((story_lev_num == 16) || (story_lev_num == 30));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] &= ((story_lev_num == 16) || (story_lev_num == 28) || (story_lev_num == 30));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER])
 	{
@@ -2031,18 +2037,20 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 #libdefine TSZ_OTHER_BOSS_SUPERMANCUBUS 3
 #libdefine TSZ_OTHER_BOSS_SUPERSPIDERDEMON 4
 #libdefine TSZ_OTHER_BOSS_SUPERCYBERDEMON 5
+#libdefine TSZ_OTHER_BOSS_SURPRISE 6
 
-int tiszaszaki_other_boss_names[6]=
+int tiszaszaki_other_boss_names[7]=
 	{
 		"Giant Mancubus",
 		"Spider Mastermind",
 		"Cyberdemon",
 		"Super Mancubus",
 		"Super Spiderdemon",
-		"Super Cyberdemon"
+		"Super Cyberdemon",
+		"???"
 	};
 
-int tiszaszaki_other_boss_col_head[6][2]=
+int tiszaszaki_other_boss_col_head[7][2]=
 	{
 		{2,2}, // Giant Mancubus
 		{2,2}, // Spider Mastermind
@@ -2050,9 +2058,10 @@ int tiszaszaki_other_boss_col_head[6][2]=
 		{6,2}, // Super Mancubus
 		{6,2}, // Super Spiderdemon
 		{6,2}, // Super Cyberdemon
+		{1,2}  // ???
 	};
 
-int tiszaszaki_other_boss_col_vals[6][8]=
+int tiszaszaki_other_boss_col_vals[7][8]=
 	{
 		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Giant Mancubus
 		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Spider Mastermind
@@ -2060,13 +2069,14 @@ int tiszaszaki_other_boss_col_vals[6][8]=
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Mancubus
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Spiderdemon
 		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Cyberdemon
+		{-1, 0, 0, 0, 0, 0, 0, 0}  // ???
 	};
 
 bool do_tiszaszaki_other_boss_death;
 
 script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 {
-	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
 	if ((boss_id >= 0) && (boss_id <= 6))
 	{
 		str boss_name=tiszaszaki_other_boss_names[boss_id];
@@ -2077,13 +2087,24 @@ script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
 		{
 			bool monster_alive=true;
-	
+
+			if (monsters_battle_state == MONSTERS_BATTLE_COMBINED)
+			{
+				monsters_battle_running++;
+				while (monsters_battle_running < 2) delay(1);
+			}
+
 			monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
 
-			while (monster_alive && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER))
+			do_tiszaszaki_other_boss_death = false;
+
+			while ((monster_alive && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER)) 
+				|| (monsters_battle_running > 0))
 			{
 				int boss_health=GetActorProperty(boss_tid, APROP_Health);
 				int boss_col=tiszaszaki_other_boss_col_vals[boss_id][boss_hud_anim_i];
+
+				//Log(d:monsters_battle_running,s:" - ",d:monsters_battle_state);
 
 				if (boss_health < 0) boss_health = 0;
 
@@ -2097,6 +2118,13 @@ script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
 
 				monster_alive = (boss_health > 0);
+
+				if (!do_tiszaszaki_other_boss_death && !do_tiszaszaki_other_boss_death)
+				if (monsters_battle_running > 0)
+				{
+					do_tiszaszaki_other_boss_death = true;
+					monsters_battle_running--;
+				}
 			}
 
 			tiszaszaki_clear_boss_health(TRUE);
@@ -3030,6 +3058,8 @@ script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (loope
 
 // boss related scripts - monster-based
 
+bool tiszaszaki_monster_battle_cd;
+
 function void tiszaszaki_setCommonMonsDispTag(str new_tag)
 {
 	common_monster_display_prefix = StrParam(s:StrTrimmed(new_tag),s:":");
@@ -3044,7 +3074,7 @@ function int getMonstersCount(void)
 {
 	int res=-1;
 
-	if (monsters_battle_state >= MONSTERS_BATTLE_READY)
+	if (monsters_battle_state >= MONSTERS_BATTLE_COMBINED)
 	{
 		int i,n=monsters_battle_group_N;
 
@@ -3077,6 +3107,14 @@ function bool checkMonstersCount(bool ignore_value)
 
 		monsters_battle_killed = count;
 
+		if (!tiszaszaki_monster_battle_cd && (count == 0))
+		if (monsters_battle_running > 0)
+		{
+			tiszaszaki_monster_battle_cd = true;
+
+			monsters_battle_running--;
+		}
+
 		res &= (ignore_value || (count > 0));
 	}
 
@@ -3085,13 +3123,14 @@ function bool checkMonstersCount(bool ignore_value)
 
 function void tiszaszaki_setupMonstersBattle(int tid1, int tid2, int tid3, bool unlimited)
 {
-	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
 	{
 		monsters_battle_group_tids[0] = tid1;
 		monsters_battle_group_tids[1] = tid2;
 		monsters_battle_group_tids[2] = tid3;
 
-		monsters_battle_state = MONSTERS_BATTLE_READY;
+		if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+			monsters_battle_state = MONSTERS_BATTLE_READY;
 
 		if (!unlimited) monsters_battle_total = getMonstersCount();
 	}
@@ -3112,12 +3151,20 @@ script "tiszaszaki_display_monsters_hud_loop" (void)
 
 script "tiszaszaki_encounterMonstersBattle" (int ended_manually_i)
 {
-	if (monsters_battle_state == MONSTERS_BATTLE_READY)
+	if ((monsters_battle_state == MONSTERS_BATTLE_READY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
 	{
 		bool loop=true;
 		bool ended_manually=(ended_manually_i != 0);
 
+		if (monsters_battle_state == MONSTERS_BATTLE_COMBINED)
+		{
+			monsters_battle_running++;
+			while (monsters_battle_running < 2) delay(1);
+		}
+
 		monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
+
+		tiszaszaki_monster_battle_cd = false;
 
 		ACS_NamedExecute("tiszaszaki_display_monsters_hud_loop", 0, 0,0,0);
 
@@ -3126,6 +3173,7 @@ script "tiszaszaki_encounterMonstersBattle" (int ended_manually_i)
 			loop = true;
 			loop &= (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER);
 			loop &= (checkMonstersCount(ended_manually));
+			loop |= (monsters_battle_running > 0);
 			delay(1);
 		}
 
@@ -3149,6 +3197,12 @@ function void tiszaszaki_clearMonstersBattle(void)
 		monsters_battle_killed = 0;
 		monsters_battle_total = -1;
 	}
+}
+
+function void tiszaszaki_combineBattles(void)
+{
+	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+		monsters_battle_state = MONSTERS_BATTLE_COMBINED;
 }
 
 // monitor pickup scripts
