@@ -1796,6 +1796,23 @@ script "tiszaszaki_clear_seven_sinner_translation" (int boss_id)
 	}
 }
 
+int tsz_spawn_dir;
+
+function void tsz_SpawnThingToRandomDir(int spot_tid, int thing_sid, int speed,int vspeed, int thing_n)
+{
+	if ((spot_tid > 0) && (thing_sid > 0))
+	if ((speed >= 0) && (vspeed >= 0))
+	if ((thing_n > 0) && (thing_n <= 256))
+	{
+		int min_ang=1;
+		int max_ang=FixedDiv(256 << 16, thing_n << 16) >> 16;
+
+		tsz_spawn_dir += Random(min_ang,max_ang);
+
+		Thing_ProjectileGravity(spot_tid, thing_sid, tsz_spawn_dir, speed,vspeed);
+	}
+}
+
 script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 {
 	if ((boss_id >= 0) && (boss_id <= 7))
@@ -1817,22 +1834,26 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 
 		if (boss_tid > 0)
 		{
+			int keydrop_hspeed=8;
+			int keydrop_vspeed=12;
+			tsz_spawn_dir = 0;
+
 			switch (boss_keydrop_id)
 			{
-				case 1: Thing_SpawnNoFog(boss_tid, T_REDKEYCARD, 0, 0); break; // red key
-				case 2: Thing_SpawnNoFog(boss_tid, T_BLUEKEYCARD, 0, 0); break; // blue key
-				case 3: Thing_SpawnNoFog(boss_tid, T_YELLOWKEYCARD, 0, 0); break; // yellow key
-				case 4: Thing_SpawnNoFog(boss_tid, T_REDSKULLKEY, 0, 0); break; // purple key
-				case 5: Thing_SpawnNoFog(boss_tid, T_BLUESKULLKEY, 0, 0); break; // green key
-				case 6: Thing_SpawnNoFog(boss_tid, T_YELLOWSKULLKEY, 0, 0); break; // orange key
+				case 1: tsz_SpawnThingToRandomDir(boss_tid, T_REDKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // red key
+				case 2: tsz_SpawnThingToRandomDir(boss_tid, T_BLUEKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // blue key
+				case 3: tsz_SpawnThingToRandomDir(boss_tid, T_YELLOWKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // yellow key
+				case 4: tsz_SpawnThingToRandomDir(boss_tid, T_REDSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // purple key
+				case 5: tsz_SpawnThingToRandomDir(boss_tid, T_BLUESKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // green key
+				case 6: tsz_SpawnThingToRandomDir(boss_tid, T_YELLOWSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // orange key
 				case 7:
 				{
-					Thing_SpawnNoFog(boss_tid, T_REDKEYCARD, 0, 0);
-					Thing_SpawnNoFog(boss_tid, T_BLUEKEYCARD, 0, 0);
-					Thing_SpawnNoFog(boss_tid, T_YELLOWKEYCARD, 0, 0);
-					Thing_SpawnNoFog(boss_tid, T_REDSKULLKEY, 0, 0);
-					Thing_SpawnNoFog(boss_tid, T_BLUESKULLKEY, 0, 0);
-					Thing_SpawnNoFog(boss_tid, T_YELLOWSKULLKEY, 0, 0);
+					tsz_SpawnThingToRandomDir(boss_tid, T_REDKEYCARD, keydrop_hspeed,keydrop_vspeed, 1);
+					tsz_SpawnThingToRandomDir(boss_tid, T_BLUEKEYCARD, keydrop_hspeed,keydrop_vspeed, 1);
+					tsz_SpawnThingToRandomDir(boss_tid, T_YELLOWKEYCARD, keydrop_hspeed,keydrop_vspeed, 1);
+					tsz_SpawnThingToRandomDir(boss_tid, T_REDSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1);
+					tsz_SpawnThingToRandomDir(boss_tid, T_BLUESKULLKEY, keydrop_hspeed,keydrop_vspeed, 1);
+					tsz_SpawnThingToRandomDir(boss_tid, T_YELLOWSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1);
 				}; break; // all keys above
 				default: break; // no drop
 			}
