@@ -75,6 +75,7 @@ bool do_tiszaszaki_check_boss_prefs;
 
 bool do_tiszaszaki_show_target_hud;
 bool do_tiszaszaki_show_monsters_hud;
+bool do_tsz_show_normal_boss_health;
 
 int boss_target_hit;
 int boss_target_max;
@@ -1017,6 +1018,12 @@ function void tiszaszaki_display_monsters_hud(void)
 	}
 }
 
+function void tiszaszaki_clear_monsters_hud(void)
+{
+	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
+	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
+}
+
 function void tiszaszaki_display_target_hud(void)
 {
 	if (do_tiszaszaki_show_target_hud)
@@ -1032,15 +1039,14 @@ function void tiszaszaki_clear_target_hud(void)
 	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
 }
 
-function void tiszaszaki_clear_monsters_hud(void)
-{
-	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
-	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
-}
-
 function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
 {
 	hudmessage (s:boss_name,s:": ",d:boss_health; 0, 13, boss_col, 0.96, 0.08, 0.0);
+}
+
+function void tiszaszaki_clear_boss_health(void)
+{
+	hudmessage (s:""; 0, 13, 0, 0, 0, 0);
 }
 
 function void tiszaszaki_display_time(void)
@@ -1165,6 +1171,13 @@ script "tiszaszaki_common_set_boss_prefs" (void)
 
 		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
 			tiszaszaki_clear_monsters_hud();
+
+		cvar_new_val = (GetCVar("ssdremaster_show_normal_boss_health") != 0);
+		cvar_old_val = do_tsz_show_normal_boss_health;
+		do_tsz_show_normal_boss_health = cvar_new_val;
+
+		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val) && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER))
+			tiszaszaki_clear_boss_health();
 
 		if (do_tiszaszaki_check_boss_prefs) Delay(1);
 	} while (do_tiszaszaki_check_boss_prefs);
@@ -1554,6 +1567,8 @@ script "tiszaszaki_init_sevensinner_translation" (void)
 		ACS_Execute(i, 0, 0,0,0);
 }
 
+// boss translations
+
 script 302 (void)		// Envy	(dark green/natural green)
 
 {
@@ -1763,7 +1778,7 @@ Thing_SetTranslation (719, 19);
 
 //// end of translations
 
-// boss related scripts
+// boss related scripts - seven deadly sinners
 
 bool tiszaszaki_boss_health_engaged=false;
 
@@ -1863,7 +1878,7 @@ script "tiszaszaki_show_seven_sinner_health" (int boss_id)
 				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
 			}
 
-			hudmessage (s:""; 0, 13, 0, 0, 0, 0);
+			tiszaszaki_clear_boss_health();
 		}
 	}
 }
@@ -1991,6 +2006,89 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 				ACS_Execute(post_death_acs, 0, 0,0,0);
 			}
 		}
+	}
+}
+
+// boss related scripts - other
+
+#libdefine TSZ_OTHER_BOSS_GIANTMANCUBUS 0
+#libdefine TSZ_OTHER_BOSS_SUPERMANCUBUS 1
+#libdefine TSZ_OTHER_BOSS_SUPERSPIDERDEMON 2
+#libdefine TSZ_OTHER_BOSS_SUPERCYBERDEMON 3
+
+int tiszaszaki_other_boss_names[4]=
+	{
+		"Giant Mancubus",
+		"Super Mancubus",
+		"Super Spiderdemon",
+		"Super Cyberdemon"
+	};
+
+int tiszaszaki_other_boss_col_head[8][2]=
+	{
+		{2,2}, // Giant Mancubus
+		{6,2}, // Super Mancubus
+		{6,2}, // Super Spiderdemon
+		{6,2}, // Super Cyberdemon
+	};
+
+int tiszaszaki_other_boss_col_vals[8][8]=
+	{
+		{ 1, 0, 0, 0, 0, 0, 0, 0}, // Giant Mancubus
+		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Mancubus
+		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Spiderdemon
+		{ 6, 8,10, 3, 7,19, 0, 0}, // Super Cyberdemon
+	};
+
+bool do_tiszaszaki_other_boss_death;
+
+script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
+{
+	if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
+	if ((boss_id >= 0) && (boss_id <= 4))
+	{
+		str boss_name=tiszaszaki_other_boss_names[boss_id];
+
+		int boss_hud_anim_i=0, boss_hud_anim_n=tiszaszaki_other_boss_col_head[boss_id][0];
+		int boss_hud_anim_dl=tiszaszaki_other_boss_col_head[boss_id][1];
+
+		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
+		{
+			bool monster_alive=true;
+	
+			monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
+
+			while (monster_alive && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER))
+			{
+				int boss_health=GetActorProperty(boss_tid, APROP_Health);
+				int boss_col=tiszaszaki_other_boss_col_vals[boss_id][boss_hud_anim_i];
+
+				if (boss_health < 0) boss_health = 0;
+
+				if (do_tsz_show_normal_boss_health)
+				{
+					SetFont ("BigFont");
+					tiszaszaki_display_boss_health(boss_name, boss_health, boss_col);
+				}
+
+				delay(boss_hud_anim_dl);
+				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
+
+				monster_alive = (boss_health > 0);
+			}
+
+			monsters_battle_state = MONSTERS_BATTLE_FINALE;
+
+			hudmessage (s:""; 0, 13, 0, 0, 0, 0);
+		}
+	}
+}
+
+function void tiszaszaki_other_boss_finish(void)
+{
+	if (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER)
+	{
+		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
 	}
 }
 
