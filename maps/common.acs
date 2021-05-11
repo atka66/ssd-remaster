@@ -127,8 +127,6 @@ int secret_count_per_level[30]=
 int story_lev_num;
 int bonus_lev_num;
 
-str level_music;
-
 bool ready;
 bool show_hud;
 bool tiszaszaki_time_running;
@@ -165,6 +163,40 @@ str  forceField_texStr [32];
 int  forceField_cd     [32];
 bool forceField_hurt   [32];
 bool forceField_active [32];
+
+#libdefine TSZ_LIQUID_3D_TYPE_FWATER 0
+#libdefine TSZ_LIQUID_3D_TYPE_GWATER 1
+#libdefine TSZ_LIQUID_3D_TYPE_SLUDGE 2
+#libdefine TSZ_LIQUID_3D_TYPE_BLOOD 3
+#libdefine TSZ_LIQUID_3D_TYPE_NUKAGE 4
+#libdefine TSZ_LIQUID_3D_TYPE_LAVA 5
+
+#libdefine TSZ_LIQUID_3D_NO_DAMAGE 0
+#libdefine TSZ_LIQUID_3D_DAMAGE_VERY_LOW 1
+#libdefine TSZ_LIQUID_3D_DAMAGE_LOW 2
+#libdefine TSZ_LIQUID_3D_DAMAGE_MEDIUM 3
+#libdefine TSZ_LIQUID_3D_DAMAGE_HIGH 4
+#libdefine TSZ_LIQUID_3D_DAMAGE_VERY_HIGH 5
+#libdefine TSZ_LIQUID_3D_DAMAGE_EXTREME 6
+
+int tsz_liquid_3D_floors_chars[6][7][4]=
+	{ // {damage_mod, damage_amount, damage_interval, leak_ratio}
+		{{0,0,0,0}, { 0, 0,0,0}, { 0, 0,0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}}, // FWATER
+		{{0,0,0,0}, { 0, 0,0,0}, { 0, 0,0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}}, // GWATER
+		{{0,0,0,0}, { 0, 0,0,0}, { 0, 0,0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}}, // SLUDGE
+		{{0,0,0,0}, {13,10,0,0}, {13,20,0,0}, {13,20,20,0}, {13,30,20,0}, {13,30,10,0}, {13,40, 5,0}}, // BLOOD
+		{{0,0,0,0}, { 0, 0,0,0}, { 0, 0,0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}}, // NUKAGE
+		{{0,0,0,0}, { 0, 0,0,0}, { 0, 0,0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}, { 0, 0, 0,0}}  // LAVA
+	};
+int tsz_liquid_3D_floors_visual[6][4]=
+	{ // {r,g,b,desat}
+		{ 32, 64,192,  0}, // FWATER
+		{128,128,128,128}, // GWATER
+		{244,164,104, 64}, // SLUDGE
+		{192, 64, 32, 64}, // BLOOD
+		{  0,  0,  0,  0}, // NUKAGE
+		{  0,  0,  0,  0}  // LAVA
+	};
 
 int tiszaszaki_dw_chk_water_id;
 
@@ -259,6 +291,61 @@ int monsters_battle_state;
 #libdefine MONSTERS_BATTLE_ENCOUNTER 3
 #libdefine MONSTERS_BATTLE_FINALE 4
 #libdefine MONSTERS_BATTLE_UNAVAILABLE -1
+
+// deep water 3D floor definitions
+
+function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag4, int liquid_type, int liquid_damage)
+{
+	if ((tag1 > 0) || (tag2 > 0) || (tag3 > 0) || (tag4 > 0))
+	if ((liquid_type >= TSZ_LIQUID_3D_TYPE_FWATER) && (liquid_type <= TSZ_LIQUID_3D_TYPE_LAVA))
+	if ((liquid_damage >= TSZ_LIQUID_3D_NO_DAMAGE) && (liquid_damage <= TSZ_LIQUID_3D_DAMAGE_EXTREME))
+	{
+		int r    =tsz_liquid_3D_floors_visual[liquid_type][0];
+		int g    =tsz_liquid_3D_floors_visual[liquid_type][1];
+		int b    =tsz_liquid_3D_floors_visual[liquid_type][2];
+		int desat=tsz_liquid_3D_floors_visual[liquid_type][3];
+
+		int  damage_mod     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][0];
+		int  damage_amount  =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][1];
+		int  damage_interval=tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][2];
+		int  leak_ratio     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][4];
+
+		if ((r >= 0) && (r <= 255))
+		if ((g >= 0) && (g <= 255))
+		if ((b >= 0) && (b <= 255))
+		if ((desat >= 0) && (desat <= 255))
+		{
+			if (tag1 > 0)
+				Sector_SetColor(tag1, r,g,b, desat);
+
+			if (tag2 > 0)
+				Sector_SetColor(tag2, r,g,b, desat);
+
+			if (tag3 > 0)
+				Sector_SetColor(tag3, r,g,b, desat);
+
+			if (tag4 > 0)
+				Sector_SetColor(tag4, r,g,b, desat);
+		}
+
+		if (damage_mod >= 0)
+		if ((damage_amount > 0) && (damage_interval >= 0))
+		if ((leak_ratio >= 0) && (leak_ratio <= 256))
+		{
+			if (tag1 > 0)
+				Sector_SetDamage(tag1, damage_amount, damage_mod, damage_interval, leak_ratio);
+
+			if (tag2 > 0)
+				Sector_SetDamage(tag2, damage_amount, damage_mod, damage_interval, leak_ratio);
+
+			if (tag3 > 0)
+				Sector_SetDamage(tag3, damage_amount, damage_mod, damage_interval, leak_ratio);
+
+			if (tag4 > 0)
+				Sector_SetDamage(tag4, damage_amount, damage_mod, damage_interval, leak_ratio);
+		}
+	}
+}
 
 // deep water effect scripts (by tiszaszaki)
 
@@ -766,6 +853,34 @@ function void tiszaszaki_leveldefaults(void)
 	tiszaszaki_lamertime_hours = tiszaszaki_default_sucktime * 30;
 }
 
+function void tiszaszaki_setLevelMusic(void)
+{
+	str level_music="";
+
+	if (bonus_stage_state == NOT_A_BONUS_STAGE)
+	{
+		if (endofact < 3)
+		{
+			str music_zone_str="";
+
+			level_music = "zone";
+
+			if (zone < 10)
+				music_zone_str = StrParam(s:"0",d:zone);
+			else
+				music_zone_str = StrParam(d:zone);
+
+			level_music = StrParam(s:level_music,s:music_zone_str,s:"a",d:act);
+		}
+	}
+	else
+	{
+		level_music = "z_bonus";
+	}
+
+	SetMusic (level_music);
+}
+
 function int tiszaszaki_levelinfo(void)
 {
 	int res=GetLevelInfo(LEVELINFO_LEVELNUM);
@@ -798,23 +913,6 @@ function int tiszaszaki_levelinfo(void)
 	{
 		zone = 0;
 		act = 0;
-	}
-
-	level_music = "";
-	if ((res >= 31) && (res <= 35))
-		level_music = "z_bonus";
-	if ((res >=  1) && (res <= 30))
-	{
-		str music_zone_str="";
-
-		level_music = "zone";
-
-		if (zone < 10)
-			music_zone_str = StrParam(s:"0",d:zone);
-		else
-			music_zone_str = StrParam(d:zone);
-
-		level_music = StrParam(s:level_music,s:music_zone_str,s:"a",d:act);
 	}
 
 	return res;
@@ -1840,7 +1938,7 @@ function int tiszaszaki_specific_boss_tid(int boss_id)
 {
 	int res=0;
 
-	if ((boss_id >= 0) && (boss_id <= 7))
+	if ((boss_id >= TSZ_SEVENSINNER_BOSS_ENVY) && (boss_id <= TSZ_SEVENSINNER_THEFIRESTARTER))
 	{
 		res = tiszaszaki_sevensinner_tids[boss_id];
 
@@ -1862,7 +1960,7 @@ function int tiszaszaki_specific_boss_tid(int boss_id)
 script "tiszaszaki_show_seven_sinner_health" (int boss_id)
 {
 	if (!tiszaszaki_boss_health_engaged)
-	if ((boss_id >= 0) && (boss_id <= 7))
+	if ((boss_id >= TSZ_SEVENSINNER_BOSS_ENVY) && (boss_id <= TSZ_SEVENSINNER_THEFIRESTARTER))
 	{
 		str boss_name=tiszaszaki_sevensinner_names[boss_id];
 		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
@@ -1904,7 +2002,7 @@ script "tiszaszaki_clear_seven_sinner_health" (void)
 
 script "tiszaszaki_clear_seven_sinner_translation" (int boss_id)
 {
-	if ((boss_id >= 0) && (boss_id <= 7))
+	if ((boss_id >= TSZ_SEVENSINNER_BOSS_ENVY) && (boss_id <= TSZ_SEVENSINNER_THEFIRESTARTER))
 	if (do_tiszaszaki_sevensinner_anim[boss_id])
 	{
 		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
@@ -1948,7 +2046,7 @@ function void tsz_SpawnThingToRandomDir(int spot_tid, int new_tid, int thing_sid
 
 script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 {
-	if ((boss_id >= 0) && (boss_id <= 7))
+	if ((boss_id >= TSZ_SEVENSINNER_BOSS_ENVY) && (boss_id <= TSZ_SEVENSINNER_THEFIRESTARTER))
 	if (!do_tiszaszaki_sevensinner_death[boss_id])
 	{
 		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
@@ -2079,7 +2177,7 @@ bool do_tiszaszaki_other_boss_death;
 script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 {
 	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
-	if ((boss_id >= 0) && (boss_id <= 6))
+	if ((boss_id >= TSZ_OTHER_BOSS_GIANTMANCUBUS) && (boss_id <= TSZ_OTHER_BOSS_SURPRISE))
 	{
 		str boss_name=tiszaszaki_other_boss_names[boss_id];
 
@@ -3322,7 +3420,7 @@ ACS_ExecuteAlways (209, 0, 780, 0, 0);
 delay(700);
 sethudsize (0, 0, 0);
 SetPlayerProperty (1, 0, 5);
-SetMusic (level_music); 
+tiszaszaki_setLevelMusic();
 }
 
 script 209 (int arg0)
@@ -3488,7 +3586,6 @@ endofact++;
 if (endofact == 3)
 {
 bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
-level_music = "";
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
