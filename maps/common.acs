@@ -87,40 +87,22 @@ int monsters_battle_total;
 
 int monsters_battle_running;
 
-int boss_target_min_count[15]={
-	2, // zone  1
-	1, // zone  2
-	4, // zone  3
-	4, // zone  4
-	4, // zone  5
-	8, // zone  6
-	8, // zone  7
-	2, // zone  8
-	8, // zone  9
-	4, // zone 10
-	8, // zone 11
-	8, // zone 12
-	8, // zone 13
-	8, // zone 14
-	2, // zone 15
-	};
-
-int boss_target_max_count[15]={
-	64, // zone  1
-	64, // zone  2
-	64, // zone  3
-	64, // zone  4
-	64, // zone  5
-	 8, // zone  6
-	 8, // zone  7
-	 8, // zone  8
-	 8, // zone  9
-	 8, // zone 10
-	 8, // zone 11
-	 8, // zone 12
-	 8, // zone 13
-	 8, // zone 14
-	 8, // zone 15
+int boss_target_count_borders[15][2]={
+	{2, 64}, // zone  1
+	{1, 64}, // zone  2
+	{4, 64}, // zone  3
+	{4, 64}, // zone  4
+	{4, 64}, // zone  5
+	{8,  8}, // zone  6
+	{8,  8}, // zone  7
+	{2,  8}, // zone  8
+	{8,  8}, // zone  9
+	{4,  8}, // zone 10
+	{8,  8}, // zone 11
+	{8,  8}, // zone 12
+	{8,  8}, // zone 13
+	{8,  8}, // zone 14
+	{2,  8}  // zone 15
 	};
 
 int secret_count_per_level[30]=
@@ -144,8 +126,6 @@ int secret_count_per_level[30]=
 
 int story_lev_num;
 int bonus_lev_num;
-
-bool boss_battle_level;
 
 str level_music;
 
@@ -174,9 +154,7 @@ str zone_titles[15]={
 	};
 
 int deepWaterN = 128;
-bool inDeepWater[128];
-bool onWaterSurface[128];
-bool isTopDownWater[128];
+bool deepWaterStats[128][3]; // {inDeepWater,onWaterSurface,isTopDownWater}
 
 int forceFieldN = 32;
 int  forceField_lid    [32];
@@ -190,14 +168,10 @@ bool forceField_active [32];
 
 int tiszaszaki_dw_chk_water_id;
 
-//bool tiszaszaki_dw_splash_log;
-
 bool tiszaszaki_dw_act_below_surface;
 bool tiszaszaki_dw_act_above_surface;
 
 int script210_wtag, script210_wtid;
-
-//bool script212_log;
 
 int script904_ang_n;
 
@@ -222,9 +196,10 @@ int script904_ang_n;
 #libdefine T_BANBALL 215
 #libdefine T_BANIPBALL 216
 
+#libdefine T_ENHANCEDIMP 137
 #libdefine T_ENHANCEDDEMON 138
 #libdefine T_ENHANCEDCACODEMON 199
-#libdefine T_ENHANCEDIMP 137
+
 #libdefine T_MINICYBERDEMON 23
 #libdefine T_SUICIDALSOUL 149
 
@@ -239,6 +214,24 @@ int script904_ang_n;
 #libdefine T_SPHERE 189
 #libdefine T_RING 167
 #libdefine T_SOLIDBARREL 172
+
+// Icon of Sin related definitions
+
+bool monsters_battle_icon_of_sin;
+int monsters_battle_ios_spawn_N=10;
+int monsters_battle_ios_spawn_IDs[10]=
+	{
+		137, // T_ENHANCEDIMP,
+		138, // T_ENHANCEDDEMON,
+		115, // T_PAINELEMENTAL,
+		199, // T_ENHANCEDCACODEMON,
+		111, // T_VILE,
+		 20, // T_REVENANT,
+		  6, // T_ARACHNOTRON,
+		112, // T_MANCUBUS,
+		113, // T_HELLKNIGHT,
+		  3  // T_BARON
+	};
 
 // bonus stage related defines (by tiszaszaki)
 
@@ -316,12 +309,12 @@ script "tiszaszaki_deepwater_in" (int i, int log_i) // in
 	{
 		bool log_splash=(log_i != 0);
 
-		if (!inDeepWater[i])
+		if (!deepWaterStats[i][0])
 		{
 			if (log_splash) Log(s:"tiszaszaki_deepwater_in: splashing (water id:",d:i,s:")");
 
 			PlaySound(0,"splash");
-			inDeepWater[i]=true;
+			deepWaterStats[i][0]=true;
 		}
 	}
 }
@@ -332,12 +325,12 @@ script "tiszaszaki_deepwater_out" (int i, int log_i) // out
 	{
 		bool log_splash=(log_i != 0);
 
-		if (inDeepWater[i])
+		if (deepWaterStats[i][0])
 		{
 			if (log_splash) Log(s:"tiszaszaki_deepwater_out: splashing (water id:",d:i,s:")");
 
 			PlaySound(0,"splash");
-			inDeepWater[i]=false;
+			deepWaterStats[i][0]=false;
 		}
 	}
 }
@@ -346,19 +339,22 @@ script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 {
 	if ((i >= 0) && (i < deepWaterN) && (wtag > 0) && (wtid > 0))
 	{
-		while (onWaterSurface[i])
+		bool log_check=false;
+		bool log_splash=false;
+
+		while (deepWaterStats[i][1])
 		{
 			int checkVal;
 			int dl=2;
 
 			tiszaszaki_dw_chk_water_id = i;
 
-			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], FALSE); // tiszaszaki_dw_splash_log
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, deepWaterStats[i][2], log_check);
 
 			if (checkVal < 0)
-				ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,FALSE,0); // tiszaszaki_dw_splash_log
+				ACS_NamedExecute("tiszaszaki_deepwater_in", 0, i,log_splash,0);
 			if (checkVal > 0)
-				ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,FALSE,0); // tiszaszaki_dw_splash_log
+				ACS_NamedExecute("tiszaszaki_deepwater_out", 0, i,log_splash,0);
 
 			Delay(dl);
 		}
@@ -368,18 +364,18 @@ script "tiszaszaki_deepwater_do_splash" (int i, int wtag, int wtid)
 function void tiszaszaki_deepwater_istopdown(int i, bool b)
 {
 	if ((i >= 0) && (i < deepWaterN))
-		isTopDownWater[i] = b;
+		deepWaterStats[i][2] = b;
 }
 
 script 210 (int i, int wtag, int wtid)
 {
 	if ((i >= 0) && (i < deepWaterN) && (wtag > 0) && (wtid > 0))
-    if (!onWaterSurface[i])
+    if (!deepWaterStats[i][1])
     {
         script210_wtag = wtag;
         script210_wtid = wtid;
 
-        onWaterSurface[i]=true;
+        deepWaterStats[i][1]=true;
         ACS_NamedExecute("tiszaszaki_deepwater_do_splash", 0, i,wtag,wtid);
     }
 }
@@ -387,9 +383,9 @@ script 210 (int i, int wtag, int wtid)
 script 211 (int i)
 {
 	if ((i >= 0) && (i < deepWaterN))
-    if (onWaterSurface[i])
+    if (deepWaterStats[i][1])
     {
-        onWaterSurface[i]=false;
+        deepWaterStats[i][1]=false;
     }
 }
 
@@ -458,7 +454,7 @@ script 212 (int i, int tid, int active) // in both ways
 		tiszaszaki_dw_act_below_surface = true;
 		tiszaszaki_dw_act_above_surface = true;
 
-		while (!onWaterSurface[i]) Delay(1);
+		while (!deepWaterStats[i][1]) Delay(1);
 		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
 	}
 }
@@ -470,7 +466,7 @@ script 213 (int i, int tid, int active) // downward only
 		tiszaszaki_dw_act_below_surface = true;
 		tiszaszaki_dw_act_above_surface = false;
 
-		while (!onWaterSurface[i]) Delay(1);
+		while (!deepWaterStats[i][1]) Delay(1);
 		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
 	}
 }
@@ -484,8 +480,10 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
 		bool active=false;
 		if (active_i != 0) active=true;
+		bool log_check=false;
+		bool log_activation=false;
 
-		while (onWaterSurface[i])
+		while (deepWaterStats[i][1])
 		{
 			int checkVal;
 			bool activated=!GetActorProperty(tid, APROP_Dormant);
@@ -493,19 +491,19 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
 			tiszaszaki_dw_chk_water_id = i;
 
-			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, isTopDownWater[i], FALSE); // tiszaszaki_dw_splash_log
+			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, deepWaterStats[i][2], log_check);
 
 			if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
 			{
 				if (!activated && active)
 				{
-					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
+					if (log_activation) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating below surface...");
 					Thing_Activate(tid);
 					SetActorProperty(tid, APROP_Dormant, false);
 				}
 				if (activated && !active)
 				{
-					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
+					if (log_activation) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating below surface...");
 					Thing_Deactivate(tid);
 					SetActorProperty(tid, APROP_Dormant, true);
 				}
@@ -514,13 +512,13 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 			{
 				if (activated && active)
 				{
-					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
+					if (log_activation) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", deactivating above surface...");
 					Thing_Deactivate(tid);
 					SetActorProperty(tid, APROP_Dormant, true);
 				}
 				if (!activated && !active)
 				{
-					// if (script212_log) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
+					if (log_activation) Log(s:"tiszaszaki_deepwater_do_thing_activation: water_id = ",d:i,s:", thing tid:",d:tid,s:", activating above surface...");
 					Thing_Activate(tid);
 					SetActorProperty(tid, APROP_Dormant, false);
 				}
@@ -1199,15 +1197,12 @@ script "tiszaszaki_common_set_boss_prefs" (void)
 
 script "tiszaszaki_common_init" OPEN
 {
-	int i;
+	int i, j;
 
 	int level_num_temp=tiszaszaki_levelinfo();
 
 	tiszaszaki_dw_chk_water_id = -1;
 
-	//tiszaszaki_dw_splash_log = false;
-
-	//script212_log = false;
 	script904_ang_n = 8;
 
 	tic_per_frac = 5;
@@ -1220,16 +1215,11 @@ script "tiszaszaki_common_init" OPEN
 	tiszaszaki_loop_nametag_change = true;
 	ACS_NamedExecute("tiszaszaki_common_set_nametag", 0, 0,0,0);
 
-	//Log(s:"common.acs: Entering level ",d:level_num_temp,s:"...");
-
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
 		for (i=0;i<deepWaterN;i++)
-		{
-			inDeepWater[i] = false;
-			onWaterSurface[i] = false;
-			isTopDownWater[i] = false;
-		}
+			for (j=0;j<3;j++)
+				deepWaterStats[i][j] = false;
 
 		for (i=0;i<forceFieldN;i++)
 			clear_forcefield_entry(i);
@@ -1249,19 +1239,17 @@ script "tiszaszaki_common_init" OPEN
 
 		if ((act == 2) || (level_num_temp == 29))
 		{
-			boss_battle_level = true;
 			boss_battle_state = BOSS_BATTLE_STANDBY;
 			boss_target_max = 8;
 
 			if (level_num_temp == 29)
 			{
-				boss_target_min_count[15] = 8;
-				boss_target_max_count[15] = 8;
+				boss_target_count_borders[15][0] = 8;
+				boss_target_count_borders[15][1] = 8;
 			}
 		}
 		else
 		{
-			boss_battle_level = false;
 			boss_battle_state = NOT_A_BOSS_BATTLE_LEVEL;
 			boss_target_max = 0;
 		}
@@ -1321,7 +1309,6 @@ script "tiszaszaki_common_init" OPEN
 
 		endofstage = 0;
 
-		boss_battle_level = false;
 		boss_battle_state = NOT_A_BOSS_BATTLE_LEVEL;
 
 		boss_target_hit = 0;
@@ -2988,18 +2975,20 @@ Restart;
 
 script "tiszaszaki_query_boss_target_num" (void)
 {
+	bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
+
 	if (boss_battle_level)
 		Log(d:boss_target_max);
 }
 
 script "tiszaszaki_ease_boss_targets" (int minimal_i)		// half boss hit count (if possible)
 {
-	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
+	if (boss_battle_state == BOSS_BATTLE_STANDBY)
 	{
 		bool minimal=(minimal_i != 0);
 
 		int new_hit_count=boss_target_max / 2;
-		int boss_target_min_temp=boss_target_min_count[zone-1];
+		int boss_target_min_temp=boss_target_count_borders[zone-1][0];
 		int min_hit_count=(boss_target_hit + boss_target_min_temp);
 
 		if (min_hit_count < boss_target_min_temp)
@@ -3019,12 +3008,12 @@ script "tiszaszaki_ease_boss_targets" (int minimal_i)		// half boss hit count (i
 
 script "tiszaszaki_harden_boss_targets" (int maximal_i)		// double boss hit count (if possible)
 {
-	if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
+	if (boss_battle_state == BOSS_BATTLE_STANDBY)
 	{
 		bool maximal=(maximal_i != 0);
 
 		int new_hit_count=boss_target_max * 2;
-		int boss_target_max_temp=boss_target_max_count[zone-1];
+		int boss_target_max_temp=boss_target_count_borders[zone-1][1];
 		int max_hit_count=boss_target_max_temp;
 
 		if (maximal)
@@ -3041,11 +3030,11 @@ script "tiszaszaki_harden_boss_targets" (int maximal_i)		// double boss hit coun
 
 script "tiszaszaki_display_boss_targets" (void)		// target hit display
 {
-if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_STANDBY))
-{
-	boss_battle_state = BOSS_BATTLE_ENCOUNTER;
-	ACS_NamedExecute("tiszaszaki_display_boss_target_loop", 0, 0,0,0);
-}
+	if (boss_battle_state == BOSS_BATTLE_STANDBY)
+	{
+		boss_battle_state = BOSS_BATTLE_ENCOUNTER;
+		ACS_NamedExecute("tiszaszaki_display_boss_target_loop", 0, 0,0,0);
+	}
 }
 
 script "tiszaszaki_display_boss_target_loop" (void)	// target hit display (looped function)
@@ -3076,19 +3065,40 @@ function int getMonstersCount(void)
 
 	if (monsters_battle_state >= MONSTERS_BATTLE_COMBINED)
 	{
-		int i,n=monsters_battle_group_N;
+		int i,n;
+		int temp;
 
 		res = 0;
 
-		for (i=0;i<n;i++)
+		if (monsters_battle_icon_of_sin)
 		{
-			int monster_tid=monsters_battle_group_tids[i];
+			n = monsters_battle_ios_spawn_N;
 
-			if (monster_tid > 0)
+			for (i=0;i<n;i++)
 			{
-				int temp=ThingCount(0, monster_tid);
+				int monster_sid=monsters_battle_ios_spawn_IDs[i];
 
-				res += temp;
+				if (monster_sid > 0)
+				{
+					temp = ThingCount(monster_sid, 0);
+
+					res += temp;
+				}
+			}
+		}
+		else
+		{
+			n = monsters_battle_group_N; 
+			for (i=0;i<n;i++)
+			{
+				int monster_tid=monsters_battle_group_tids[i];
+
+				if (monster_tid > 0)
+				{
+					temp = ThingCount(0, monster_tid);
+
+					res += temp;
+				}
 			}
 		}
 	}
@@ -3125,6 +3135,8 @@ function void tiszaszaki_setupMonstersBattle(int tid1, int tid2, int tid3, bool 
 {
 	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
 	{
+		monsters_battle_icon_of_sin = (unlimited && (tid1 == 6) && (tid2 == 6) && (tid3 == 6));
+
 		monsters_battle_group_tids[0] = tid1;
 		monsters_battle_group_tids[1] = tid2;
 		monsters_battle_group_tids[2] = tid3;
@@ -3335,6 +3347,8 @@ SetActorProperty(0, APROP_Speed, GetActorProperty(0, APROP_Speed) / 2);
 
 script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 29-30 only
 {
+	bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
+
 	if (boss_battle_level)
 	{
 		ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
@@ -3348,7 +3362,7 @@ script "tiszaszaki_end_scoring" (void)
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 ACS_Terminate (400, 0);
-if (boss_battle_level && (boss_battle_state == BOSS_BATTLE_ENCOUNTER))
+if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
 {
 	boss_battle_state = BOSS_BATTLE_FINALE;
 	ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
@@ -3417,6 +3431,8 @@ if (bonus_stage_state == NOT_A_BONUS_STAGE)
 endofact++;
 if (endofact == 3)
 {
+bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
+level_music = "";
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
@@ -3456,4 +3472,4 @@ ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 tiszaszaki_loop_nametag_change = false;
 do_tiszaszaki_check_boss_prefs = false;
-}  
+}  
