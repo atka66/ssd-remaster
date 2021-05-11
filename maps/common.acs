@@ -1013,6 +1013,18 @@ function bool checkTime(int hours, int mins, int secs, int fracs)
 	return res;
 }
 
+function int querySeconds(void)
+{
+	int res=-1;
+
+	if (tsz_timestamp >= 0)
+	{
+		res = (tsz_timestamp / frac_per_seconds) % 60;
+	}
+
+	return res;
+}
+
 function bool checkLevelTime(int hours, int mins, int secs, int fracs)
 {
 	bool res=true;
@@ -3213,7 +3225,7 @@ function void tiszaszaki_defCommonMonsDispTag(void)
 	common_monster_display_prefix = common_monster_disp_pref_def;
 }
 
-function int getMonstersCount(void)
+function int getMonstersCount(bool force_monster_hate)
 {
 	int res=-1;
 
@@ -3249,7 +3261,12 @@ function int getMonstersCount(void)
 
 				if (monster_tid > 0)
 				{
+					int secs=querySeconds();
+
 					temp = ThingCount(0, monster_tid);
+
+					if (force_monster_hate && (temp > 0) && (checkTime(-1,-1,-1,00)) && (secs >= 0) && ((secs % 10) == 0))
+						Thing_Hate(monster_tid, 0, 0);
 
 					res += temp;
 				}
@@ -3267,7 +3284,7 @@ function bool checkMonstersCount(bool ignore_value)
 	res &= (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER);
 	if (res) 
 	{
-		int count=getMonstersCount();
+		int count=getMonstersCount(TRUE);
 
 		monsters_battle_killed = count;
 
@@ -3298,7 +3315,7 @@ function void tiszaszaki_setupMonstersBattle(int tid1, int tid2, int tid3, bool 
 		if (monsters_battle_state == MONSTERS_BATTLE_STANDBY)
 			monsters_battle_state = MONSTERS_BATTLE_READY;
 
-		if (!unlimited) monsters_battle_total = getMonstersCount();
+		if (!unlimited) monsters_battle_total = getMonstersCount(FALSE);
 	}
 }
 
