@@ -1129,37 +1129,42 @@ function void tiszaszaki_display_monsters_hud(void)
 			hud_x = 0.84;
 		}
 
-		hudmessage (s:common_monster_display_prefix; 0, 14, CR_RED, hud_x, hud_y, 0.0);
-		hudmessage (s:killed_str;                    0, 15, CR_TAN, 0.96,  hud_y, 0.0);
+		hudmessage (s:common_monster_display_prefix; 1, 14, CR_RED, hud_x, hud_y, 1.0, 1.0);
+		hudmessage (s:killed_str;                    1, 15, CR_TAN, 0.96,  hud_y, 1.0, 1.0);
 	}
 }
 
+/*
 function void tiszaszaki_clear_monsters_hud(void)
 {
 	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
 	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
 }
+*/
 
 function void tiszaszaki_display_target_hud(void)
 {
 	if (do_tiszaszaki_show_target_hud)
 	{
-		hudmessage (s:common_target_display_prefix;            0, 11, CR_GOLD, 0.88, 0.14, 0.0);
-		hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 0, 12, CR_TAN,  0.96, 0.14, 0.0);
+		hudmessage (s:common_target_display_prefix;            1, 11, CR_GOLD, 0.88, 0.14, 1.0, 1.0);
+		hudmessage (d:boss_target_hit,s:"/",d:boss_target_max; 1, 12, CR_TAN,  0.96, 0.14, 1.0, 1.0);
 	}
 }
 
+/*
 function void tiszaszaki_clear_target_hud(void)
 {
 	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
 	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
 }
+*/
 
 function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
 {
-	hudmessage (s:boss_name,s:": ",d:boss_health; 0, 13, boss_col, 0.96, 0.08, 0.0);
+	hudmessage (s:boss_name,s:": ",d:boss_health; 1, 13, boss_col, 0.96, 0.08, 1.0, 1.0);
 }
 
+/*
 function void tiszaszaki_clear_boss_health(bool is_normal_boss)
 {
 	bool do_clear=true;
@@ -1170,6 +1175,7 @@ function void tiszaszaki_clear_boss_health(bool is_normal_boss)
 	if (do_clear)
 		hudmessage (s:""; 0, 13, 0, 0, 0, 0);
 }
+*/
 
 function void tiszaszaki_display_time(void)
 {
@@ -1283,24 +1289,24 @@ script "tiszaszaki_common_set_boss_prefs" (void)
 		cvar_new_val = (GetCVar("ssdremaster_show_boss_target_hud") != 0);
 		cvar_old_val = do_tiszaszaki_show_target_hud;
 		do_tiszaszaki_show_target_hud = cvar_new_val;
-
+/*
 		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
 			tiszaszaki_clear_target_hud();
-
+*/
 		cvar_new_val = (GetCVar("ssdremaster_show_monster_count_hud") != 0);
 		cvar_old_val = do_tiszaszaki_show_monsters_hud;
 		do_tiszaszaki_show_monsters_hud = cvar_new_val;
-
+/*
 		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
 			tiszaszaki_clear_monsters_hud();
-
+*/
 		cvar_new_val = (GetCVar("ssdremaster_show_normal_boss_health") != 0);
 		cvar_old_val = do_tsz_show_normal_boss_health;
 		do_tsz_show_normal_boss_health = cvar_new_val;
-
+/*
 		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
 			tiszaszaki_clear_boss_health(TRUE);
-
+*/
 		if (do_tiszaszaki_check_boss_prefs) Delay(1);
 	} while (do_tiszaszaki_check_boss_prefs);
 }
@@ -2015,7 +2021,7 @@ script "tiszaszaki_show_seven_sinner_health" (int boss_id)
 				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
 			}
 
-			tiszaszaki_clear_boss_health(FALSE);
+			//tiszaszaki_clear_boss_health(FALSE);
 		}
 	}
 }
@@ -2256,7 +2262,7 @@ script "tiszaszaki_show_other_boss_health" (int boss_id, int boss_tid)
 				}
 			}
 
-			tiszaszaki_clear_boss_health(TRUE);
+			//tiszaszaki_clear_boss_health(TRUE);
 
 			monsters_battle_state = MONSTERS_BATTLE_FINALE;
 		}
@@ -3345,8 +3351,10 @@ script "tiszaszaki_display_monsters_hud_loop" (void)
 		delay(1);
 		Restart;
 	}
+	/*
 	delay(35);
 	tiszaszaki_clear_monsters_hud();
+	*/
 }
 
 script "tiszaszaki_encounterMonstersBattle" (int ended_manually_i)
@@ -3540,8 +3548,10 @@ script "tiszaszaki_stop_displaying_boss_targets" (void)		// for map 29-30 only
 	if (boss_battle_level)
 	{
 		ACS_NamedTerminate ("tiszaszaki_display_boss_target_loop", 0);
+		/*
 		Delay(5);
 		tiszaszaki_clear_target_hud();
+		*/
 	}
 }
 
@@ -3628,8 +3638,10 @@ hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+/*
 if (boss_battle_level)
 	tiszaszaki_clear_target_hud();
+*/
 SetPlayerProperty (1, 0, 4);
 SetPlayerProperty (1, 0, 5);
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
