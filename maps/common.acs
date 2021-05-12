@@ -190,14 +190,14 @@ int tsz_liquid_3D_floors_chars[6][7][4]=
 		{{0,0,0,0}, {26,20,0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26,  0, 0,0}}, // NUKAGE
 		{{0,0,0,0}, {14, 0,0,0}, {14,20,25,0}, {14,30, 0,0}, {14,30,15,0}, {14,40,10,0}, {14, 50,10,0}}  // LAVA
 	};
-int tsz_liquid_3D_floors_visual[6][4]=
-	{ // {r,g,b,desat}
-		{ 32, 64,192,  0}, // FWATER
-		{128,128,128,128}, // GWATER
-		{244,164,104, 64}, // SLUDGE
-		{192, 64, 32, 64}, // BLOOD
-		{  0,  0,  0,  0}, // NUKAGE
-		{255,128,  0,128}  // LAVA
+int tsz_liquid_3D_floors_visual[6][7]=
+	{ // {r,g,b,desat,   r_fade,g_fade,b_fade}
+		{ 32, 64,192,  0,     0,  0,  0}, // FWATER
+		{128,128,128,128,   128,128,128}, // GWATER
+		{244,164,104, 64,    64, 64, 64}, // SLUDGE
+		{192, 64, 32, 64,     0,  0,  0}, // BLOOD
+		{  0,  0,  0,  0,     0,  0,  0}, // NUKAGE
+		{255,128,  0,128,   255,128, 32}  // LAVA
 	};
 
 int tiszaszaki_dw_chk_water_id;
@@ -302,10 +302,14 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 	if ((liquid_type >= TSZ_LIQUID_3D_TYPE_FWATER) && (liquid_type <= TSZ_LIQUID_3D_TYPE_LAVA))
 	if ((liquid_damage >= TSZ_LIQUID_3D_NO_DAMAGE) && (liquid_damage <= TSZ_LIQUID_3D_DAMAGE_EXTREME))
 	{
-		int r    =tsz_liquid_3D_floors_visual[liquid_type][0];
-		int g    =tsz_liquid_3D_floors_visual[liquid_type][1];
-		int b    =tsz_liquid_3D_floors_visual[liquid_type][2];
-		int desat=tsz_liquid_3D_floors_visual[liquid_type][3];
+		int r     =tsz_liquid_3D_floors_visual[liquid_type][0];
+		int g     =tsz_liquid_3D_floors_visual[liquid_type][1];
+		int b     =tsz_liquid_3D_floors_visual[liquid_type][2];
+		int desat =tsz_liquid_3D_floors_visual[liquid_type][3];
+
+		int r_fade=tsz_liquid_3D_floors_visual[liquid_type][4];
+		int g_fade=tsz_liquid_3D_floors_visual[liquid_type][5];
+		int b_fade=tsz_liquid_3D_floors_visual[liquid_type][6];
 
 		int  damage_mod     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][0];
 		int  damage_amount  =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][1];
@@ -316,18 +320,33 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 		if ((g >= 0) && (g <= 255))
 		if ((b >= 0) && (b <= 255))
 		if ((desat >= 0) && (desat <= 255))
+		if ((r_fade >= 0) && (r_fade <= 255))
+		if ((g_fade >= 0) && (g_fade <= 255))
+		if ((b_fade >= 0) && (b_fade <= 255))
 		{
 			if (tag1 > 0)
+			{
 				Sector_SetColor(tag1, r,g,b, desat);
+				Sector_SetFade(tag1, r_fade,g_fade,b_fade);
+			}
 
 			if (tag2 > 0)
+			{
 				Sector_SetColor(tag2, r,g,b, desat);
+				Sector_SetFade(tag2, r_fade,g_fade,b_fade);
+			}
 
 			if (tag3 > 0)
+			{
 				Sector_SetColor(tag3, r,g,b, desat);
+				Sector_SetFade(tag3, r_fade,g_fade,b_fade);
+			}
 
 			if (tag4 > 0)
+			{
 				Sector_SetColor(tag4, r,g,b, desat);
+				Sector_SetFade(tag4, r_fade,g_fade,b_fade);
+			}
 		}
 
 		if (damage_mod >= 0)
