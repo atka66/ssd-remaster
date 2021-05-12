@@ -671,13 +671,6 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
 
 		ang_d = ang1-ang0, pit_d = pit1-pit0;
 
-		if (ang_d < 0.0)
-		{
-			ang_d = -ang_d;
-			ang_dir = -1;
-		}
-		if (ang_d > 0.5) ang_d = 1.0 - ang_d;
-
 		ang_step = FixedMul(ang_d,fixed_n), pit_step = FixedMul(pit_d,fixed_n);
 
 		ang = ang0, pit = pit0;
@@ -2188,8 +2181,8 @@ int tiszaszaki_other_boss_names[7]=
 int tiszaszaki_other_boss_col_head[7][2]=
 	{
 		{2,2}, // Giant Mancubus
-		{2,2}, // Spider Mastermind
-		{2,2}, // Cyberdemon
+		{1,2}, // Spider Mastermind
+		{1,2}, // Cyberdemon
 		{6,2}, // Super Mancubus
 		{6,2}, // Super Spiderdemon
 		{6,2}, // Super Cyberdemon
