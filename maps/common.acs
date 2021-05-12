@@ -124,6 +124,8 @@ int secret_count_per_level[30]=
 		 0,  0  // zone 15
 	};
 
+#libdefine TSZ_LEVELNUM_TITLEMAP 99
+
 int story_lev_num;
 int bonus_lev_num;
 
@@ -1338,6 +1340,15 @@ script "tiszaszaki_common_init" OPEN
 			clear_forcefield_entry(i);
 	}
 
+	// main title
+	if (level_num_temp == TSZ_LEVELNUM_TITLEMAP)
+		story_lev_num = TSZ_LEVELNUM_TITLEMAP;
+
+	// init translation to 'seven sinner' bosses
+	if (((level_num_temp >=  1) && (level_num_temp <= 30)) || (level_num_temp == 99))
+		ACS_NamedExecute("tiszaszaki_init_sevensinner_translation", 0, 0,0,0);
+
+
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
@@ -1470,8 +1481,6 @@ script "tiszaszaki_common_init" OPEN
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
 		str title_str=zone_titles[zone-1];
-
-		ACS_NamedExecute("tiszaszaki_init_sevensinner_translation", 0, 0,0,0);
 
 		ACS_Execute (300, 0, 0, 0, 0);
 
@@ -1692,8 +1701,9 @@ script "tiszaszaki_init_sevensinner_translation" (void)
 script 302 (void)		// Envy	(dark green/natural green)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] &= ((story_lev_num ==  4) || (story_lev_num == 10));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY] |= ((story_lev_num ==  4) || (story_lev_num == 10));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_ENVY])
 	{
@@ -1707,8 +1717,9 @@ script 302 (void)		// Envy	(dark green/natural green)
 script 303 (void)		// Lust	(red/dark red)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] &= ((story_lev_num ==  5) || (story_lev_num ==  7) || (story_lev_num ==  8));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST] |= ((story_lev_num ==  5) || (story_lev_num ==  7) || (story_lev_num ==  8));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_LUST])
 	{
@@ -1722,8 +1733,9 @@ script 303 (void)		// Lust	(red/dark red)
 script 304 (void)		// Sloth (brown/tan)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] &= ((story_lev_num == 13) || (story_lev_num == 14));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH] |= ((story_lev_num == 13) || (story_lev_num == 14));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_SLOTH])
 	{
@@ -1737,8 +1749,9 @@ script 304 (void)		// Sloth (brown/tan)
 script 305 (void)		// 	Greed (blue/purple)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] &= ((story_lev_num == 15) || (story_lev_num == 16));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] |= ((story_lev_num == 15) || (story_lev_num == 16));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED])
 	{
@@ -1752,8 +1765,9 @@ script 305 (void)		// 	Greed (blue/purple)
 script 306 (void)		// Vanity (grey/white)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GREED] &= ((story_lev_num == 17) || (story_lev_num == 20));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY] |= ((story_lev_num == 17) || (story_lev_num == 20));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_VANITY])
 	{
@@ -1767,8 +1781,9 @@ script 306 (void)		// Vanity (grey/white)
 script 307 (void)		// Gluttony	(orange/dark orange)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] &= ((story_lev_num == 23) || (story_lev_num == 24));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY] |= ((story_lev_num == 23) || (story_lev_num == 24));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_GLUTTONY])
 	{
@@ -1782,8 +1797,9 @@ script 307 (void)		// Gluttony	(orange/dark orange)
 script 308 (void)		// Pride (yellow/bright yellow)
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] &= (story_lev_num == 26);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE] |= (story_lev_num == 26);
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_BOSS_PRIDE])
 	{
@@ -1851,8 +1867,9 @@ script 311 (void)		// Super Cyberdemon
 script 312 (void)		// The Firestarter
 
 {
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] = true;
-	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] &= ((story_lev_num == 16) || (story_lev_num == 28) || (story_lev_num == 30));
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] = false;
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] |= (story_lev_num == TSZ_LEVELNUM_TITLEMAP);
+	do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER] |= ((story_lev_num == 16) || (story_lev_num == 28) || (story_lev_num == 30));
 
 	while (do_tiszaszaki_sevensinner_anim[TSZ_SEVENSINNER_THEFIRESTARTER])
 	{

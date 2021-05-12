@@ -3,6 +3,7 @@ sucktime 1
 partime 60
 
 map TITLEMAP "Main Title"
+levelnum 99
 sky1 SKY01 0
 sky2 SKY04 0
 cluster 8
