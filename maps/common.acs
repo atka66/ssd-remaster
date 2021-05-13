@@ -843,7 +843,11 @@ function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int ani
 
 		SetLineBlocking(lid, blktype);
 		SetLineSpecial(lid, 226, 230,0,ff_i,NO,0);
-		SetLineActivation(lid, SPAC_Push);
+
+		if (blktype == BLOCK_EVERYTHING)
+			SetLineActivation(lid, SPAC_Push | SPAC_Impact);
+		else
+			SetLineActivation(lid, SPAC_Push);
 
 		ACS_ExecuteAlways(230, 0, ff_i,YES,0);
 	}
