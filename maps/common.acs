@@ -1177,6 +1177,9 @@ function void tiszaszaki_clear_monsters_hud(void)
 {
 	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
 	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
+
+	hudmessage (s:""; 0, 16, 0, 0, 0, 0); // ???
+	hudmessage (s:""; 0, 17, 0, 0, 0, 0); // ???
 }
 */
 
@@ -1199,7 +1202,8 @@ function void tiszaszaki_clear_target_hud(void)
 
 function void tiszaszaki_display_boss_health(str boss_name, int boss_health, int boss_col)
 {
-	hudmessage (s:boss_name,s:": ",d:boss_health; 1, 13, boss_col, 0.96, 0.08, 1.0, 1.0);
+	hudmessage (s:boss_name,s:": "; 1, 13, boss_col, 0.76, 0.08, 1.0, 1.0);
+	hudmessage (d:boss_health;      1, 23, CR_WHITE, 0.96, 0.08, 1.0, 1.0);
 }
 
 /*
