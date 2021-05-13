@@ -79,11 +79,15 @@ bool do_tsz_show_normal_boss_health;
 int boss_target_hit;
 int boss_target_max;
 
+int monsters_battle_hate_intval[5]={60,50,30,20,10};
+
 int monsters_battle_group_N=3;
 int monsters_battle_group_tids[3];
 
 int monsters_battle_killed;
 int monsters_battle_total;
+
+int monsters_battle_overall_health;
 
 int monsters_battle_running;
 
@@ -157,6 +161,10 @@ int deepWaterN = 128;
 bool deepWaterStats[128][3]; // {inDeepWater,onWaterSurface,isTopDownWater}
 
 int forceFieldN = 32;
+int  forceField_intprops [32][5]; // {lid,anim_n,anim_dl,trans,cd}
+bool forceField_boolprops[32][2]; // {hurt,active}
+str  forceField_strprops [32][1]; // {texStr}
+/*
 int  forceField_lid    [32];
 int  forceField_anim_n [32];
 int  forceField_anim_dl[32];
@@ -165,6 +173,7 @@ str  forceField_texStr [32];
 int  forceField_cd     [32];
 bool forceField_hurt   [32];
 bool forceField_active [32];
+*/
 
 #libdefine TSZ_LIQUID_3D_TYPE_FWATER 0
 #libdefine TSZ_LIQUID_3D_TYPE_GWATER 1
@@ -749,18 +758,18 @@ script 230 (int ff_i, int test_mode_i)
 	{
 		bool test_mode=(test_mode_i != 0);
 
-		if (test_mode || !forceField_active[ff_i])
+		if (test_mode || !forceField_boolprops[ff_i][1])
 		{
-			int  lid     =forceField_lid    [ff_i];
-			int  trans_am=forceField_trans  [ff_i];
-			str  texStr  =forceField_texStr [ff_i];
-			int  cd      =forceField_cd     [ff_i];
-			bool hurt    =forceField_hurt   [ff_i];
+			int  lid     =forceField_intprops [ff_i][0];
+			int  trans_am=forceField_intprops [ff_i][3];
+			str  texStr  =forceField_strprops [ff_i][0];
+			int  cd      =forceField_intprops [ff_i][4];
+			bool hurt    =forceField_boolprops[ff_i][0];
 
-			int  n       =forceField_anim_n [ff_i];
-			int  anim_dl =forceField_anim_dl[ff_i];
+			int  n       =forceField_intprops [ff_i][1];
+			int  anim_dl =forceField_intprops [ff_i][2];
 
-			forceField_active[ff_i] = true;
+			forceField_boolprops[ff_i][1] = true;
 
 			if (!test_mode && hurt) ForceField();
 
@@ -798,7 +807,7 @@ script 230 (int ff_i, int test_mode_i)
 
 			if (!test_mode && (cd > 0)) Delay(cd);
 
-			forceField_active[ff_i] = false;
+			forceField_boolprops[ff_i][1] = false;
 		}
 	}
 }
@@ -807,30 +816,30 @@ function void clear_forcefield_entry(int ff_i)
 {
 	if ((ff_i >= 0) && (ff_i < forceFieldN))
 	{
-		forceField_lid    [ff_i] = 0;
-		forceField_anim_n [ff_i] = 0;
-		forceField_anim_dl[ff_i] = 0;
-		forceField_trans  [ff_i] = 0;
-		forceField_texStr [ff_i] = "";
-		forceField_cd     [ff_i] = 0;
-		forceField_hurt   [ff_i] = false;
-		forceField_active [ff_i] = false;
+		forceField_intprops [ff_i][0] = 0;
+		forceField_intprops [ff_i][1] = 0;
+		forceField_intprops [ff_i][2] = 0;
+		forceField_intprops [ff_i][3] = 0;
+		forceField_strprops [ff_i][0] = "";
+		forceField_intprops [ff_i][4] = 0;
+		forceField_boolprops[ff_i][0] = false;
+		forceField_boolprops[ff_i][1] = false;
 	}
 }
 
 function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int anim_dl, int trans_am, str texStr, int cd, int blktype, bool hurt)
 {
-	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_lid[ff_i] == 0)
+	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_intprops[ff_i][0] == 0)
 		&& (lid > 0) && (anim_n >= 0) && (anim_dl >= 0) && (anim_dl <= 8) && (trans_am >= 0)
 		&& (texStr != "") && (cd >= 0) && (blktype > BLOCK_NOTHING))
 	{
-		forceField_lid    [ff_i] = lid;
-		forceField_anim_n [ff_i] = anim_n;
-		forceField_anim_dl[ff_i] = anim_dl;
-		forceField_trans  [ff_i] = trans_am;
-		forceField_texStr [ff_i] = texStr;
-		forceField_cd     [ff_i] = cd;
-		forceField_hurt   [ff_i] = hurt;
+		forceField_intprops [ff_i][0] = lid;
+		forceField_intprops [ff_i][1] = anim_n;
+		forceField_intprops [ff_i][2] = anim_dl;
+		forceField_intprops [ff_i][3] = trans_am;
+		forceField_strprops [ff_i][0] = texStr;
+		forceField_intprops [ff_i][4] = cd;
+		forceField_boolprops[ff_i][0] = hurt;
 
 		SetLineBlocking(lid, blktype);
 		SetLineSpecial(lid, 226, 230,0,ff_i,NO,0);
@@ -842,7 +851,7 @@ function void tiszaszaki_setup_forcefield(int ff_i, int lid, int anim_n, int ani
 
 function void tiszaszaki_remove_forcefield(int ff_i)
 {
-	int lid=forceField_lid[ff_i];
+	int lid=forceField_intprops[ff_i][0];
 
 	if ((ff_i >= 0) && (ff_i < forceFieldN) && (lid > 0))
 	{
@@ -1109,6 +1118,8 @@ function str tiszaszaki_get_time_string(int timestamp)
 str common_monster_disp_pref_def="Monsters:";
 str common_monster_display_prefix="Monsters:"; // redundant var declarations
 
+str common_sumhealth_display_prefix="Overall health:";
+
 str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
@@ -1117,32 +1128,47 @@ str common_timebonus_display_prefix="Time bonus:";
 
 function void tiszaszaki_display_monsters_hud(void)
 {
+	bool show_overall_health=false;
+
 	if (do_tiszaszaki_show_monsters_hud)
 	{
-		int hud_x=0,hud_y=0;
+		int hud1_x=0,hud1_y=0;
+		int hud2_y=0;
 		str killed_str="";
 
 		if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
-			hud_y = 0.20;
+		{
+			hud1_y = 0.20;
+		}
 		else
-			hud_y = 0.14;
+		{
+			hud1_y = 0.14;
+		}
+
+		hud2_y = hud1_y + 0.06;
 
 		if (monsters_battle_total >= 0)
 		{
 			killed_str = StrParam(s:killed_str,d:(monsters_battle_total - monsters_battle_killed));
 			killed_str = StrParam(s:killed_str,s:"/",d:monsters_battle_total);
 
-			hud_x = 0.80;
+			hud1_x = 0.80;
 		}
 		else
 		{
 			killed_str = StrParam(s:killed_str,d:monsters_battle_killed);
 
-			hud_x = 0.84;
+			hud1_x = 0.84;
 		}
 
-		hudmessage (s:common_monster_display_prefix; 1, 14, CR_RED, hud_x, hud_y, 1.0, 1.0);
-		hudmessage (s:killed_str;                    1, 15, CR_TAN, 0.96,  hud_y, 1.0, 1.0);
+		hudmessage (s:common_monster_display_prefix; 1, 14, CR_RED, hud1_x, hud1_y, 1.0, 1.0);
+		hudmessage (s:killed_str;                    1, 15, CR_TAN, 0.96,   hud1_y, 1.0, 1.0);
+
+		if (show_overall_health)
+		{
+			hudmessage (s:common_sumhealth_display_prefix; 1, 16, CR_GREEN, 0.80, hud2_y, 1.0, 1.0);
+			hudmessage (d:monsters_battle_overall_health;  1, 17, CR_WHITE, 0.96, hud2_y, 1.0, 1.0);
+		}
 	}
 }
 
@@ -1203,8 +1229,8 @@ function void tiszaszaki_display_timebonus(void)
 {
 	if (tiszaszaki_debug_timebonus)
 	{
-		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.80, 0.20, 0.0);
-		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.96, 0.20, 0.0);
+		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.04, 0.16, 0.0);
+		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.28, 0.16, 0.0);
 	}
 }
 
@@ -3262,9 +3288,12 @@ function void tiszaszaki_defCommonMonsDispTag(void)
 
 function int getMonstersCount(bool force_monster_hate)
 {
+	bool hate_debug=false;
+	int thing_hate_interval=monsters_battle_hate_intval[GameSkill()];
+
 	int res=-1;
 
-	if (monsters_battle_state >= MONSTERS_BATTLE_COMBINED)
+	if ((monsters_battle_state >= MONSTERS_BATTLE_COMBINED) && (thing_hate_interval >= 0))
 	{
 		int i,n;
 		int temp;
@@ -3289,7 +3318,10 @@ function int getMonstersCount(bool force_monster_hate)
 		}
 		else
 		{
-			n = monsters_battle_group_N; 
+			n = monsters_battle_group_N;
+
+			monsters_battle_overall_health = 0;
+
 			for (i=0;i<n;i++)
 			{
 				int monster_tid=monsters_battle_group_tids[i];
@@ -3297,11 +3329,21 @@ function int getMonstersCount(bool force_monster_hate)
 				if (monster_tid > 0)
 				{
 					int secs=querySeconds();
+					int prop=0;
 
 					temp = ThingCount(0, monster_tid);
+					prop = GetActorProperty(monster_tid, APROP_Health);
 
-					if (force_monster_hate && (temp > 0) && (checkTime(-1,-1,-1,00)) && (secs >= 0) && ((secs % 10) == 0))
+					if (prop < 0) prop = 0;
+
+					monsters_battle_overall_health += temp * prop;
+
+					if (force_monster_hate && (thing_hate_interval > 0) && (temp > 0) && (checkTime(-1,-1,-1,00)) && (secs >= 0) && ((secs % thing_hate_interval) == 0))
+					{
+						if (hate_debug)
+							Log(s:"[getMonstersCount] forcing monsters (tag ",d:monster_tid,s:") hate player...");
 						Thing_Hate(monster_tid, 0, 0);
+					}
 
 					res += temp;
 				}
