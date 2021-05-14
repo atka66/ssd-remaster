@@ -609,6 +609,7 @@ Frames "A"
 Solid
 NoGravity
 CanPass
+Float
 Radius 12
 Height 16
 }
@@ -620,6 +621,7 @@ Sprite PLAT
 Frames "A"
 NoGravity
 CanPass
+Float
 Radius 12
 Height 16
 }
