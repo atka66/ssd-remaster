@@ -225,6 +225,7 @@ int script904_ang_n;
 #libdefine T_FIREJET 224
 #libdefine T_MINE 135
 #libdefine T_HEXENARROW 209
+#libdefine T_HEXENBLADE 210
 
 #libdefine T_REIVERFIREBALL 207
 #libdefine T_REIVERFIREBALL2 212
