@@ -259,6 +259,10 @@ int script904_ang_n;
 #libdefine T_RING 167
 #libdefine T_SOLIDBARREL 172
 
+// spawn ID arrays
+
+int ssdremaster_allkeys[6]={T_REDKEYCARD,T_BLUEKEYCARD,T_YELLOWKEYCARD,T_REDSKULLKEY,T_BLUESKULLKEY,T_YELLOWSKULLKEY};
+
 // Icon of Sin related definitions
 
 bool monsters_battle_icon_of_sin;
@@ -1129,7 +1133,9 @@ str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
 str common_score_display_prefix="Score:";
 str common_ring_display_prefix="Rings:";
+
 str common_timebonus_display_prefix="Time bonus:";
+str common_leveltime_display_prefix="Level time:";
 
 function void tiszaszaki_display_monsters_hud(void)
 {
@@ -1238,15 +1244,36 @@ function void tiszaszaki_display_timebonus(void)
 {
 	if (tiszaszaki_debug_timebonus)
 	{
-		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.04, 0.16, 0.0);
-		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.28, 0.16, 0.0);
+		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.04, 0.20, 0.0);
+		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.28, 0.20, 0.0);
 	}
 }
 
 function void tiszaszaki_clear_timebonus(void)
 {
-	hudmessage (s:""; 0, 40, 0, 0, 0, 0);
-	hudmessage (s:""; 0, 41, 0, 0, 0, 0);
+	if (tiszaszaki_debug_timebonus)
+	{
+		hudmessage (s:""; 0, 40, 0, 0, 0, 0);
+		hudmessage (s:""; 0, 41, 0, 0, 0, 0);
+	}
+}
+
+function void tiszaszaki_display_leveltime(void)
+{
+	if (tiszaszaki_debug_timebonus)
+	{
+		hudmessage (s:common_leveltime_display_prefix;                 0, 42, CR_GOLD,  0.04, 0.26, 0.0);
+		hudmessage (s:tiszaszaki_get_time_string(tsz_timestamp_level); 0, 43, CR_WHITE, 0.28, 0.26, 0.0);
+	}
+}
+
+function void tiszaszaki_clear_leveltime(void)
+{
+	if (tiszaszaki_debug_timebonus)
+	{
+		hudmessage (s:""; 0, 42, 0, 0, 0, 0);
+		hudmessage (s:""; 0, 43, 0, 0, 0, 0);
+	}
 }
 
 function void tiszaszaki_display_score(void)
@@ -1539,6 +1566,8 @@ script "tiszaszaki_common_init" OPEN
 
 		setfont ("BigFont");
 		tiszaszaki_display_time();
+		setfont ("BigFont");
+		tiszaszaki_display_leveltime();
 		setfont ("BigFont");
 		tiszaszaki_display_timebonus();
 		delay(5);
@@ -2131,6 +2160,8 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 	if ((boss_id >= TSZ_SEVENSINNER_BOSS_ENVY) && (boss_id <= TSZ_SEVENSINNER_THEFIRESTARTER))
 	if (!do_tiszaszaki_sevensinner_death[boss_id])
 	{
+		int i,n;
+
 		int boss_tid=tiszaszaki_specific_boss_tid(boss_id);
 		int boss_keydrop_id=tiszaszaki_sevensinner_keydrop[boss_id];
 		int boss_stop_acs=tiszaszaki_sevensinner_stop_acs[boss_id];
@@ -2147,58 +2178,41 @@ script "tiszaszaki_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 
 		if (boss_tid > 0)
 		{
-			int keydrop_hspeed=8;
-			int keydrop_vspeed=12;
-
-			tsz_spawn_dir = 0;
-
-			switch (boss_keydrop_id)
+			if ((boss_keydrop_id >= 1) && (boss_keydrop_id <= 7))
 			{
-				case 1: tsz_SpawnThingToRandomDir(boss_tid, 0, T_REDKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // red key
-				case 2: tsz_SpawnThingToRandomDir(boss_tid, 0, T_BLUEKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // blue key
-				case 3: tsz_SpawnThingToRandomDir(boss_tid, 0, T_YELLOWKEYCARD, keydrop_hspeed,keydrop_vspeed, 1); break; // yellow key
-				case 4: tsz_SpawnThingToRandomDir(boss_tid, 0, T_REDSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // purple key
-				case 5: tsz_SpawnThingToRandomDir(boss_tid, 0, T_BLUESKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // green key
-				case 6: tsz_SpawnThingToRandomDir(boss_tid, 0, T_YELLOWSKULLKEY, keydrop_hspeed,keydrop_vspeed, 1); break; // orange key
-				case 7:
+				int ssdremaster_allkeys_N=6;
+
+				int keydrop_hspeed=8;
+				int keydrop_vspeed=12;
+
+				tsz_spawn_dir = 0;
+
+				if (boss_keydrop_id <= 6)
 				{
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_REDKEYCARD, keydrop_hspeed,keydrop_vspeed, 6);
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_BLUEKEYCARD, keydrop_hspeed,keydrop_vspeed, 6);
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_YELLOWKEYCARD, keydrop_hspeed,keydrop_vspeed, 6);
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_REDSKULLKEY, keydrop_hspeed,keydrop_vspeed, 6);
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_BLUESKULLKEY, keydrop_hspeed,keydrop_vspeed, 6);
-					tsz_SpawnThingToRandomDir(boss_tid, 0, T_YELLOWSKULLKEY, keydrop_hspeed,keydrop_vspeed, 6);
-				}; break; // all keys above
-				default: break; // no drop
+					tsz_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[boss_keydrop_id-1], keydrop_hspeed,keydrop_vspeed, 1);
+				}
+				else
+				{
+					n = ssdremaster_allkeys_N;
+
+					for (i=0;i<n;i++)
+						tsz_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[i], keydrop_hspeed,keydrop_vspeed, 1);
+				}
 			}
 
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 32, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 64, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 96, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 128, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 160, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 192, 16, -1);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 224, 16, -1);
+			n = 8;
+			for (i=0;i<n;i++)
+				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 32*i, 16, -1);
+
 			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
-			Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-			delay(2);
+
+			n = 9;
+			for (i=0;i<n;i++)
+			{
+				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+				delay(2);
+			}
+
 			Thing_ProjectileGravity (boss_tid, T_BRAINS, 0, 0, -1);
 
 			if (post_death_acs)
@@ -2979,6 +2993,12 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		setfont ("BigFont");
 		tiszaszaki_display_time();
 
+		if(!reverse)
+		{
+			setfont ("BigFont");
+			tiszaszaki_display_leveltime();
+		}
+
 		if(!reverse && !skipbonus && tiszaszaki_par_time_reached)
 		if((timebonus != 0) && (checkLevelTime(-1,-1,-1,00)))
 		{
@@ -3635,8 +3655,8 @@ SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
 
-if (tiszaszaki_debug_timebonus)
-	tiszaszaki_clear_timebonus();
+tiszaszaki_clear_timebonus();
+tiszaszaki_clear_leveltime();
 
 setfont ("BigFont");
 if (tiszaszaki_custom_nametag)
