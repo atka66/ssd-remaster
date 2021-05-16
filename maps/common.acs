@@ -24,6 +24,8 @@ global bool 5:tsz_common_init_firsttime;
 global int  6:tiszaszaki_default_sucktime;
 global int  7:tiszaszaki_lamertime_hours;
 
+global int  8:keyscramble_random_results[];
+
 int tsz_timestamp_level;
 
 int tiszaszaki_level_par_time_hh,tiszaszaki_level_par_time_mm,tiszaszaki_level_par_time_ss;
@@ -164,16 +166,6 @@ int forceFieldN = 32;
 int  forceField_intprops [32][5]; // {lid,anim_n,anim_dl,trans,cd}
 bool forceField_boolprops[32][2]; // {hurt,active}
 str  forceField_strprops [32][1]; // {texStr}
-/*
-int  forceField_lid    [32];
-int  forceField_anim_n [32];
-int  forceField_anim_dl[32];
-int  forceField_trans  [32];
-str  forceField_texStr [32];
-int  forceField_cd     [32];
-bool forceField_hurt   [32];
-bool forceField_active [32];
-*/
 
 #libdefine TSZ_LIQUID_3D_TYPE_FWATER 0
 #libdefine TSZ_LIQUID_3D_TYPE_GWATER 1
@@ -210,11 +202,9 @@ int tsz_liquid_3D_floors_visual[6][7]=
 	};
 
 int tiszaszaki_dw_chk_water_id;
+bool tiszaszaki_dw_act_surface[2];
 
-bool tiszaszaki_dw_act_below_surface;
-bool tiszaszaki_dw_act_above_surface;
-
-int script210_wtag, script210_wtid;
+int script210_tags[2];
 
 int script904_ang_n;
 
@@ -263,6 +253,28 @@ int script904_ang_n;
 
 int ssdremaster_allkeys[6]={86,85,87,89,90,88};
 
+// 'key scramble' related stuff
+
+str keyscramble_wall_textures[6][2]=
+	{ // {keycardTex,skullkeyTex}, for each key
+		{"DOORRED","DOORRED2"}, // red key
+		{"DOORBLU","DOORBLU2"}, // blue key
+		{"DOORYEL","DOORYEL2"}, // yellow key
+		{"DOORPUR","DOORPUR2"}, // purple key
+		{"DOORGRN","DOORGRN2"}, // green key
+		{"DOORORG","DOORORG2"}  // orange key
+	};
+
+int keyscramble_defs_per_stage[28][6][8]=
+	{
+	// stagedefs: {redkey_defs,bluekey_defs,yellowkey_defs, purplekey_defs,greenkey_defs,orangekey_defs}, for each stage
+	// keydefs: {lid,texPos,keyTexType, tid, stag, triggerlid,oldtrigger,newtrigger}, for each key
+		{{0,0,0, 0, 0, 0,0,0},{3,0,0, 29, 0, 0,0,0},{0,0,0, 0, 0, 0,0,0}, {5,0,0, 48, 0, 0,0,0},{4,0,0, 30, 0, 0,0,0},{6,0,0, 49, 0, 0,0,0}}, // stage  1
+		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0}}, // stage  2
+		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0}}, // stage  3
+		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0},{0,0,0,  0, 0, 0,0,0}}, // stage  4
+	};
+
 // Icon of Sin related definitions
 
 bool monsters_battle_icon_of_sin;
@@ -307,6 +319,83 @@ int monsters_battle_state;
 #libdefine MONSTERS_BATTLE_ENCOUNTER 3
 #libdefine MONSTERS_BATTLE_FINALE 4
 #libdefine MONSTERS_BATTLE_UNAVAILABLE -1
+
+// 'key scramble' functions
+
+function void init_keyscramble_per_stage(void)
+{
+	int ssdremaster_allkeys_N=6;
+
+	int i,n;
+
+	n = ssdremaster_allkeys_N;
+
+	for (i=0;i<n;i++)
+	{
+		int lid=       keyscramble_defs_per_stage[story_lev_num-1][i][0];
+		int texPos=    keyscramble_defs_per_stage[story_lev_num-1][i][1];
+		int keyTexType=keyscramble_defs_per_stage[story_lev_num-1][i][2];
+		int tid=       keyscramble_defs_per_stage[story_lev_num-1][i][3];
+		int stag=      keyscramble_defs_per_stage[story_lev_num-1][i][4];
+
+		if (tid > 0)
+		if (((lid > 0) && (texPos >= 0) && (texPos <= 2) && (keyTexType >= 0) && (keyTexType <= 1)) || (stag > 0))
+		{
+			int res=Random(0,ssdremaster_allkeys_N-2);
+
+			if (res >= i) res++;
+
+			keyscramble_random_results[i] = res + 1;
+		}
+	}
+}
+
+function void apply_keyscramble_from_stage(int stagenum)
+{
+	int ssdremaster_allkeys_N=6;
+
+	int tid_off_for_swap=10000;
+
+	if ((stagenum >= 1) && (stagenum <= 30))
+	{
+		int i,n;
+
+		n = ssdremaster_allkeys_N;
+
+		for (i=0;i<n;i++)
+		{
+			int random_res=keyscramble_random_results[i];
+
+			if ((random_res >= 1) && (random_res <= ssdremaster_allkeys_N))
+			{
+				int lid=       keyscramble_defs_per_stage[stagenum-1][i][0];
+				int texPos=    keyscramble_defs_per_stage[stagenum-1][i][1];
+				int keyTexType=keyscramble_defs_per_stage[stagenum-1][i][2];
+				int tid=       keyscramble_defs_per_stage[stagenum-1][i][3];
+				int stag=      keyscramble_defs_per_stage[stagenum-1][i][4];
+
+				int keyspawntype=ssdremaster_allkeys[random_res-1];
+				int newtid=tid + tid_off_for_swap;
+
+				if (lid > 0)
+				{
+					//str oldKeyTex=keyscramble_wall_textures[i         ][keyTexType]; // used for checking real texture
+					str newKeyTex=keyscramble_wall_textures[random_res-1][keyTexType];
+
+					SetLineTexture(lid, SIDE_FRONT, 2 - texPos, newKeyTex);
+				}
+
+				if (stag > 0)
+				{
+				}
+
+				Thing_SpawnNoFog(tid, keyspawntype, 0, newtid);
+				Thing_Remove(tid);
+				Thing_ChangeTID(newtid, tid);
+			}
+		}
+	}
+}
 
 // deep water 3D floor definitions
 
@@ -494,8 +583,8 @@ script 210 (int i, int wtag, int wtid)
 	if ((i >= 0) && (i < deepWaterN) && (wtag > 0) && (wtid > 0))
     if (!deepWaterStats[i][1])
     {
-        script210_wtag = wtag;
-        script210_wtid = wtid;
+        script210_tags[0] = wtag;
+        script210_tags[1] = wtid;
 
         deepWaterStats[i][1]=true;
         ACS_NamedExecute("tiszaszaki_deepwater_do_splash", 0, i,wtag,wtid);
@@ -573,8 +662,8 @@ script 212 (int i, int tid, int active) // in both ways
 {
 	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
 	{
-		tiszaszaki_dw_act_below_surface = true;
-		tiszaszaki_dw_act_above_surface = true;
+		tiszaszaki_dw_act_surface[0] = true;
+		tiszaszaki_dw_act_surface[1] = true;
 
 		while (!deepWaterStats[i][1]) Delay(1);
 		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
@@ -585,8 +674,8 @@ script 213 (int i, int tid, int active) // downward only
 {
 	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
 	{
-		tiszaszaki_dw_act_below_surface = true;
-		tiszaszaki_dw_act_above_surface = false;
+		tiszaszaki_dw_act_surface[0] = true;
+		tiszaszaki_dw_act_surface[1] = false;
 
 		while (!deepWaterStats[i][1]) Delay(1);
 		ACS_NamedExecute("tiszaszaki_deepwater_do_thing_activation", 0, i,tid,active);
@@ -597,8 +686,8 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 {
 	if ((i >= 0) && (i < deepWaterN) && (tid > 0))
 	{
-		int wtag=script210_wtag;
-		int wtid=script210_wtid;
+		int wtag=script210_tags[0];
+		int wtid=script210_tags[1];
 
 		bool active=false;
 		if (active_i != 0) active=true;
@@ -615,7 +704,7 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 
 			checkVal = tiszaszaki_deepwater_check(0, wtag, wtid, deepWaterStats[i][2], log_check);
 
-			if (tiszaszaki_dw_act_below_surface && (checkVal < 0))
+			if (tiszaszaki_dw_act_surface[0] && (checkVal < 0))
 			{
 				if (!activated && active)
 				{
@@ -630,7 +719,7 @@ script "tiszaszaki_deepwater_do_thing_activation" (int i, int tid, int active_i)
 					SetActorProperty(tid, APROP_Dormant, true);
 				}
 			}
-			if (tiszaszaki_dw_act_above_surface && (checkVal > 0))
+			if (tiszaszaki_dw_act_surface[1] && (checkVal > 0))
 			{
 				if (activated && active)
 				{
@@ -1437,6 +1526,15 @@ script "tiszaszaki_common_init" OPEN
 		bonus_stage_state = NOT_A_BONUS_STAGE;
 
 		endofact = 0;
+
+		/*
+		if (story_lev_num == 16)
+			apply_keyscramble_from_stage(15);
+
+		init_keyscramble_per_stage();
+
+		apply_keyscramble_from_stage(story_lev_num);
+		*/
 
 		do_tiszaszaki_check_boss_prefs = true;
 		ACS_NamedExecute("tiszaszaki_common_set_boss_prefs", 0, 0,0,0);
