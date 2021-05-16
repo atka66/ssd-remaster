@@ -99,8 +99,8 @@ int boss_target_count_borders[15][2]={
 	{4, 64}, // zone  3
 	{4, 64}, // zone  4
 	{4, 64}, // zone  5
-	{8,  8}, // zone  6
-	{8,  8}, // zone  7
+	{4,  8}, // zone  6
+	{4,  8}, // zone  7
 	{2,  8}, // zone  8
 	{8,  8}, // zone  9
 	{4,  8}, // zone 10
@@ -191,14 +191,14 @@ int tsz_liquid_3D_floors_chars[6][7][4]=
 		{{0,0,0,0}, {26,20,0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26,  0, 0,0}}, // NUKAGE
 		{{0,0,0,0}, {14, 0,0,0}, {14,20,25,0}, {14,30, 0,0}, {14,30,15,0}, {14,40,10,0}, {14, 50,10,0}}  // LAVA
 	};
-int tsz_liquid_3D_floors_visual[6][7]=
-	{ // {r,g,b,desat,   r_fade,g_fade,b_fade}
-		{ 32, 64,192,  0,     0,  0,  0}, // FWATER
-		{128,128,128,128,   128,128,128}, // GWATER
-		{244,164,104, 64,    64, 64, 64}, // SLUDGE
-		{192, 64, 32, 64,     0,  0,  0}, // BLOOD
-		{  0,  0,  0,  0,     0,  0,  0}, // NUKAGE
-		{255,128,  0,128,   255,128, 32}  // LAVA
+int tsz_liquid_3D_floors_visual[6][8]=
+	{ // {r,g,b,desat,   r_fade,g_fade,b_fade,   viscosity (friction for liquids)}
+		{ 32, 64,192,  0,     0,  0,  0,   100}, // FWATER
+		{128,128,128,128,   128,128,128,   100}, // GWATER
+		{244,164,104, 64,    64, 64, 64,   100}, // SLUDGE
+		{192, 64, 32, 64,     0,  0,  0,   100}, // BLOOD
+		{  0,  0,  0,  0,     0,  0,  0,   100}, // NUKAGE
+		{255,128,  0,128,   255,128, 32,    75}  // LAVA
 	};
 
 int tiszaszaki_dw_chk_water_id;
@@ -405,19 +405,21 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 	if ((liquid_type >= TSZ_LIQUID_3D_TYPE_FWATER) && (liquid_type <= TSZ_LIQUID_3D_TYPE_LAVA))
 	if ((liquid_damage >= TSZ_LIQUID_3D_NO_DAMAGE) && (liquid_damage <= TSZ_LIQUID_3D_DAMAGE_EXTREME))
 	{
-		int r     =tsz_liquid_3D_floors_visual[liquid_type][0];
-		int g     =tsz_liquid_3D_floors_visual[liquid_type][1];
-		int b     =tsz_liquid_3D_floors_visual[liquid_type][2];
-		int desat =tsz_liquid_3D_floors_visual[liquid_type][3];
+		int r     =   tsz_liquid_3D_floors_visual[liquid_type][0];
+		int g     =   tsz_liquid_3D_floors_visual[liquid_type][1];
+		int b     =   tsz_liquid_3D_floors_visual[liquid_type][2];
+		int desat =   tsz_liquid_3D_floors_visual[liquid_type][3];
 
-		int r_fade=tsz_liquid_3D_floors_visual[liquid_type][4];
-		int g_fade=tsz_liquid_3D_floors_visual[liquid_type][5];
-		int b_fade=tsz_liquid_3D_floors_visual[liquid_type][6];
+		int r_fade=   tsz_liquid_3D_floors_visual[liquid_type][4];
+		int g_fade=   tsz_liquid_3D_floors_visual[liquid_type][5];
+		int b_fade=   tsz_liquid_3D_floors_visual[liquid_type][6];
 
-		int  damage_mod     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][0];
-		int  damage_amount  =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][1];
-		int  damage_interval=tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][2];
-		int  leak_ratio     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][4];
+		int viscosity=tsz_liquid_3D_floors_visual[liquid_type][7];
+
+		int damage_mod     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][0];
+		int damage_amount  =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][1];
+		int damage_interval=tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][2];
+		int leak_ratio     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][4];
 
 		if ((r >= 0) && (r <= 255))
 		if ((g >= 0) && (g <= 255))
@@ -468,6 +470,21 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 			if (tag4 > 0)
 				Sector_SetDamage(tag4, damage_amount, damage_mod, damage_interval, leak_ratio);
 		}
+	}
+
+	if ((viscosity >= 0) && (viscosity != 100))
+	{
+		if (tag1 > 0)
+			Sector_SetFriction(tag1, viscosity);
+
+		if (tag2 > 0)
+			Sector_SetFriction(tag2, viscosity);
+
+		if (tag3 > 0)
+			Sector_SetFriction(tag3, viscosity);
+
+		if (tag4 > 0)
+			Sector_SetFriction(tag4, viscosity);
 	}
 }
 
