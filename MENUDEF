@@ -2,10 +2,28 @@ OptionMenu "SonicRemasterSettings"
 {
 	Title "Super Sonic Doom - Remaster Settings"
 
+	StaticText "Story settings (updated real-time)"
+	StaticText ""
+
 	Option "Custom player name replaces DamaGe", "ssdremaster_custom_nametag", "OnOff"
-	Option "Show boss target hit on HUD", "ssdremaster_show_boss_target_hud", "OnOff"
-	Option "Show monster-based boss battle status on HUD", "ssdremaster_show_monster_count_hud", "OnOff"
+
+	StaticText ""
+	StaticText ""
+
+	StaticText "HUD battle settings (updated real-time)"
+	StaticText ""
+
+	Option "Show target-based boss hit count on HUD", "ssdremaster_show_boss_target_hud", "OnOff"
+	Option "Show monster-based boss battle count on HUD", "ssdremaster_show_monster_count_hud", "OnOff"
 	Option "Show normal (not Seven Deadly Sinner) boss health on HUD", "ssdremaster_show_normal_boss_health", "OnOff"
+
+	StaticText ""
+	StaticText ""
+
+	StaticText "[WIP] KeyScramble Settings (updated when level starts)"
+	StaticText ""
+
+	Option "Enable KeyScramble feature", "ssdremaster_enable_keyscramble", "OnOff"
 }
 
 AddListMenu "MainMenu" before "OptionsMenu"
