@@ -270,10 +270,22 @@ int keyscramble_defs_per_stage[28][6][8]=
 	{
 	// stagedefs: {redkey_defs,bluekey_defs,yellowkey_defs, purplekey_defs,greenkey_defs,orangekey_defs}, for each stage
 	// keydefs: {lid,texPos,keyTexType, tid, stag, trigger_lid,trigger_acs,trigger_N}, for each key
-		{{0,0,0, 0, 0, 0,0,0},{3,0,0, 29, 0, 51,11,1},{0,0,0, 0, 0, 0,0,0}, {5,0,0, 48, 0, 53,13,1},{4,0,0, 30, 0, 52,12,1},{6,0,0, 49, 0, 54,14,1}}, // stage  1
-		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0}}, // stage  2
-		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0}}, // stage  3
-		{{0,0,0, 0, 0, 0,0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0, 0, 0, 0,0,0}, {0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0},{0,0,0,  0, 0,  0, 0,0}}, // stage  4
+		{
+			{  0,0,0,   0, 0,   0, 0,0},{3,0,0, 29, 0, 51,11,1},{  0,0,0,   0, 0,   0, 0,0},
+			{  5,0,0,  48, 0,  53,13,1},{4,0,0, 30, 0, 52,12,1},{  6,0,0,  49, 0,  54,14,1}
+		}, // stage  1
+		{
+			{111,0,0, 112, 0, 113, 8,1},{0,0,0,  0, 0,  0, 0,0},{112,0,0, 113, 0, 114,19,6},
+			{  0,0,0,   0, 0,   0, 0,0},{0,0,0,  0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+		}, // stage  2
+		{
+			{  0,0,0,   0, 0,   0, 0,0},{0,0,0,  0, 0,  0, 0,0},{  2,0,0,  68, 0,   8, 6,1},
+			{  0,0,0,   0, 0,   0, 0,0},{1,2,0, 67, 0,  4,10,4},{  3,0,0,  69, 0,  13,17,3}
+		}, // stage  3
+		{
+			{  0,0,0,   0, 0,   0, 0,0},{0,0,0,  0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
+			{  0,0,0,   0, 0,   0, 0,0},{0,0,0,  0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+		}, // stage  4
 	};
 
 // Icon of Sin related definitions
@@ -321,17 +333,47 @@ int monsters_battle_state;
 #libdefine MONSTERS_BATTLE_FINALE 4
 #libdefine MONSTERS_BATTLE_UNAVAILABLE -1
 
+// random function
+
+function int tiszaszaki_RandomBoost(int low,int high, int min_n,int max_n)
+{
+	int res=0;
+
+	if ((low <= high) && (min_n > 0) && (min_n <= max_n))
+	{
+		res = low;
+
+		if (low < high)
+		{
+			int i,n=min_n;
+
+			if (min_n < max_n) n = Random(min_n, max_n);
+
+			for (i=0;i<n;i++)
+				res = Random(low, high);
+		}
+	}
+
+	return res;
+}
+
 // 'key scramble' functions
 
 function void init_keyscramble_for_stage(int stagenum)
 {
 	int ssdremaster_allkeys_N=6;
+	int keyscramble_samples[6];
 
 	if ((stagenum >= 1) && (stagenum <= 30))
 	{
-		int i,n;
+		int i,n, j,m;
 
 		n = ssdremaster_allkeys_N;
+
+		m = n;
+
+		for (i=0;i<n;i++)
+			keyscramble_samples[i] = i;
 
 		for (i=0;i<n;i++)
 		{
@@ -347,12 +389,25 @@ function void init_keyscramble_for_stage(int stagenum)
 			int trigger_N=  keyscramble_defs_per_stage[stagenum-1][i][7];
 
 			if (tid > 0)
-			if (((lid > 0) && (texPos >= 0) && (texPos <= 2) && (keyTexType >= 0) && (keyTexType <= 1)) || (stag > 0))
-			if ((trigger_lid > 0) && (trigger_acs > 0) && (trigger_N > 0))
+			if (((lid >= 0) && (texPos >= 0) && (texPos <= 2) && (keyTexType >= 0) && (keyTexType <= 1)) && (stag >= 0))
+			if ((trigger_lid >= 0) && (trigger_acs >= 0) && (trigger_N >= 0))
 			{
-				int res=Random(0,ssdremaster_allkeys_N-2);
+				int ind,res;
 
-				if (res >= i) res++;
+				do
+				{
+					ind = tiszaszaki_RandomBoost(0,m-1, 8,16);
+					res = keyscramble_samples[ind];
+				}
+				while (res == i);
+
+				if (ind < m-1)
+					for (j=ind;j<m-1;j++)
+						keyscramble_samples[ind] = keyscramble_samples[ind+1];
+				else
+					keyscramble_samples[ind] = 0;
+
+				m--;
 
 				keyscramble_random_results[i] = res + 1;
 			}
@@ -399,7 +454,7 @@ function void apply_keyscramble_for_stage(int stagenum)
 					SetLineTexture(lid, SIDE_FRONT, 2 - texPos, newKeyTex);
 				}
 
-				if (stag > 0)
+				if (stag > 0) // WIP
 				{
 				}
 
@@ -407,10 +462,13 @@ function void apply_keyscramble_for_stage(int stagenum)
 				Thing_Remove(tid);
 				Thing_ChangeTID(newtid, tid);
 
-				m = trigger_N;
+				if ((trigger_lid > 0) && (trigger_acs > 0) && (trigger_N > 0))
+				{
+					m = trigger_N;
 
-				for (j=0;j<m;j++)
-					SetLineSpecial(trigger_lid + j, 83, trigger_acs,0,j,0,random_res);
+					for (j=0;j<m;j++)
+						SetLineSpecial(trigger_lid + j, 83, trigger_acs,0,j,0,random_res);
+				}
 			}
 		}
 	}
@@ -1434,7 +1492,7 @@ function str StrTrimmed(str s)
 	return res;
 }
 
-// nametag functions
+// nametag function and script (with CVar setting)
 
 function str tiszaszaki_common_get_nametag (void)
 {
@@ -1479,6 +1537,13 @@ script "tiszaszaki_common_set_nametag" (void)
 	} while (tiszaszaki_loop_nametag_change);
 }
 
+// other CVar settings
+
+function void tiszaszaki_cvar_keyscramble(void)
+{
+	tiszaszaki_enable_keyscramble = (GetCVar("ssdremaster_enable_keyscramble"));
+}
+
 script "tiszaszaki_common_set_boss_prefs" (void)
 {
 	do
@@ -1518,7 +1583,8 @@ script "tiszaszaki_common_init" OPEN
 
 	int level_num_temp=tiszaszaki_levelinfo();
 
-	tiszaszaki_enable_keyscramble = false;
+	//tiszaszaki_enable_keyscramble = false;
+	tiszaszaki_cvar_keyscramble();
 
 	tiszaszaki_dw_chk_water_id = -1;
 
@@ -1566,6 +1632,10 @@ script "tiszaszaki_common_init" OPEN
 
 		if (tiszaszaki_enable_keyscramble)
 		{
+			if (story_lev_num ==  3)
+				apply_keyscramble_for_stage( 2);
+			if (story_lev_num == 14)
+				apply_keyscramble_for_stage(13);
 			if (story_lev_num == 16)
 				apply_keyscramble_for_stage(15);
 

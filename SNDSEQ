@@ -144,6 +144,12 @@ end
         stopsound       q1lift2b
 end
 
+:Door5_Platform(Wood)
+        platform        7
+        playrepeat      q1door2a
+        stopsound       q1lift2b
+end
+
 :Silence!
         platform        0
         playuntildone   silent
