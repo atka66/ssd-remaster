@@ -192,14 +192,14 @@ int tsz_liquid_3D_floors_chars[6][7][4]=
 		{{0,0,0,0}, {26,20,0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26, 0, 0,0}, {26,  0, 0,0}}, // NUKAGE
 		{{0,0,0,0}, {14, 0,0,0}, {14,20,25,0}, {14,30, 0,0}, {14,30,15,0}, {14,40,10,0}, {14, 50,10,0}}  // LAVA
 	};
-int tsz_liquid_3D_floors_visual[6][8]=
-	{ // {r,g,b,desat,   r_fade,g_fade,b_fade,   viscosity (friction for liquids)}
-		{ 32, 64,192,  0,     0,  0,  0,   100}, // FWATER
-		{128,128,128,128,   128,128,128,   100}, // GWATER
-		{244,164,104, 64,    64, 64, 64,   100}, // SLUDGE
-		{192, 64, 32, 64,     0,  0,  0,   100}, // BLOOD
-		{  0,  0,  0,  0,     0,  0,  0,   100}, // NUKAGE
-		{255,128,  0,128,   255,128, 32,    75}  // LAVA
+int tsz_liquid_3D_floors_visual[6][9]=
+	{ // {r,g,b,desat,   r_fade,g_fade,b_fade,   viscosity (friction for liquids),sink_speed (gravity)}
+		{ 32, 64,192,  0,     0,  0,  0,   100,100}, // FWATER
+		{128,128,128,128,   128,128,128,   100,100}, // GWATER
+		{244,164,104, 64,    64, 64, 64,    85, 75}, // SLUDGE
+		{192, 64, 32, 64,     0,  0,  0,   100,100}, // BLOOD
+		{128,192, 64,  0,    64,128, 16,    90,125}, // NUKAGE
+		{255,128,  0,128,   255,128, 32,    75, 50}  // LAVA
 	};
 
 int tiszaszaki_dw_chk_water_id;
@@ -445,6 +445,8 @@ function void init_keyscramble_for_stage(int stagenum)
 			Log(s:temp);
 		}
 
+		n = ssdremaster_allkeys_N;
+
 		for (i=0;i<n;i++)
 		{
 			int lid=        keyscramble_defs_per_stage[stagenum-1][i][0];
@@ -485,6 +487,16 @@ function void init_keyscramble_for_stage(int stagenum)
 
 				m--;
 
+				if (res != i)
+				{
+					keyscramble_random_results[i] = res + 1;
+					if (keyscramble_debug) Log(d:i,s:" -> ",d:res);
+				}
+				else
+				{
+					keyscramble_random_results[i] = -1;
+				}
+
 				if (keyscramble_debug && (m > 0))
 				{
 					temp = "";
@@ -493,13 +505,19 @@ function void init_keyscramble_for_stage(int stagenum)
 
 					Log(s:temp);
 				}
-
-				if (res != i)
-				{
-					keyscramble_random_results[i] = res + 1;
-					if (keyscramble_debug) Log(d:i,s:" -> ",d:keyscramble_random_results[i]);
-				}
 			}
+		}
+
+		if (keyscramble_debug)
+		{
+			temp = "result: ";
+
+			n = ssdremaster_allkeys_N;
+
+			for (i=0;i<n;i++)
+				temp = StrParam(s:temp,d:keyscramble_random_results[i],s:";");
+
+			Log(s:temp);
 		}
 	}
 }
@@ -773,16 +791,17 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 	if ((liquid_type >= TSZ_LIQUID_3D_TYPE_FWATER) && (liquid_type <= TSZ_LIQUID_3D_TYPE_LAVA))
 	if ((liquid_damage >= TSZ_LIQUID_3D_NO_DAMAGE) && (liquid_damage <= TSZ_LIQUID_3D_DAMAGE_EXTREME))
 	{
-		int r     =   tsz_liquid_3D_floors_visual[liquid_type][0];
-		int g     =   tsz_liquid_3D_floors_visual[liquid_type][1];
-		int b     =   tsz_liquid_3D_floors_visual[liquid_type][2];
-		int desat =   tsz_liquid_3D_floors_visual[liquid_type][3];
+		int r=         tsz_liquid_3D_floors_visual[liquid_type][0];
+		int g=         tsz_liquid_3D_floors_visual[liquid_type][1];
+		int b=         tsz_liquid_3D_floors_visual[liquid_type][2];
+		int desat=     tsz_liquid_3D_floors_visual[liquid_type][3];
 
-		int r_fade=   tsz_liquid_3D_floors_visual[liquid_type][4];
-		int g_fade=   tsz_liquid_3D_floors_visual[liquid_type][5];
-		int b_fade=   tsz_liquid_3D_floors_visual[liquid_type][6];
+		int r_fade=    tsz_liquid_3D_floors_visual[liquid_type][4];
+		int g_fade=    tsz_liquid_3D_floors_visual[liquid_type][5];
+		int b_fade=    tsz_liquid_3D_floors_visual[liquid_type][6];
 
-		int viscosity=tsz_liquid_3D_floors_visual[liquid_type][7];
+		int viscosity= tsz_liquid_3D_floors_visual[liquid_type][7];
+		int sink_speed=tsz_liquid_3D_floors_visual[liquid_type][8];
 
 		int damage_mod     =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][0];
 		int damage_amount  =tsz_liquid_3D_floors_chars[liquid_type][liquid_damage][1];
@@ -840,7 +859,7 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 		}
 	}
 
-	if ((viscosity >= 0) && (viscosity != 100))
+	if ((viscosity > 0) && (viscosity != 100))
 	{
 		if (tag1 > 0)
 			Sector_SetFriction(tag1, viscosity);
@@ -853,6 +872,24 @@ function void tiszaszaki_3D_liquid_effects(int tag1, int tag2, int tag3, int tag
 
 		if (tag4 > 0)
 			Sector_SetFriction(tag4, viscosity);
+	}
+
+	if ((sink_speed > 0) && (sink_speed != 100))
+	{
+		int sink_speed_i=sink_speed / 100;
+		int sink_speed_f=sink_speed % 100;
+
+		if (tag1 > 0)
+			Sector_SetGravity(tag1, sink_speed_i, sink_speed_f);
+
+		if (tag2 > 0)
+			Sector_SetGravity(tag2, sink_speed_i, sink_speed_f);
+
+		if (tag3 > 0)
+			Sector_SetGravity(tag3, sink_speed_i, sink_speed_f);
+
+		if (tag4 > 0)
+			Sector_SetGravity(tag4, sink_speed_i, sink_speed_f);
 	}
 }
 
