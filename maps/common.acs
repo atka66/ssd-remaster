@@ -418,6 +418,8 @@ function str tiszaszaki_queryKeyName(int lock_id, bool capital)
 
 function void init_keyscramble_for_stage(int stagenum)
 {
+	bool keyscramble_debug=true;
+
 	int ssdremaster_allkeys_N=6;
 	int keyscramble_samples[6];
 
@@ -434,11 +436,14 @@ function void init_keyscramble_for_stage(int stagenum)
 		for (i=0;i<n;i++)
 			keyscramble_samples[i] = i;
 
-		temp = "";
-		for (j=0;j<m;j++)
-			temp = StrParam(s:temp,d:keyscramble_samples[j],s:";");
+		if (keyscramble_debug)
+		{
+			temp = "";
+			for (j=0;j<m;j++)
+				temp = StrParam(s:temp,d:keyscramble_samples[j],s:";");
 
-		Log(s:temp);
+			Log(s:temp);
+		}
 
 		for (i=0;i<n;i++)
 		{
@@ -480,7 +485,7 @@ function void init_keyscramble_for_stage(int stagenum)
 
 				m--;
 
-				if (m > 0)
+				if (keyscramble_debug && (m > 0))
 				{
 					temp = "";
 					for (j=0;j<m;j++)
@@ -492,7 +497,7 @@ function void init_keyscramble_for_stage(int stagenum)
 				if (res != i)
 				{
 					keyscramble_random_results[i] = res + 1;
-					Log(d:i,s:" -> ",d:keyscramble_random_results[i]);
+					if (keyscramble_debug) Log(d:i,s:" -> ",d:keyscramble_random_results[i]);
 				}
 			}
 		}
@@ -552,6 +557,208 @@ function void apply_keyscramble_for_stage(int stagenum)
 
 					for (j=0;j<m;j++)
 						SetLineSpecial(trigger_lid + j, 83, trigger_acs,0,j,0,random_res);
+				}
+			}
+		}
+	}
+}
+
+function void keyscramble_translation(int light_tid1, int light_translate1, int light_tid2, int light_translate2, int light_tid3, int light_translate3,
+	int light_tid4, int light_translate4, int light_tid5, int light_translate5, int light_tid6, int light_translate6)
+{
+	if (tiszaszaki_enable_keyscramble)
+	{
+		int ssdremaster_allkeys_N=6;
+		bool keyscramble_debug=false;
+
+		str keyscramble_light_sources[6];
+		int i,n;
+
+		switch (story_lev_num)
+		{
+			case 4:
+			{
+				keyscramble_light_sources[0] = "ColumnRed";
+				keyscramble_light_sources[1] = "ColumnBlue";
+				keyscramble_light_sources[2] = "ColumnYellow";
+				keyscramble_light_sources[3] = "ColumnPurple";
+				keyscramble_light_sources[4] = "ColumnGreen";
+				keyscramble_light_sources[5] = "ColumnOrange";
+			} break;
+			default:
+			{
+				n = ssdremaster_allkeys_N;
+				for (i=0;i<n;i++)
+					keyscramble_light_sources[i] = "";
+			} break;
+		}
+
+		if ((light_translate1 >= -1) && (light_translate2 >= -1) && (light_translate3 >= -1))
+		if ((light_translate4 >= -1) && (light_translate5 >= -1) && (light_translate6 >= -1))
+		{
+			int random_res=0;
+			int tid_off_for_swap=10000, newtid;
+			str light_class="";
+
+			random_res = keyscramble_random_results[0];
+			if ((light_tid1 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid1) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #1 -> ",s:light_class);
+					newtid = light_tid1 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid1, newtid, 0);
+					Thing_Remove(light_tid1);
+					Thing_ChangeTID(newtid, light_tid1);
+				}
+
+				switch (random_res)
+				{
+					case 1: break;
+					case 2: Thing_SetTranslation(light_tid1, light_translate2); break;
+					case 3: Thing_SetTranslation(light_tid1, light_translate3); break;
+					case 4: Thing_SetTranslation(light_tid1, light_translate4); break;
+					case 5: Thing_SetTranslation(light_tid1, light_translate5); break;
+					case 6: Thing_SetTranslation(light_tid1, light_translate6); break;
+					default: break;
+				}
+			}
+
+			random_res = keyscramble_random_results[1];
+			if ((light_tid2 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid2) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #2 -> ",s:light_class);
+					newtid = light_tid2 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid2, newtid, 0);
+					Thing_Remove(light_tid2);
+					Thing_ChangeTID(newtid, light_tid2);
+				}
+
+				switch (random_res)
+				{
+					case 1: Thing_SetTranslation(light_tid2, light_translate1); break;
+					case 2: break;
+					case 3: Thing_SetTranslation(light_tid2, light_translate3); break;
+					case 4: Thing_SetTranslation(light_tid2, light_translate4); break;
+					case 5: Thing_SetTranslation(light_tid2, light_translate5); break;
+					case 6: Thing_SetTranslation(light_tid2, light_translate6); break;
+					default: break;
+				}
+			}
+
+			random_res = keyscramble_random_results[2];
+			if ((light_tid3 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid3) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #3 -> ",s:light_class);
+					newtid = light_tid3 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid3, newtid, 0);
+					Thing_Remove(light_tid3);
+					Thing_ChangeTID(newtid, light_tid3);
+				}
+
+				switch (random_res)
+				{
+					case 1: Thing_SetTranslation(light_tid3, light_translate1); break;
+					case 2: Thing_SetTranslation(light_tid3, light_translate2); break;
+					case 3: break;
+					case 4: Thing_SetTranslation(light_tid3, light_translate4); break;
+					case 5: Thing_SetTranslation(light_tid3, light_translate5); break;
+					case 6: Thing_SetTranslation(light_tid3, light_translate6); break;
+					default: break;
+				}
+			}
+
+			random_res = keyscramble_random_results[3];
+			if ((light_tid4 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid4) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #4 -> ",s:light_class);
+					newtid = light_tid4 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid4, newtid, 0);
+					Thing_Remove(light_tid4);
+					Thing_ChangeTID(newtid, light_tid4);
+				}
+
+				switch (random_res)
+				{
+					case 1: Thing_SetTranslation(light_tid4, light_translate1); break;
+					case 2: Thing_SetTranslation(light_tid4, light_translate2); break;
+					case 3: Thing_SetTranslation(light_tid4, light_translate3); break;
+					case 4: break;
+					case 5: Thing_SetTranslation(light_tid4, light_translate5); break;
+					case 6: Thing_SetTranslation(light_tid4, light_translate6); break;
+					default: break;
+				}
+			}
+
+			random_res = keyscramble_random_results[4];
+			if ((light_tid5 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid5) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #5 -> ",s:light_class);
+					newtid = light_tid5 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid5, newtid, 0);
+					Thing_Remove(light_tid5);
+					Thing_ChangeTID(newtid, light_tid5);
+				}
+
+				switch (random_res)
+				{
+					case 1: Thing_SetTranslation(light_tid5, light_translate1); break;
+					case 2: Thing_SetTranslation(light_tid5, light_translate2); break;
+					case 3: Thing_SetTranslation(light_tid5, light_translate3); break;
+					case 4: Thing_SetTranslation(light_tid5, light_translate4); break;
+					case 5: break;
+					case 6: Thing_SetTranslation(light_tid5, light_translate6); break;
+					default: break;
+				}
+			}
+
+			random_res = keyscramble_random_results[5];
+			if ((light_tid6 > 0) && (random_res >= 1))
+			{
+				light_class = keyscramble_light_sources[random_res-1];
+
+				if ((light_class != "") && (ThingCount(0, light_tid6) > 0))
+				{
+					if (keyscramble_debug) Log(s:"key #6 -> ",s:light_class);
+					newtid = light_tid6 + tid_off_for_swap;
+
+					SpawnSpotForced(light_class, light_tid6, newtid, 0);
+					Thing_Remove(light_tid6);
+					Thing_ChangeTID(newtid, light_tid6);
+				}
+
+				switch (random_res)
+				{
+					case 1: Thing_SetTranslation(light_tid6, light_translate1); break;
+					case 2: Thing_SetTranslation(light_tid6, light_translate2); break;
+					case 3: Thing_SetTranslation(light_tid6, light_translate3); break;
+					case 4: Thing_SetTranslation(light_tid6, light_translate4); break;
+					case 5: Thing_SetTranslation(light_tid6, light_translate5); break;
+					case 6: break;
+					default: break;
 				}
 			}
 		}
@@ -1714,7 +1921,7 @@ script "tiszaszaki_common_init" OPEN
 		endcounter = 0;
 
 		// disable 'key scramble' feature in levels where fails (temporarily!)
-		if (story_lev_num == 4)
+		if (true && (story_lev_num == 4))
 			tiszaszaki_enable_keyscramble = false;
 
 		if (tiszaszaki_enable_keyscramble)
