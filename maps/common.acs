@@ -418,7 +418,7 @@ function str tiszaszaki_queryKeyName(int lock_id, bool capital)
 
 function void init_keyscramble_for_stage(int stagenum)
 {
-	bool keyscramble_debug=true;
+	bool keyscramble_debug=false;
 
 	int ssdremaster_allkeys_N=6;
 	int keyscramble_samples[6];
@@ -487,15 +487,8 @@ function void init_keyscramble_for_stage(int stagenum)
 
 				m--;
 
-				if (res != i)
-				{
-					keyscramble_random_results[i] = res + 1;
-					if (keyscramble_debug) Log(d:i,s:" -> ",d:res);
-				}
-				else
-				{
-					keyscramble_random_results[i] = -1;
-				}
+				keyscramble_random_results[i] = res + 1;
+				if (keyscramble_debug) Log(d:i,s:" -> ",d:res);
 
 				if (keyscramble_debug && (m > 0))
 				{
@@ -563,6 +556,20 @@ function void apply_keyscramble_for_stage(int stagenum)
 
 				if (stag > 0) // WIP
 				{
+					int r,g,b;
+
+					switch (random_res)
+					{
+						case 1: { r = 255; g =   0; b =   0; } break; // red key
+						case 2: { r =   0; g =   0; b = 255; } break; // blue key
+						case 3: { r = 255; g = 255; b =   0; } break; // yellow key
+						case 4: { r = 255; g =   0; b = 255; } break; // purple key
+						case 5: { r =   0; g = 255; b =   0; } break; // green key
+						case 6: { r = 255; g = 128; b =   0; } break; // orange key
+						default: break;
+					}
+
+					Sector_SetColor(stag, r,g,b);
 				}
 
 				Thing_SpawnNoFog(tid, keyspawntype, 0, newtid);
@@ -1958,17 +1965,15 @@ script "tiszaszaki_common_init" OPEN
 		endcounter = 0;
 
 		// disable 'key scramble' feature in levels where fails (temporarily!)
-		if (true && (story_lev_num == 4))
+		if (false && (story_lev_num == 4))
 			tiszaszaki_enable_keyscramble = false;
 
 		if (tiszaszaki_enable_keyscramble)
 		{
-			if (story_lev_num ==  3)
-				apply_keyscramble_for_stage( 2);
-			if (story_lev_num == 14)
-				apply_keyscramble_for_stage(13);
-			if (story_lev_num == 16)
-				apply_keyscramble_for_stage(15);
+			if (story_lev_num ==  3) apply_keyscramble_for_stage( 2);
+			if (story_lev_num ==  9) apply_keyscramble_for_stage( 8);
+			if (story_lev_num == 14) apply_keyscramble_for_stage(13);
+			if (story_lev_num == 16) apply_keyscramble_for_stage(15);
 
 			init_keyscramble_for_stage(story_lev_num);
 
