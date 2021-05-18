@@ -518,12 +518,20 @@ function void init_keyscramble_for_stage(int stagenum)
 function void apply_keyscramble_for_stage(int stagenum)
 {
 	int ssdremaster_allkeys_N=6;
+	str ssdremaster_allkeys_str[6];
 
 	int tid_off_for_swap=10000;
 
 	if ((stagenum >= 1) && (stagenum <= 30))
 	{
 		int i,n, j,m;
+
+		ssdremaster_allkeys_str[0]="RedCard2";
+		ssdremaster_allkeys_str[1]="BlueCard2";
+		ssdremaster_allkeys_str[2]="YellowCard2";
+		ssdremaster_allkeys_str[3]="PurpleCard";
+		ssdremaster_allkeys_str[4]="GreenCard";
+		ssdremaster_allkeys_str[5]="OrangeCard";
 
 		n = ssdremaster_allkeys_N;
 
@@ -543,7 +551,7 @@ function void apply_keyscramble_for_stage(int stagenum)
 				int trigger_acs=keyscramble_defs_per_stage[stagenum-1][i][6];
 				int trigger_N=  keyscramble_defs_per_stage[stagenum-1][i][7];
 
-				int keyspawntype=ssdremaster_allkeys[random_res-1];
+				str keyspawnclass=ssdremaster_allkeys_str[random_res-1];
 				int newtid=tid + tid_off_for_swap;
 
 				if (lid > 0)
@@ -572,7 +580,7 @@ function void apply_keyscramble_for_stage(int stagenum)
 					Sector_SetColor(stag, r,g,b);
 				}
 
-				Thing_SpawnNoFog(tid, keyspawntype, 0, newtid);
+				SpawnSpotForced(keyspawnclass, tid, newtid, 0);
 				Thing_Remove(tid);
 				Thing_ChangeTID(newtid, tid);
 
@@ -623,19 +631,22 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 		{
 			int random_res=0;
 			int tid_off_for_swap=10000, newtid;
-			str light_class="";
+			str light_class1="";
+			str light_class2="";
 
 			random_res = keyscramble_random_results[0];
 			if ((light_tid1 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[0];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid1) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid1) > 0) && CheckActorClass(light_tid1, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #1 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #1 -> ",s:light_class2);
 					newtid = light_tid1 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid1, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid1, newtid, 0);
 					Thing_Remove(light_tid1);
 					Thing_ChangeTID(newtid, light_tid1);
 				}
@@ -655,14 +666,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			random_res = keyscramble_random_results[1];
 			if ((light_tid2 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[1];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid2) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid2) > 0) && CheckActorClass(light_tid2, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #2 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #2 -> ",s:light_class2);
 					newtid = light_tid2 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid2, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid2, newtid, 0);
 					Thing_Remove(light_tid2);
 					Thing_ChangeTID(newtid, light_tid2);
 				}
@@ -682,14 +695,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			random_res = keyscramble_random_results[2];
 			if ((light_tid3 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[2];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid3) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid3) > 0) && CheckActorClass(light_tid3, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #3 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #3 -> ",s:light_class2);
 					newtid = light_tid3 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid3, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid3, newtid, 0);
 					Thing_Remove(light_tid3);
 					Thing_ChangeTID(newtid, light_tid3);
 				}
@@ -709,14 +724,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			random_res = keyscramble_random_results[3];
 			if ((light_tid4 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[3];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid4) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid4) > 0) && CheckActorClass(light_tid4, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #4 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #4 -> ",s:light_class2);
 					newtid = light_tid4 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid4, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid4, newtid, 0);
 					Thing_Remove(light_tid4);
 					Thing_ChangeTID(newtid, light_tid4);
 				}
@@ -736,14 +753,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			random_res = keyscramble_random_results[4];
 			if ((light_tid5 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[4];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid5) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid5) > 0) && CheckActorClass(light_tid5, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #5 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #5 -> ",s:light_class2);
 					newtid = light_tid5 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid5, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid5, newtid, 0);
 					Thing_Remove(light_tid5);
 					Thing_ChangeTID(newtid, light_tid5);
 				}
@@ -763,14 +782,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			random_res = keyscramble_random_results[5];
 			if ((light_tid6 > 0) && (random_res >= 1))
 			{
-				light_class = keyscramble_light_sources[random_res-1];
+				light_class1 = keyscramble_light_sources[5];
+				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class != "") && (ThingCount(0, light_tid6) > 0))
+				if ((light_class1 != "") && (light_class2 != ""))
+				if ((ThingCount(0, light_tid6) > 0) && CheckActorClass(light_tid6, light_class1))
 				{
-					if (keyscramble_debug) Log(s:"key #6 -> ",s:light_class);
+					if (keyscramble_debug) Log(s:"key #6 -> ",s:light_class2);
 					newtid = light_tid6 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class, light_tid6, newtid, 0);
+					SpawnSpotForced(light_class2, light_tid6, newtid, 0);
 					Thing_Remove(light_tid6);
 					Thing_ChangeTID(newtid, light_tid6);
 				}
@@ -2886,13 +2907,12 @@ script 250 (void)					// water splash
 activatorsound ("splash", 127);
 }
 
-str playerClassStr="DoomPlayer";
-
 script 251 (int arg0, int arg1)				// spring (horizontal)
 
 {
-str activatorClass=GetActorClass(0);
-bool b=true;//(activatorClass == playerClassStr);
+str playerClassStr="DoomPlayer";
+bool b=(false || checkActorClass(0, playerClassStr));
+
 if (b)
 {
 activatorsound ("spring", 127);
@@ -2903,8 +2923,9 @@ ThrustThing (arg1, arg0, 1);
 script 252 (int arg0, int arg1)				// spring (vertical)
 
 {
-str activatorClass=GetActorClass(0);
-bool b=true;//(activatorClass == playerClassStr);
+str playerClassStr="DoomPlayer";
+bool b=(false || checkActorClass(0, playerClassStr));
+
 if (b)
 {
 activatorsound ("spring", 127);
