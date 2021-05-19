@@ -3458,13 +3458,30 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 		if ((min_ring_n > 0) && (max_ring_n > 0) && (min_ring_n <= max_ring_n) && (ring_tid > 0))
 		{
 			int i,n=Random(min_ring_n,max_ring_n);
-			int ringdrop_hspeed=4;
-			int ringdrop_vspeed=32;
+			int ringdrop_speed=(32 << 16);
+			int ringdrop_pitch=FixedDiv(1 << 16,4 << 16);
 			int tid=0;
+
+			int ringdrop_hspeed, ringdrop_vspeed;
 
 			if (log_ring_spawn) Log(s:"[cheat] Ring spawning arguments: ",d:min_ring_n,s:",",d:max_ring_n,s:",",d:ring_tid);
 
 			tsz_spawn_dir = 0;
+
+			ringdrop_speed = 0; ringdrop_pitch = 0; // temporarily disable speed formulas below
+
+			if ((ringdrop_speed > 0) && (ringdrop_pitch >= 0))
+			{
+				ringdrop_hspeed = FixedMul(ringdrop_speed,cos(ringdrop_pitch)) >> 16;
+				ringdrop_vspeed = FixedMul(ringdrop_speed,sin(ringdrop_pitch)) >> 16;
+			}
+			else
+			{
+				ringdrop_hspeed = 4;
+				ringdrop_vspeed = 32;
+			}
+
+			if (log_ring_spawn) Log(s:"[cheat] Ring spawning physics: (",d:ringdrop_hspeed,s:",",d:ringdrop_vspeed,s:")");
 
 			for (i=0;i<n;i++)
 			{
