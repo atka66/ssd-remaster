@@ -517,6 +517,9 @@ function void init_keyscramble_for_stage(int stagenum)
 
 function void apply_keyscramble_for_stage(int stagenum)
 {
+	bool ssdremaster_keyscramble_locktex=(GetCVar("ssdremaster_keyscramble_allow_lock_textures") != 0);
+	bool ssdremaster_keyscramble_sectlit=(GetCVar("ssdremaster_keyscramble_allow_sector_light_effects") != 0);
+
 	int ssdremaster_allkeys_N=6;
 	str ssdremaster_allkeys_str[6];
 
@@ -554,7 +557,7 @@ function void apply_keyscramble_for_stage(int stagenum)
 				str keyspawnclass=ssdremaster_allkeys_str[random_res-1];
 				int newtid=tid + tid_off_for_swap;
 
-				if (lid > 0)
+				if (ssdremaster_keyscramble_locktex && (lid > 0))
 				{
 					//str oldKeyTex=keyscramble_wall_textures[i         ][keyTexType]; // used for checking real texture
 					str newKeyTex=keyscramble_wall_textures[random_res-1][keyTexType];
@@ -562,7 +565,7 @@ function void apply_keyscramble_for_stage(int stagenum)
 					SetLineTexture(lid, SIDE_FRONT, 2 - texPos, newKeyTex);
 				}
 
-				if (stag > 0) // WIP
+				if (ssdremaster_keyscramble_sectlit && (stag > 0)) // WIP
 				{
 					int r,g,b;
 
@@ -599,6 +602,9 @@ function void apply_keyscramble_for_stage(int stagenum)
 function void keyscramble_translation(int light_tid1, int light_translate1, int light_tid2, int light_translate2, int light_tid3, int light_translate3,
 	int light_tid4, int light_translate4, int light_tid5, int light_translate5, int light_tid6, int light_translate6)
 {
+	bool ssdremaster_keyscramble_actlite=(GetCVar("ssdremaster_keyscramble_allow_light_sources") != 0);
+	bool ssdremaster_keyscramble_actmisc=(GetCVar("ssdremaster_keyscramble_allow_other_obstacles") != 0);
+
 	if (ssdremaster_enable_keyscramble)
 	{
 		int ssdremaster_allkeys_N=6;
@@ -626,185 +632,72 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			} break;
 		}
 
+		if ((light_tid1 >= 0) && (light_tid2 >= 0) && (light_tid3 >= 0))
+		if ((light_tid4 >= 0) && (light_tid5 >= 0) && (light_tid6 >= 0))
 		if ((light_translate1 >= -1) && (light_translate2 >= -1) && (light_translate3 >= -1))
 		if ((light_translate4 >= -1) && (light_translate5 >= -1) && (light_translate6 >= -1))
 		{
-			int random_res=0;
-			int tid_off_for_swap=10000, newtid;
-			str light_class1="";
-			str light_class2="";
+			int tid_off_for_swap=10000;
+			bool is_light_source=true;
 
-			random_res = keyscramble_random_results[0];
-			if ((light_tid1 > 0) && (random_res >= 1))
+			n = ssdremaster_allkeys_N;
+			for (i=1;i<=n;i++)
 			{
-				light_class1 = keyscramble_light_sources[0];
+				int random_res=keyscramble_random_results[i-1];
+
+				int light_tid=0;
+				str light_class1, light_class2;
+
+				if ((random_res < 1) || (random_res > ssdremaster_allkeys_N)) continue;
+
+				switch (i)
+				{
+					case 1: light_tid = light_tid1; break;
+					case 2: light_tid = light_tid2; break;
+					case 3: light_tid = light_tid3; break;
+					case 4: light_tid = light_tid4; break;
+					case 5: light_tid = light_tid5; break;
+					case 6: light_tid = light_tid6; break;
+					default: break;
+				}
+
+				if ((i == random_res) || (light_tid <= 0)) continue;			
+
+				light_class1 = keyscramble_light_sources[i-1];
 				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid1) > 0) && CheckActorClass(light_tid1, light_class1))
+				if ((StrCmp(light_class1,"") == 0) || (StrCmp(light_class2,"") == 0)) continue;
+
+				is_light_source &= (CheckActorClass(light_tid, light_class1));
+
+				if ((is_light_source && ssdremaster_keyscramble_actlite && ThingCount(0, light_tid) > 0))
 				{
+					int newtid = light_tid + tid_off_for_swap;
+
 					if (keyscramble_debug) Log(s:"key #1 -> ",s:light_class2);
-					newtid = light_tid1 + tid_off_for_swap;
 
-					SpawnSpotForced(light_class2, light_tid1, newtid, 0);
-					Thing_Remove(light_tid1);
-					Thing_ChangeTID(newtid, light_tid1);
+					SpawnSpotForced(light_class2, light_tid, newtid, 0);
+					Thing_Remove(light_tid);
+					Thing_ChangeTID(newtid, light_tid);
 				}
-
-				switch (random_res)
+				
+				if ( (is_light_source && ssdremaster_keyscramble_actlite) ||
+					(!is_light_source && ssdremaster_keyscramble_actmisc) )
 				{
-					case 1: break;
-					case 2: Thing_SetTranslation(light_tid1, light_translate2); break;
-					case 3: Thing_SetTranslation(light_tid1, light_translate3); break;
-					case 4: Thing_SetTranslation(light_tid1, light_translate4); break;
-					case 5: Thing_SetTranslation(light_tid1, light_translate5); break;
-					case 6: Thing_SetTranslation(light_tid1, light_translate6); break;
-					default: break;
-				}
-			}
+					int light_translate=-1;
 
-			random_res = keyscramble_random_results[1];
-			if ((light_tid2 > 0) && (random_res >= 1))
-			{
-				light_class1 = keyscramble_light_sources[1];
-				light_class2 = keyscramble_light_sources[random_res-1];
+					switch (random_res)
+					{
+						case 1: light_translate = light_translate1; break;
+						case 2: light_translate = light_translate2; break;
+						case 3: light_translate = light_translate3; break;
+						case 4: light_translate = light_translate4; break;
+						case 5: light_translate = light_translate5; break;
+						case 6: light_translate = light_translate6; break;
+						default: break;
+					}
 
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid2) > 0) && CheckActorClass(light_tid2, light_class1))
-				{
-					if (keyscramble_debug) Log(s:"key #2 -> ",s:light_class2);
-					newtid = light_tid2 + tid_off_for_swap;
-
-					SpawnSpotForced(light_class2, light_tid2, newtid, 0);
-					Thing_Remove(light_tid2);
-					Thing_ChangeTID(newtid, light_tid2);
-				}
-
-				switch (random_res)
-				{
-					case 1: Thing_SetTranslation(light_tid2, light_translate1); break;
-					case 2: break;
-					case 3: Thing_SetTranslation(light_tid2, light_translate3); break;
-					case 4: Thing_SetTranslation(light_tid2, light_translate4); break;
-					case 5: Thing_SetTranslation(light_tid2, light_translate5); break;
-					case 6: Thing_SetTranslation(light_tid2, light_translate6); break;
-					default: break;
-				}
-			}
-
-			random_res = keyscramble_random_results[2];
-			if ((light_tid3 > 0) && (random_res >= 1))
-			{
-				light_class1 = keyscramble_light_sources[2];
-				light_class2 = keyscramble_light_sources[random_res-1];
-
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid3) > 0) && CheckActorClass(light_tid3, light_class1))
-				{
-					if (keyscramble_debug) Log(s:"key #3 -> ",s:light_class2);
-					newtid = light_tid3 + tid_off_for_swap;
-
-					SpawnSpotForced(light_class2, light_tid3, newtid, 0);
-					Thing_Remove(light_tid3);
-					Thing_ChangeTID(newtid, light_tid3);
-				}
-
-				switch (random_res)
-				{
-					case 1: Thing_SetTranslation(light_tid3, light_translate1); break;
-					case 2: Thing_SetTranslation(light_tid3, light_translate2); break;
-					case 3: break;
-					case 4: Thing_SetTranslation(light_tid3, light_translate4); break;
-					case 5: Thing_SetTranslation(light_tid3, light_translate5); break;
-					case 6: Thing_SetTranslation(light_tid3, light_translate6); break;
-					default: break;
-				}
-			}
-
-			random_res = keyscramble_random_results[3];
-			if ((light_tid4 > 0) && (random_res >= 1))
-			{
-				light_class1 = keyscramble_light_sources[3];
-				light_class2 = keyscramble_light_sources[random_res-1];
-
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid4) > 0) && CheckActorClass(light_tid4, light_class1))
-				{
-					if (keyscramble_debug) Log(s:"key #4 -> ",s:light_class2);
-					newtid = light_tid4 + tid_off_for_swap;
-
-					SpawnSpotForced(light_class2, light_tid4, newtid, 0);
-					Thing_Remove(light_tid4);
-					Thing_ChangeTID(newtid, light_tid4);
-				}
-
-				switch (random_res)
-				{
-					case 1: Thing_SetTranslation(light_tid4, light_translate1); break;
-					case 2: Thing_SetTranslation(light_tid4, light_translate2); break;
-					case 3: Thing_SetTranslation(light_tid4, light_translate3); break;
-					case 4: break;
-					case 5: Thing_SetTranslation(light_tid4, light_translate5); break;
-					case 6: Thing_SetTranslation(light_tid4, light_translate6); break;
-					default: break;
-				}
-			}
-
-			random_res = keyscramble_random_results[4];
-			if ((light_tid5 > 0) && (random_res >= 1))
-			{
-				light_class1 = keyscramble_light_sources[4];
-				light_class2 = keyscramble_light_sources[random_res-1];
-
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid5) > 0) && CheckActorClass(light_tid5, light_class1))
-				{
-					if (keyscramble_debug) Log(s:"key #5 -> ",s:light_class2);
-					newtid = light_tid5 + tid_off_for_swap;
-
-					SpawnSpotForced(light_class2, light_tid5, newtid, 0);
-					Thing_Remove(light_tid5);
-					Thing_ChangeTID(newtid, light_tid5);
-				}
-
-				switch (random_res)
-				{
-					case 1: Thing_SetTranslation(light_tid5, light_translate1); break;
-					case 2: Thing_SetTranslation(light_tid5, light_translate2); break;
-					case 3: Thing_SetTranslation(light_tid5, light_translate3); break;
-					case 4: Thing_SetTranslation(light_tid5, light_translate4); break;
-					case 5: break;
-					case 6: Thing_SetTranslation(light_tid5, light_translate6); break;
-					default: break;
-				}
-			}
-
-			random_res = keyscramble_random_results[5];
-			if ((light_tid6 > 0) && (random_res >= 1))
-			{
-				light_class1 = keyscramble_light_sources[5];
-				light_class2 = keyscramble_light_sources[random_res-1];
-
-				if ((light_class1 != "") && (light_class2 != ""))
-				if ((ThingCount(0, light_tid6) > 0) && CheckActorClass(light_tid6, light_class1))
-				{
-					if (keyscramble_debug) Log(s:"key #6 -> ",s:light_class2);
-					newtid = light_tid6 + tid_off_for_swap;
-
-					SpawnSpotForced(light_class2, light_tid6, newtid, 0);
-					Thing_Remove(light_tid6);
-					Thing_ChangeTID(newtid, light_tid6);
-				}
-
-				switch (random_res)
-				{
-					case 1: Thing_SetTranslation(light_tid6, light_translate1); break;
-					case 2: Thing_SetTranslation(light_tid6, light_translate2); break;
-					case 3: Thing_SetTranslation(light_tid6, light_translate3); break;
-					case 4: Thing_SetTranslation(light_tid6, light_translate4); break;
-					case 5: Thing_SetTranslation(light_tid6, light_translate5); break;
-					case 6: break;
-					default: break;
+					Thing_SetTranslation(light_tid, light_translate);
 				}
 			}
 		}

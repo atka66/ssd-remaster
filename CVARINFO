@@ -4,3 +4,7 @@ server int   ssdremaster_show_monster_count_hud = 0;
 server int   ssdremaster_show_normal_boss_health = 0;
 
 server int   ssdremaster_enable_keyscramble = 0;
+server int   ssdremaster_keyscramble_allow_lock_textures = 1;
+server int   ssdremaster_keyscramble_allow_sector_light_effects = 0;
+server int   ssdremaster_keyscramble_allow_light_sources = 1;
+server int   ssdremaster_keyscramble_allow_other_obstacles = 0;
