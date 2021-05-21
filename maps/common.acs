@@ -19,13 +19,17 @@ global int  1:score;
 global int  2:sdr_timestamp;
 global int  3:sdr_timestamp_backup;
 
+#define SDR_TIMESTAMP_BACKUP_READY -1
+
 global bool 4:sdr_triggered_lamertime;
 global bool 5:sdr_common_init_firsttime;
 
 global int  6:ssdremaster_default_sucktime;
 global int  7:ssdremaster_lamertime_hours;
 
-global int  8:keyscramble_random_results[];
+global int  8:ssdremaster_mock_count;
+
+global int  9:keyscramble_random_results[];
 
 int sdr_timestamp_level;
 
@@ -1441,12 +1445,19 @@ function void setupTime(int hours, int mins, int secs)
 
 function void backupTime(void)
 {
-	sdr_timestamp_backup = sdr_timestamp;
+	if (sdr_timestamp_backup == SDR_TIMESTAMP_BACKUP_READY)
+	{
+		sdr_timestamp_backup = sdr_timestamp;
+	}
 }
 
 function void restoreTime(void)
 {
-	sdr_timestamp = sdr_timestamp_backup;
+	if (sdr_timestamp_backup > 0)
+	{
+		sdr_timestamp = sdr_timestamp_backup;
+		sdr_timestamp_backup = SDR_TIMESTAMP_BACKUP_READY;
+	}
 }
 
 function bool checkTime(int hours, int mins, int secs, int fracs)
@@ -1680,6 +1691,15 @@ function void ssdremaster_display_time(void)
 		hudmessage (s:"LAMER!";                                  0, 20, CR_RED,   0.20, 0.10, 0.0);
 	else
 		hudmessage (s:ssdremaster_get_time_string(sdr_timestamp); 0, 20, CR_WHITE, 0.20, 0.10, 0.0);
+}
+
+function void ssdremaster_clear_time(void)
+{
+	if (!ssdremaster_time_running)
+	{
+		hudmessage (s:""; 0, 10, 0, 0, 0, 0);
+		hudmessage (s:""; 0, 20, 0, 0, 0, 0);
+	}
 }
 
 function void ssdremaster_display_timebonus(void)
@@ -1955,6 +1975,10 @@ script "ssdremaster_common_init" OPEN
 
 			setupTime(00,00,00);
 
+			sdr_timestamp_backup = SDR_TIMESTAMP_BACKUP_READY;
+
+			ssdremaster_mock_count = 0;
+
 			score = 0;
 		}
 
@@ -2074,8 +2098,23 @@ script "ssdremaster_common_final" UNLOADING
 
 script "ssdremaster_common_return" REOPEN
 {
-	ssdremaster_time_running = true;
-	ACS_Execute(400, 0, 0,0,0);
+	if (bonus_stage_state == NOT_A_BONUS_STAGE)
+	{
+		ssdremaster_time_running = true;
+		ACS_Execute(400, 0, 0,0,0);
+	}
+	else
+	{
+		ssdremaster_time_running = false;
+		ssdremaster_clear_time();
+		SetPlayerProperty(1, 0, 5);
+		SetFont("BigFont");
+		hudmessage(s:"You've already visited this bonus stage."; 2, 0, CR_RED, 0.5, 0.45, 5.0, 0.01, 1.0);
+		delay(35);
+		hudmessage(s:"So you'll get lost."; 2, 0, CR_RED, 0.5, 0.55, 4.0, 0.01, 1.0);
+		delay(210);
+		ACS_Execute(800, 0, 0,0,0);
+	}
 }
 
 //// translations
@@ -3567,7 +3606,10 @@ sdr_reveal_secret_message_ready = true;
 switch (arg1)
 {
 case SDR_SECRET_REVEAL_MOCK:
-	activatorsound ("laugh", 127);
+	{
+		activatorsound ("laugh", 127);
+		ssdremaster_mock_count++;
+	}
 	break;
 case SDR_SECRET_REVEAL_BONUS:
 	{
@@ -4227,7 +4269,7 @@ hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
 if ((bonus_lev_num >= 1) && (bonus_lev_num <= 4))
 SetPlayerProperty (1, 0, 4);
-if (bonus_lev_num >= 4)
+if (bonus_lev_num == 3)
 SetPlayerProperty (1, 0, 3);
 activatorsound ("teleport3", 127);
 delay(35);
