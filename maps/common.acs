@@ -29,6 +29,8 @@ global int  7:ssdremaster_lamertime_hours;
 
 global int  8:ssdremaster_mock_count;
 
+global int  9:ssdremaster_random_seed;
+
 global int  9:keyscramble_random_results[];
 
 int sdr_timestamp_level;
@@ -357,7 +359,50 @@ int monsters_battle_state;
 
 // random function
 
-function int ssdremaster_RandomBoost(int low,int high, int min_n,int max_n)
+// A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm. (ZDoom ACS variant)
+function int ssdremaster_jenkins_hash_step( int x )
+{
+	x = x + ( x << 10 );
+	x = x ^ ( x >> 06 );
+	x = x + ( x << 03 );
+	x = x ^ ( x >> 11 );
+	x = x + ( x << 15 );
+
+	return x;
+}
+
+function void ssdremaster_init_random_seed(bool first_time)
+{
+	ssdremaster_random_seed = ThingCount(0, 0);
+}
+
+function void ssdremaster_execute_random_hash(void)
+{
+	ssdremaster_random_seed = ssdremaster_jenkins_hash_step(ssdremaster_random_seed);
+}
+
+function int ssdremaster_hashRandom(int low,int high)
+{
+	int res=0;
+
+	if (low <= high)
+	{
+		res = low;
+
+		if (low < high)
+		{
+			int spread=(high - low) + 1;
+
+			ssdremaster_execute_random_hash();
+
+			res += ssdremaster_random_seed % spread;
+		}
+	}
+
+	return res;
+}
+
+function int ssdremaster_RandomBoost(int low,int high, int min_n,int max_n, bool jenkins)
 {
 	int res=0;
 
@@ -369,10 +414,21 @@ function int ssdremaster_RandomBoost(int low,int high, int min_n,int max_n)
 		{
 			int i,n=min_n;
 
-			if (min_n < max_n) n = Random(min_n, max_n);
+			if (min_n < max_n)
+			{
+				if (jenkins)
+					n = ssdremaster_hashRandom(min_n, max_n);
+				else
+					n = Random(min_n, max_n);
+			}
 
 			for (i=0;i<n;i++)
-				res = Random(low, high);
+			{
+				if (jenkins)
+					res = ssdremaster_hashRandom(low, high);
+				else
+					res = Random(low, high);
+			}
 		}
 	}
 
@@ -474,7 +530,7 @@ function void init_keyscramble_for_stage(int stagenum)
 
 				do
 				{
-					ind = ssdremaster_RandomBoost(0,m-1, 8,16);
+					ind = ssdremaster_RandomBoost(0,m-1, 8,16, false);
 					res = keyscramble_samples[ind];
 				}
 				while ((m >= 2) && (res == i));
@@ -1890,6 +1946,8 @@ script "ssdremaster_common_init" OPEN
 		for (i=0;i<forceFieldN;i++)
 			clear_forcefield_entry(i);
 	}
+
+	ssdremaster_init_random_seed(!sdr_common_init_firsttime);
 
 	// main title
 	if (level_num_temp == SDR_LEVELNUM_TITLEMAP)
