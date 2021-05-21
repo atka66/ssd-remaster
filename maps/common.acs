@@ -947,14 +947,22 @@ script 211 (int i)
 
 // water current setting
 
-function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int sp, bool do_surface_anim, bool do_surface_rotate, bool do_current, bool use_custom_speed)
+function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int sp, bool do_surface_anim, bool do_surface_rotate, bool do_current, bool use_custom_speed, bool reversed)
 {
 	if ((tag > 0) && (wtag > 0) && (tid0 > 0) && (tid1 > 0) && (sp > 0))
 	{
-		int ang=ssdremaster_get_facing_angle(tid0, tid1);
-		int len=ssdremaster_get_facing_length(tid0, tid1);
-
+		int ang,len;
 		int ang_temp;
+
+		if (reversed)
+		{
+			int swap_temp=tid0;
+			tid0 = tid1;
+			tid1 = swap_temp;
+		}
+
+		ang = ssdremaster_get_facing_angle(tid0, tid1);
+		len = ssdremaster_get_facing_length(tid0, tid1);
 
 /*
 		Log(s:"Current description BEGIN");

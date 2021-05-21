@@ -530,6 +530,7 @@ Height 42
 Solid
 Pushable
 CanPass
+Float
 }
 
 breakable EmptyBarrel
@@ -548,6 +549,7 @@ Pushable
 CanPass
 NoBlood
 DiesAway
+Float
 }
 
 SolidBarrel
@@ -561,6 +563,7 @@ Height 32
 Solid
 Pushable
 CanPass
+Float
 }
 
 HereticBarrel
@@ -574,6 +577,7 @@ Height 36
 Solid
 Pushable
 CanPass
+Float
 }
 
 HexenBarrel
@@ -587,6 +591,7 @@ Height 34
 Solid
 Pushable
 CanPass
+Float
 }
 
 Boom
