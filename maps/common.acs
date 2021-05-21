@@ -3473,9 +3473,13 @@ killtarget2++;
 
 // time manipulation scripts
 
-function void ssdremaster_time_run_frac_sec(int fs, bool reverse)
+function bool ssdremaster_time_run_frac_sec(int fs, bool reverse)
 {
-	if ((sdr_timestamp >= 0) && ((reverse && (fs <= sdr_timestamp)) || !reverse))
+	bool res=true;
+
+	res &= ((sdr_timestamp >= 0) && ((reverse && (fs <= sdr_timestamp)) || !reverse));
+
+	if (res)
 	{
 		if (reverse)
 			sdr_timestamp -= fs;
@@ -3485,17 +3489,21 @@ function void ssdremaster_time_run_frac_sec(int fs, bool reverse)
 			sdr_timestamp_level += fs;
 		}
 	}
+
+	return res;
 }
 
-function void ssdremaster_time_run_seconds(int s, bool reverse)
+function bool ssdremaster_time_run_seconds(int s, bool reverse)
 {
-	ssdremaster_time_run_frac_sec(frac_per_seconds*s, reverse);
+	return ssdremaster_time_run_frac_sec(frac_per_seconds*s, reverse);
 }
 
 script "ssdremaster_time_warp_one_hour" (void)
 {
 	if (bonus_stage_state == NOT_A_BONUS_STAGE)
-		ssdremaster_time_run_seconds(3600, false);
+	{
+		bool temp=ssdremaster_time_run_seconds(3600, false);
+	}
 }
 
 // display scripts
@@ -3518,7 +3526,7 @@ script 400 (int skipbonus, int reverse_i)			// time display
 
 	while (ssdremaster_time_running)
 	{
-		ssdremaster_time_run_frac_sec(1, reverse);
+		bool temp=ssdremaster_time_run_frac_sec(1, reverse);
 
 		setfont ("BigFont");
 		ssdremaster_display_time();
