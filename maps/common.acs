@@ -2107,12 +2107,13 @@ script "ssdremaster_common_return" REOPEN
 	{
 		ssdremaster_time_running = false;
 		ssdremaster_clear_time();
-		SetPlayerProperty(1, 0, 5);
+		SetPlayerProperty(1, 1, 5);
 		SetFont("BigFont");
 		hudmessage(s:"You've already visited this bonus stage."; 2, 0, CR_RED, 0.5, 0.45, 5.0, 0.01, 1.0);
 		delay(35);
 		hudmessage(s:"So you'll get lost."; 2, 0, CR_RED, 0.5, 0.55, 4.0, 0.01, 1.0);
 		delay(210);
+		SetPlayerProperty(1, 0, 5);
 		ACS_Execute(800, 0, 0,0,0);
 	}
 }
@@ -3377,9 +3378,13 @@ int secretbonus_rundown_unit = 250;
 
 int rundown_dl=2;
 
-function void ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
+function bool ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
 {
-	if ((ring_n != 0) && (max_ring_n > 0))
+	bool res=true;
+
+	res &= ((ring_n != 0) && (max_ring_n > 0));
+
+	if (res)
 	{
 		int new_rings=rings + ring_n;
 
@@ -3389,6 +3394,8 @@ function void ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
 		if (ring_n > 0)
 			ringbonus += bonus_am;
 	}
+
+	return res;
 }
 
 script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings around player (if possible)
@@ -3396,6 +3403,7 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 	bool log_ring_spawn=false;
 
 	if (((story_lev_num >=  1) && (story_lev_num <= 30)) || ((bonus_lev_num >=  1) && (bonus_lev_num <=  4)))
+	if ((ssdremaster_time_running && ((bonus_lev_num >=  1) && (bonus_lev_num <=  2))) || (!ssdremaster_time_running))
 	{
 		if ((min_ring_n > 0) && (max_ring_n > 0) && (min_ring_n <= max_ring_n) && (ring_tid > 0))
 		{
@@ -3433,7 +3441,7 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 					setthingspecial(ring_tid, 226, 246, 0, 0,0,0);
 
 				if ((bonus_lev_num >=  1) && (bonus_lev_num <=  4))
-					setthingspecial(ring_tid, 226,   3, 0, 0,0,0);
+					setthingspecial(ring_tid, 226,   3, 0, 0,0,1);
 
 				thing_changeTID(ring_tid, 0);
 			}
