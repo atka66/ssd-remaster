@@ -3838,7 +3838,7 @@ script "ssdremaster_query_boss_target_num" (void)
 
 script "ssdremaster_ease_boss_targets" (int minimal_i)		// half boss hit count (if possible)
 {
-	if (boss_battle_state == BOSS_BATTLE_STANDBY)
+	if (boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL)
 	{
 		bool minimal=(minimal_i != 0);
 
@@ -3863,7 +3863,7 @@ script "ssdremaster_ease_boss_targets" (int minimal_i)		// half boss hit count (
 
 script "ssdremaster_harden_boss_targets" (int maximal_i)		// double boss hit count (if possible)
 {
-	if (boss_battle_state == BOSS_BATTLE_STANDBY)
+	if (boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL)
 	{
 		bool maximal=(maximal_i != 0);
 
