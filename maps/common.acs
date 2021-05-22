@@ -3461,7 +3461,7 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 	bool log_ring_spawn=false;
 
 	if (((story_lev_num >=  1) && (story_lev_num <= 30)) || ((bonus_lev_num >=  1) && (bonus_lev_num <=  4)))
-	if ((ssdremaster_time_running && ((bonus_lev_num >=  1) && (bonus_lev_num <=  2))) || (!ssdremaster_time_running))
+	if ((ssdremaster_time_running && ((bonus_lev_num >=  2) || (bonus_lev_num <=  3))) || (!ssdremaster_time_running))
 	{
 		if ((min_ring_n > 0) && (max_ring_n > 0) && (min_ring_n <= max_ring_n) && (ring_tid > 0))
 		{
