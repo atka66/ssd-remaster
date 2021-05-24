@@ -1,8 +1,7 @@
 #library "common"
 #include "zcommon.acs"
 
-int zone;
-int act;
+int zone, act;
 
 bool ssdremaster_enable_keyscramble;
 
@@ -15,37 +14,35 @@ int sdr_water_current_base_dir;
 
 int endcounter;
 
-global int  1:score;
-global int  2:sdr_timestamp;
-global int  3:sdr_timestamp_backup;
+global int   1:score;
+global int   2:sdr_timestamp;
+global int   3:sdr_timestamp_backup;
 
 #define SDR_TIMESTAMP_BACKUP_READY -1
 
-global bool 4:sdr_triggered_lamertime;
-global bool 5:sdr_common_init_firsttime;
+global bool  4:sdr_triggered_lamertime;
+global bool  5:sdr_common_init_firsttime;
 
-global int  6:ssdremaster_default_sucktime;
-global int  7:ssdremaster_lamertime_hours;
+global int   6:ssdremaster_default_sucktime;
+global int   7:ssdremaster_lamertime_hours;
 
-global int  8:ssdremaster_mock_count;
+global int   8:ssdremaster_mock_count;
 
-global int  9:ssdremaster_random_seed;
+global int   9:ssdremaster_random_seed;
 
-global int  9:keyscramble_random_results[];
+global int  10:keyscramble_random_results[];
 
 int sdr_timestamp_level;
 
-int ssdremaster_level_par_time_hh,ssdremaster_level_par_time_mm,ssdremaster_level_par_time_ss;
+int ssdremaster_level_par_time;
 
 bool ssdremaster_par_time_reached;
 
 bool ssdremaster_debug_timebonus;
 
-bool show_hours;
-bool show_frac_seconds;
+bool show_hours, show_frac_seconds;
 
-int tic_per_frac;
-int frac_per_seconds;
+int tic_per_frac, frac_per_seconds;
 
 int timebonus_per_level[30]={
 	100000, 100000, // zone  1
@@ -64,37 +61,29 @@ int timebonus_per_level[30]={
 	100000, 100000, // zone 14
 	100000, 100000, // zone 15
 	};
-int timebonus_down_per_gameskill[5]={50,50,50,50,50};
+int timebonus_down_per_gameskill[5]={100,200,300,500,750};
 
-int timebonus;
-int timebonus_ingame_down_unit;
+int timebonus, timebonus_ingame_down_unit;
 
-int killbonus;
-int killcount;
-int secretbonus;
-int secretcount;
+int killbonus, killcount;
+int secretbonus, secretcount;
 int killtarget;
 
-int rings;
-int ringcount;
-int ringbonus;
+int rings, ringcount, ringbonus;
 
 bool ssdremaster_check_boss_prefs;
 
-bool ssdremaster_show_target_hud;
-bool ssdremaster_show_monster_hud;
+bool ssdremaster_show_target_hud, ssdremaster_show_monster_hud;
 bool do_sdr_show_normal_boss_health;
 
-int boss_target_hit;
-int boss_target_max;
+int boss_target_hit, boss_target_max;
 
 int monsters_battle_hate_intval[5]={60,50,30,20,10};
 
 int monsters_battle_group_N=3;
 int monsters_battle_group_tids[3];
 
-int monsters_battle_killed;
-int monsters_battle_total;
+int monsters_battle_killed, monsters_battle_total;
 
 int monsters_battle_overall_health;
 
@@ -139,13 +128,11 @@ int secret_count_per_level[30]=
 
 #libdefine SDR_LEVELNUM_TITLEMAP 99
 
-int story_lev_num;
-int bonus_lev_num;
+int story_lev_num, bonus_lev_num;
 
-bool ready;
-bool show_hud;
+bool ready, show_hud;
+
 bool ssdremaster_time_running;
-
 bool ssdremaster_rad_used;
 
 str zone_titles[15]={
@@ -357,7 +344,7 @@ int monsters_battle_state;
 #libdefine MONSTERS_BATTLE_FINALE 4
 #libdefine MONSTERS_BATTLE_UNAVAILABLE -1
 
-// random function
+// random functions
 
 // A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm. (ZDoom ACS variant)
 function int ssdremaster_jenkins_hash_step( int x )
@@ -378,7 +365,7 @@ function void ssdremaster_init_random_seed(bool first_time)
 
 function void ssdremaster_execute_random_hash(void)
 {
-	ssdremaster_random_seed = ssdremaster_jenkins_hash_step(ssdremaster_random_seed);
+	ssdremaster_random_seed = ssdremaster_random_seed ^ ssdremaster_jenkins_hash_step(ssdremaster_random_seed);
 }
 
 function int ssdremaster_hashRandom(int low,int high)
@@ -1421,32 +1408,19 @@ function int ssdremaster_levelinfo(void)
 
 	if ((res >= 1) && (res <= 30))
 	{
-		int ssdremaster_level_par_time=GetLevelInfo(LEVELINFO_PAR_TIME);
-
 		zone = (res - 1) / 2 + 1;
 		act = (res - 1) % 2 + 1;
 
-		if (ssdremaster_level_par_time > 0)
-		{
-			ssdremaster_level_par_time_ss = ssdremaster_level_par_time % 60;
-			ssdremaster_level_par_time /= 60;
-
-			ssdremaster_level_par_time_mm = ssdremaster_level_par_time % 60;
-			ssdremaster_level_par_time /= 60;
-
-			ssdremaster_level_par_time_hh = ssdremaster_level_par_time;
-
-			ssdremaster_par_time_reached = false;
-		}
-		else
-		{
-			ssdremaster_par_time_reached = true;
-		}
+		ssdremaster_level_par_time = GetLevelInfo(LEVELINFO_PAR_TIME);
+		ssdremaster_par_time_reached = (ssdremaster_level_par_time <= 0);
 	}
 	else
 	{
 		zone = 0;
 		act = 0;
+
+		ssdremaster_level_par_time = 0;
+		ssdremaster_par_time_reached = false;
 	}
 
 	return res;
@@ -2018,7 +1992,7 @@ script "ssdremaster_common_init" OPEN
 		timebonus = timebonus_per_level[level_num_temp-1];
 		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
 
-		ssdremaster_debug_timebonus = false;
+		ssdremaster_debug_timebonus = true;
 
 		ssdremaster_rad_used = false;
 
@@ -3608,8 +3582,17 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		}
 
 		if(!reverse && !ssdremaster_par_time_reached)
-		if(checkLevelTime(ssdremaster_level_par_time_hh,ssdremaster_level_par_time_mm,ssdremaster_level_par_time_ss,-1))
-			ssdremaster_par_time_reached = true;
+		{
+			int ssdremaster_level_par_time_temp=ssdremaster_level_par_time;
+			int hh,mm,ss;
+
+			ss = ssdremaster_level_par_time_temp % 60; ssdremaster_level_par_time_temp /= 60;
+			mm = ssdremaster_level_par_time_temp % 60; ssdremaster_level_par_time_temp /= 60;
+			hh = ssdremaster_level_par_time_temp;
+
+			if(checkLevelTime(hh,mm,ss,-1))
+				ssdremaster_par_time_reached = true;
+		}
 
 		if(reverse && checkTime(00,00,00,00))
 		{
