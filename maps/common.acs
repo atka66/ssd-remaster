@@ -1992,7 +1992,7 @@ script "ssdremaster_common_init" OPEN
 		timebonus = timebonus_per_level[level_num_temp-1];
 		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
 
-		ssdremaster_debug_timebonus = true;
+		ssdremaster_debug_timebonus = false;
 
 		ssdremaster_rad_used = false;
 
