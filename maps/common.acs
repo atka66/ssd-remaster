@@ -3408,6 +3408,8 @@ int timebonus_rundown_unit = 1000;
 int killbonus_rundown_unit = 250;
 int secretbonus_rundown_unit = 250;
 
+int ringbonus_rundown_unit = 200;
+
 int rundown_dl=2;
 
 function bool ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
@@ -3778,7 +3780,19 @@ else
 }
 }
 
-// bonus level specific scripts
+// bonus level specific functions and scripts
+
+function void ssdremaster_lose_ringbonus(int div)
+{
+	if (div > 0)
+	if (ringbonus > 0)
+	{
+		if (ringbonus >= div)
+			ringbonus /= div;
+		else
+			ringbonus = 0;
+	}
+}
 
 script 900 (void)					// ring bonus rundown
 
@@ -3791,9 +3805,18 @@ if(ringbonus == 0)
 }
 else
 {
-	ringbonus -= 100;
+	if (ringbonus >= ringbonus_rundown_unit)
+	{
+		score += ringbonus_rundown_unit;
+		ringbonus -= ringbonus_rundown_unit;
+	}
+	else
+	{
+		score += ringbonus;
+		ringbonus = 0;
+	}
+
 	hudmessage (s:"ring bonus:   \cc",d:ringbonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
-	score += 100;
 	activatorsound ("button1", 127);
 }
 delay(1);
