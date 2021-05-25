@@ -95,11 +95,11 @@ int boss_target_count_borders[15][2]={
 	{2, 64}, // zone  3
 	{2, 64}, // zone  4
 	{4, 64}, // zone  5
-	{4,  8}, // zone  6
-	{4,  8}, // zone  7
+	{2,  8}, // zone  6
+	{2,  8}, // zone  7
 	{2,  8}, // zone  8
-	{8,  8}, // zone  9
-	{4,  8}, // zone 10
+	{4,  8}, // zone  9
+	{2,  8}, // zone 10
 	{8,  8}, // zone 11
 	{8,  8}, // zone 12
 	{8,  8}, // zone 13
