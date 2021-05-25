@@ -101,9 +101,9 @@ int boss_target_count_borders[15][2]={
 	{4,  8}, // zone  9
 	{2,  8}, // zone 10
 	{8,  8}, // zone 11
-	{8,  8}, // zone 12
-	{8,  8}, // zone 13
-	{8,  8}, // zone 14
+	{4,  8}, // zone 12
+	{4,  8}, // zone 13
+	{4,  8}, // zone 14
 	{2,  8}  // zone 15
 	};
 
@@ -1968,7 +1968,7 @@ script "ssdremaster_common_init" OPEN
 
 			if (level_num_temp == 29)
 			{
-				boss_target_count_borders[15][0] = 8;
+				boss_target_count_borders[15][0] = 4;
 				boss_target_count_borders[15][1] = 8;
 			}
 		}
@@ -3860,6 +3860,7 @@ script "ssdremaster_query_boss_target_num" (void)
 script "ssdremaster_ease_boss_targets" (int minimal_i)		// half boss hit count (if possible)
 {
 	if (boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL)
+	if (boss_battle_state == BOSS_BATTLE_STANDBY)
 	{
 		bool minimal=(minimal_i != 0);
 
@@ -3885,6 +3886,7 @@ script "ssdremaster_ease_boss_targets" (int minimal_i)		// half boss hit count (
 script "ssdremaster_harden_boss_targets" (int maximal_i)		// double boss hit count (if possible)
 {
 	if (boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL)
+	if (boss_battle_state == BOSS_BATTLE_STANDBY)
 	{
 		bool maximal=(maximal_i != 0);
 
