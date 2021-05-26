@@ -2753,7 +2753,7 @@ script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 
 			Thing_ProjectileGravity (boss_tid, T_BRAINS, 0, 0, -1);
 
-			if (post_death_acs)
+			if (post_death_acs > 0)
 			{
 				delay(15);
 
