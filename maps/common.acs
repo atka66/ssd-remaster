@@ -76,7 +76,7 @@ bool ssdremaster_check_boss_prefs;
 bool ssdremaster_show_target_hud, ssdremaster_show_monster_hud;
 bool do_sdr_show_normal_boss_health;
 
-int boss_target_stats[2]; // {boss_target_hit,boss_target_max}
+int boss_target_stats[4]; // {boss_target_hit,boss_target_max, boss_target_tid,boss_target_initial_health}
 
 int monsters_battle_hate_intval[5]={60,50,30,20,10};
 
@@ -1611,6 +1611,7 @@ str common_monster_disp_pref_def="Monsters:";
 str common_monster_display_prefix="Monsters:"; // redundant var declarations
 
 str common_sumhealth_display_prefix="Overall health:";
+str common_trghealth_display_prefix="Target health:";
 
 str common_target_display_prefix="Target:";
 str common_time_display_prefix="Time:";
@@ -1620,16 +1621,17 @@ str common_ring_display_prefix="Rings:";
 str common_timebonus_display_prefix="Time bonus:";
 str common_leveltime_display_prefix="Level time:";
 
+bool sdr_show_overall_health=false;
+
 function void ssdremaster_display_monster_hud(void)
 {
-	bool show_overall_health=false;
-
 	if (ssdremaster_show_monster_hud)
 	{
 		int hud1_x=0,hud1_y=0;
 		int hud2_y=0;
 		str killed_str="";
 
+		/*
 		if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
 		{
 			hud1_y = 0.20;
@@ -1638,7 +1640,9 @@ function void ssdremaster_display_monster_hud(void)
 		{
 			hud1_y = 0.14;
 		}
+		*/
 
+		hud1_y = 0.14;
 		hud2_y = hud1_y + 0.06;
 
 		if (monsters_battle_total >= 0)
@@ -1658,7 +1662,7 @@ function void ssdremaster_display_monster_hud(void)
 		hudmessage (s:common_monster_display_prefix; 1, 14, CR_RED, hud1_x, hud1_y, 1.0, 1.0);
 		hudmessage (s:killed_str;                    1, 15, CR_TAN, 0.96,   hud1_y, 1.0, 1.0);
 
-		if (show_overall_health)
+		if (sdr_show_overall_health)
 		{
 			hudmessage (s:common_sumhealth_display_prefix; 1, 16, CR_GREEN, 0.80, hud2_y, 1.0, 1.0);
 			hudmessage (d:monsters_battle_overall_health;  1, 17, CR_WHITE, 0.96, hud2_y, 1.0, 1.0);
@@ -1681,8 +1685,37 @@ function void ssdremaster_display_target_hud(void)
 {
 	if (ssdremaster_show_target_hud)
 	{
-		hudmessage (s:common_target_display_prefix;            1, 11, CR_GOLD, 0.88, 0.14, 1.0, 1.0);
-		hudmessage (d:boss_target_stats[0],s:"/",d:boss_target_stats[1]; 1, 12, CR_TAN,  0.96, 0.14, 1.0, 1.0);
+		int hud1_y=0, hud2_y=0;
+		int tid;
+
+		if (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER)
+		{
+			if (sdr_show_overall_health)
+				hud1_y = 0.26;
+			else
+				hud1_y = 0.20;
+		}
+		else
+		{
+			hud1_y = 0.14;
+		}
+
+		hud2_y = hud1_y + 0.06;
+
+		hudmessage (s:common_target_display_prefix;                      1, 11, CR_GOLD, 0.88, hud1_y, 1.0, 1.0);
+		hudmessage (d:boss_target_stats[0],s:"/",d:boss_target_stats[1]; 1, 12, CR_TAN,  0.96, hud1_y, 1.0, 1.0);
+
+		tid = boss_target_stats[2];
+
+		if (tid > 0)
+		{
+			int health2=GetActorProperty(tid, APROP_Health);
+
+			if (health2 < 0) health2 = 0;
+
+			hudmessage (s:common_trghealth_display_prefix; 1, 21, CR_RED,   0.80, hud2_y, 1.0, 1.0);
+			hudmessage (d:health2;                         1, 22, CR_WHITE, 0.96, hud2_y, 1.0, 1.0);
+		}
 	}
 }
 
@@ -1691,6 +1724,9 @@ function void ssdremaster_clear_target_hud(void)
 {
 	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
 	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
+
+	hudmessage (s:""; 0, 21, 0, 0, 0, 0); // ???
+	hudmessage (s:""; 0, 22, 0, 0, 0, 0); // ???
 }
 */
 
@@ -1754,7 +1790,7 @@ function void ssdremaster_display_leveltime(void)
 {
 	if (ssdremaster_debug_timebonus)
 	{
-		hudmessage (s:common_leveltime_display_prefix;                 0, 42, CR_GOLD,  0.04, 0.26, 0.0);
+		hudmessage (s:common_leveltime_display_prefix;                  0, 42, CR_GOLD,  0.04, 0.26, 0.0);
 		hudmessage (s:ssdremaster_get_time_string(sdr_timestamp_level); 0, 43, CR_WHITE, 0.28, 0.26, 0.0);
 	}
 }
@@ -1965,6 +2001,10 @@ script "ssdremaster_common_init" OPEN
 		{
 			boss_battle_state = BOSS_BATTLE_STANDBY;
 			boss_target_stats[1] = 8;
+
+			// properties for target as actor
+			boss_target_stats[2] = 0; // tid
+			boss_target_stats[3] = 0; // health
 
 			if (level_num_temp == 29)
 			{
@@ -3833,6 +3873,43 @@ Restart;
 }
 
 // boss related scripts - target-based
+
+function void ssdremaster_set_target_tid(int tid)
+{
+	if (tid > 0)
+	{
+		boss_target_stats[2] = tid;
+	}
+}
+
+function void ssdremaster_clr_target_tid(void)
+{
+	int tid=boss_target_stats[2];
+
+	if (tid > 0)
+	{
+		boss_target_stats[2] = 0;
+	}
+}
+
+function void ssdremaster_init_target_health(int health2)
+{
+	if (health2 > 0)
+	{
+		boss_target_stats[3] = health2;
+	}
+}
+
+function void ssdremaster_apply_target_health(void)
+{
+	int tid=    boss_target_stats[2];
+	int health2=boss_target_stats[3];
+
+	if ((tid > 0) && (health2 > 0))
+	{
+		SetActorProperty(tid, APROP_Health, health2);
+	}
+}
 
 function void ssdremaster_inc_boss_target_hit(void)
 {
