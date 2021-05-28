@@ -3911,6 +3911,28 @@ function void ssdremaster_apply_target_health(void)
 	}
 }
 
+function void ssdremaster_create_boss_target(int spot_tid, int thing_tid, int health2, int hit_acs, int hit_arg0,int hit_arg1,int hit_arg2)
+{
+	if ((spot_tid > 0) && (thing_tid > 0) && (health2 >= 0) && (hit_acs > 0))
+	{
+		spawnspot("SSDBossTarget", spot_tid, thing_tid);
+		setthingspecial(thing_tid, 80, hit_acs,0,hit_arg0,hit_arg1,hit_arg2);
+
+		ssdremaster_set_target_tid(thing_tid);
+		ssdremaster_init_target_health(health2);
+		ssdremaster_apply_target_health();
+	}
+}
+
+function void ssdremaster_destroy_boss_target(void)
+{
+	int thing_tid=boss_target_stats[2];
+
+	ssdremaster_clr_target_tid();
+	if (ThingCount(0, thing_tid) > 0)
+		thing_remove(thing_tid);
+}
+
 function void ssdremaster_inc_boss_target_hit(void)
 {
 	boss_target_stats[0]++;
