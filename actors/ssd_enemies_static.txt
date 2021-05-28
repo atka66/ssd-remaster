@@ -166,8 +166,14 @@ ACTOR SSDBossTarget
 			AIM2 A 4
 			AIM2 A 4 Bright
 			AIM2 A 4
-			AIM2 A 16
-			TNT1 A -1
+			AIM2 A 2 A_FadeOut(0.75)
+			AIM2 A 2
+			AIM2 A 2 A_FadeOut(0.50)
+			AIM2 A 2
+			AIM2 A 2 A_FadeOut(0.25)
+			AIM2 A 2
+			AIM2 A 2 A_FadeOut(0.00)
+			AIM2 A 2
 			Stop
 	}
 }
