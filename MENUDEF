@@ -14,7 +14,10 @@ OptionMenu "SonicRemasterSettings"
 	StaticText ""
 
 	Option "Show target-based boss hit count on HUD", "ssdremaster_show_boss_target_hud", "OnOff"
+	StaticText ""
 	Option "Show monster-based boss battle count on HUD", "ssdremaster_show_monster_count_hud", "OnOff"
+	Option "Show tags for monster-based boss battle (debug)", "ssdremaster_debug_monster_tags", "OnOff", "ssdremaster_show_monster_count_hud"
+	StaticText ""
 	Option "Show normal (not Seven Deadly Sinner) boss health on HUD", "ssdremaster_show_normal_boss_health", "OnOff"
 
 	StaticText ""

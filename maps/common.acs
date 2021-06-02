@@ -73,7 +73,8 @@ int rings, ringcount, ringbonus;
 
 bool ssdremaster_check_boss_prefs;
 
-bool ssdremaster_show_target_hud, ssdremaster_show_monster_hud;
+bool ssdremaster_show_target_hud;
+bool ssdremaster_show_monster_hud, ssdremaster_debug_monster_tags;
 bool do_sdr_show_normal_boss_health;
 
 int boss_target_stats[4]; // {boss_target_hit,boss_target_max, boss_target_tid,boss_target_initial_health}
@@ -996,6 +997,8 @@ script 211 (int i)
 
 function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int sp, bool do_surface_anim, bool do_surface_rotate, bool do_current, bool use_custom_speed, bool reversed)
 {
+	bool current_log=false;
+
 	if ((tag > 0) && (wtag > 0) && (tid0 > 0) && (tid1 > 0) && (sp > 0))
 	{
 		int ang,len;
@@ -1011,16 +1014,17 @@ function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int
 		ang = ssdremaster_get_facing_angle(tid0, tid1);
 		len = ssdremaster_get_facing_length(tid0, tid1);
 
-/*
-		Log(s:"Current description BEGIN");
+		if (current_log)
+		{
+			Log(s:"Current description BEGIN");
 
-		Log(s:" Tags: ",d:tag,s:", ",d:wtag,s:" (water)");
+			Log(s:" Tags: ",d:tag,s:", ",d:wtag,s:" (water)");
 
-		Log(s:" Angle: ",d:FixedMul(ang,360) >> 16);
-		Log(s:" Length: ",d:len >> 16);
+			Log(s:" Angle: ",d:FixedMul(ang,360) >> 16);
+			Log(s:" Length: ",d:len >> 16);
 
-		Log(s:" Speed (rounded): ",d:sp >> 16);
-*/
+			Log(s:" Speed (rounded): ",d:sp >> 16);
+		}
 
 		if (do_surface_anim)
 		{
@@ -1032,14 +1036,14 @@ function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int
 				y_scroll = FixedMul(FixedDiv(y_scroll,len),sp);
 			}
 			Scroll_Ceiling(wtag, x_scroll >> 16, y_scroll >> 16, SCROLL);
-			//Log(s:" Surface scrolling ON");
+			if (current_log) Log(s:" Surface scrolling ON");
 		}
 		if (do_surface_rotate)
 		{
 			ang_temp = ang - sdr_water_current_base_dir;
 			while (ang_temp < 0.0) ang_temp += 1.0;
 			Sector_SetRotation(wtag, 0, FixedMul(ang_temp,360) >> 16);
-			//Log(s:" Surface rotation DONE");
+			if (current_log) Log(s:" Surface rotation DONE");
 		}
 
 		if (do_current && ((len > 0) || use_custom_speed))
@@ -1049,10 +1053,10 @@ function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int
 				sp_temp = FixedMul(sp,len);
 			ang_temp = FixedMul(ang,256 << 16);
 			Sector_SetCurrent(tag, sp_temp >> 16, ang_temp >> 16, NO);
-			//Log(s:" Current ON");
+			if (current_log) Log(s:" Current ON");
 		}
 
-		//Log(s:"Current description END");
+		if (current_log) Log(s:"Current description END");
 	}
 }
 
@@ -1176,6 +1180,8 @@ function int ssdremaster_get_facing_angle(int tid_from, int tid_to)
 
 script 904 (int target_tid, int target_pitch) // generic face to actor
 {
+	bool facing_log=false;
+
 	if (target_tid >= 0)
 	{
 		int ang0=GetActorAngle(0), ang1=ssdremaster_get_facing_angle(0, target_tid);
@@ -1188,8 +1194,11 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
 
 		int ang_d,pit_d,	ang_step,pit_step,	ang,pit;
 
-		//Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
-		//Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
+		if (facing_log)
+		{
+			Log(d:ang0 >> 8,s:",",d:ang1 >> 8);
+			Log(d:pit0 >> 8,s:",",d:pit1 >> 8);
+		}
 
 		ang_d = ang1-ang0, pit_d = pit1-pit0;
 
@@ -1199,7 +1208,7 @@ script 904 (int target_tid, int target_pitch) // generic face to actor
 
 		for (i=0;i<ang_n;i++)
 		{
-			//Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
+			if (facing_log) Log(d:i,s:":",d:ang >> 8,s:",",d:pit >> 8);
 
 			ang += ang_dir * ang_step, pit += pit_step;
 
@@ -1248,6 +1257,8 @@ script 229 (int tid1, int tid2, int reversed_i)	// simultaneous handling of thin
 
 script 230 (int ff_i, int test_mode_i)
 {
+	bool forcefield_log=false;
+
 	if ((ff_i >= 0) && (ff_i < forceFieldN))
 	{
 		bool test_mode=(test_mode_i != 0);
@@ -1284,7 +1295,8 @@ script 230 (int ff_i, int test_mode_i)
 						int i_fixed=FixedDiv((n-i) << 16,n << 16);
 						int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
 
-						//if (test_mode) Log(d:i,s:" -> ",d:temp_trans);
+						if (forcefield_log)
+						if (test_mode) Log(d:i,s:" -> ",d:temp_trans);
 
 						TranslucentLine(lid, temp_trans, tr_add);
 						if (anim_dl > 0) Delay(anim_dl);
@@ -1493,6 +1505,7 @@ function void restoreTime(void)
 function bool checkTime(int hours, int mins, int secs, int fracs)
 {
 	bool res=true;
+	bool checktime_log=false;
 
 	res &= (checkTimeParams(hours, mins, secs, fracs,   true, true));
 
@@ -1512,12 +1525,13 @@ function bool checkTime(int hours, int mins, int secs, int fracs)
 
 		hours_temp = timestamp_temp;
 
-/*
-		Log(s:"HH:",d:hours_temp,s:" ? ",d:hours);
-		Log(s:"MM:",d:mins_temp, s:" ? ",d:mins );
-		Log(s:"SS:",d:secs_temp, s:" ? ",d:secs );
-		Log(s:"FS:",d:fracs_temp,s:" ? ",d:fracs);
-*/
+		if (checktime_log)
+		{
+			Log(s:"HH:",d:hours_temp,s:" ? ",d:hours);
+			Log(s:"MM:",d:mins_temp, s:" ? ",d:mins );
+			Log(s:"SS:",d:secs_temp, s:" ? ",d:secs );
+			Log(s:"FS:",d:fracs_temp,s:" ? ",d:fracs);
+		}
 
 		if (res && (hours >= 0)) res &= (hours_temp == hours);
 		if (res && (mins  >= 0)) res &= (mins_temp  == mins );
@@ -1625,22 +1639,14 @@ bool sdr_show_overall_health=false;
 
 function void ssdremaster_display_monster_hud(void)
 {
+	str common_monster_tag_disp_pref="Tags for ";
+
 	if (ssdremaster_show_monster_hud)
 	{
 		int hud1_x=0,hud1_y=0;
 		int hud2_y=0;
+		int hud3_x=0,hud3_y=0;
 		str killed_str="";
-
-		/*
-		if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
-		{
-			hud1_y = 0.20;
-		}
-		else
-		{
-			hud1_y = 0.14;
-		}
-		*/
 
 		hud1_y = 0.14;
 		hud2_y = hud1_y + 0.06;
@@ -1659,6 +1665,9 @@ function void ssdremaster_display_monster_hud(void)
 			hud1_x = 0.84;
 		}
 
+		hud3_x = hud1_x - 0.12;
+		hud3_y = 0.80;
+
 		hudmessage (s:common_monster_display_prefix; 1, 14, CR_RED, hud1_x, hud1_y, 1.0, 1.0);
 		hudmessage (s:killed_str;                    1, 15, CR_TAN, 0.96,   hud1_y, 1.0, 1.0);
 
@@ -1667,19 +1676,38 @@ function void ssdremaster_display_monster_hud(void)
 			hudmessage (s:common_sumhealth_display_prefix; 1, 16, CR_GREEN, 0.80, hud2_y, 1.0, 1.0);
 			hudmessage (d:monsters_battle_overall_health;  1, 17, CR_WHITE, 0.96, hud2_y, 1.0, 1.0);
 		}
+
+		if (ssdremaster_debug_monster_tags)
+		{
+			str monster_tags_listed="";
+			int i,n, i2;
+
+			common_monster_tag_disp_pref = StrParam(s:common_monster_tag_disp_pref,s:common_monster_display_prefix);
+
+			i2 = 0;
+			n = monsters_battle_group_N;
+			for (i=0;i<n;i++)
+			{
+				int tid=monsters_battle_group_tids[i];
+
+				if (tid > 0)
+				{
+					if (i2 > 0)
+						monster_tags_listed = StrParam(s:monster_tags_listed,s:",");
+
+					monster_tags_listed = StrParam(s:monster_tags_listed,d:tid);
+
+					i2++;
+				}
+			}
+
+			monster_tags_listed = StrParam(s:"'",s:monster_tags_listed,s:"'");
+
+			hudmessage (s:common_monster_tag_disp_pref; 1, 24, CR_GREEN, hud3_x, hud3_y, 0.5, 1.0);
+			hudmessage (s:monster_tags_listed;          1, 25, CR_WHITE, 0.96,   hud3_y, 0.5, 1.0);
+		}
 	}
 }
-
-/*
-function void ssdremaster_clear_monster_hud(void)
-{
-	hudmessage (s:""; 0, 14, 0, 0, 0, 0);
-	hudmessage (s:""; 0, 15, 0, 0, 0, 0);
-
-	hudmessage (s:""; 0, 16, 0, 0, 0, 0); // ???
-	hudmessage (s:""; 0, 17, 0, 0, 0, 0); // ???
-}
-*/
 
 function void ssdremaster_display_target_hud(void)
 {
@@ -1719,35 +1747,11 @@ function void ssdremaster_display_target_hud(void)
 	}
 }
 
-/*
-function void ssdremaster_clear_target_hud(void)
-{
-	hudmessage (s:""; 0, 11, 0, 0, 0, 0);
-	hudmessage (s:""; 0, 12, 0, 0, 0, 0);
-
-	hudmessage (s:""; 0, 21, 0, 0, 0, 0); // ???
-	hudmessage (s:""; 0, 22, 0, 0, 0, 0); // ???
-}
-*/
-
 function void ssdremaster_display_boss_health(str boss_name, int boss_health, int boss_col)
 {
 	hudmessage (s:boss_name,s:": "; 1, 13, boss_col, 0.76, 0.08, 1.0, 1.0);
 	hudmessage (d:boss_health;      1, 23, CR_WHITE, 0.96, 0.08, 1.0, 1.0);
 }
-
-/*
-function void ssdremaster_clear_boss_health(bool is_normal_boss)
-{
-	bool do_clear=true;
-
-	if (is_normal_boss)
-		do_clear &= (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER);
-
-	if (do_clear)
-		hudmessage (s:""; 0, 13, 0, 0, 0, 0);
-}
-*/
 
 function void ssdremaster_display_time(void)
 {
@@ -1832,8 +1836,6 @@ function str StrTrimmed(str s)
 		n = StrLen(res);
 	}
 
-//	Log(s:"string trim result: '",s:res,s:"'");
-
 	return res;
 }
 
@@ -1853,6 +1855,7 @@ function str ssdremaster_common_get_nametag (void)
 
 script "ssdremaster_common_set_nametag" (void)
 {
+	bool nametag_log=false;
 	do
 	{
 		int ssdremaster_custom_nametag_i=GetCVar("ssdremaster_custom_nametag");
@@ -1862,7 +1865,7 @@ script "ssdremaster_common_set_nametag" (void)
 		cvar_old_val = ssdremaster_custom_nametag;
 		ssdremaster_custom_nametag = cvar_new_val;
 
-		/*
+		if (nametag_log)
 		if (cvar_new_val != cvar_old_val)
 		{
 			if (ssdremaster_custom_nametag)
@@ -1870,12 +1873,11 @@ script "ssdremaster_common_set_nametag" (void)
 			else
 				Log(s:"Custom nametag is OFF");
 		}
-		*/
 
 		if (ssdremaster_custom_nametag && (new_playername != ssdremaster_playername))
 		{
 			ssdremaster_playername = new_playername;
-			//Log(s:"Nametag is: ",s:ssdremaster_playername);
+			if (nametag_log) Log(s:"Nametag is: ",s:ssdremaster_playername);
 		}
 
 		if (ssdremaster_loop_nametag_change) Delay(5);
@@ -1898,24 +1900,22 @@ script "ssdremaster_common_set_boss_prefs" (void)
 		cvar_new_val = (GetCVar("ssdremaster_show_boss_target_hud") != 0);
 		cvar_old_val = ssdremaster_show_target_hud;
 		ssdremaster_show_target_hud = cvar_new_val;
-/*
-		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
-			ssdremaster_clear_target_hud();
-*/
+
 		cvar_new_val = (GetCVar("ssdremaster_show_monster_count_hud") != 0);
 		cvar_old_val = ssdremaster_show_monster_hud;
 		ssdremaster_show_monster_hud = cvar_new_val;
-/*
-		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
-			ssdremaster_clear_monster_hud();
-*/
+
+		if (ssdremaster_show_monster_hud)
+		{
+			cvar_new_val = (GetCVar("ssdremaster_debug_monster_tags") != 0);
+			cvar_old_val = ssdremaster_debug_monster_tags;
+			ssdremaster_debug_monster_tags = cvar_new_val;
+		}
+
 		cvar_new_val = (GetCVar("ssdremaster_show_normal_boss_health") != 0);
 		cvar_old_val = do_sdr_show_normal_boss_health;
 		do_sdr_show_normal_boss_health = cvar_new_val;
-/*
-		if ((cvar_new_val != cvar_old_val) && (!cvar_new_val))
-			ssdremaster_clear_boss_health(TRUE);
-*/
+
 		if (ssdremaster_check_boss_prefs) Delay(1);
 	} while (ssdremaster_check_boss_prefs);
 }
@@ -2674,8 +2674,6 @@ script "ssdremaster_show_seven_sinner_health" (int boss_id)
 				delay(boss_hud_anim_dl);
 				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
 			}
-
-			//ssdremaster_clear_boss_health(FALSE);
 		}
 	}
 }
@@ -2878,8 +2876,6 @@ script "ssdremaster_show_other_boss_health" (int boss_id, int boss_tid)
 				int boss_health=GetActorProperty(boss_tid, APROP_Health);
 				int boss_col=ssdremaster_other_boss_colvals[boss_id][boss_hud_anim_i];
 
-				//Log(d:monsters_battle_running,s:" - ",d:monsters_battle_state);
-
 				if (boss_health < 0) boss_health = 0;
 
 				if (do_sdr_show_normal_boss_health)
@@ -2900,8 +2896,6 @@ script "ssdremaster_show_other_boss_health" (int boss_id, int boss_tid)
 					monsters_battle_running--;
 				}
 			}
-
-			//ssdremaster_clear_boss_health(TRUE);
 
 			monsters_battle_state = MONSTERS_BATTLE_FINALE;
 		}
@@ -3755,7 +3749,6 @@ if(timebonus == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
-	//terminate;
 }
 else
 {
@@ -3779,7 +3772,6 @@ if(killbonus == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
-	//terminate;
 }
 else
 {
@@ -3803,7 +3795,6 @@ if(secretbonus == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
-	//terminate;
 }
 else
 {
@@ -4098,6 +4089,9 @@ function int getMonstersCount(bool force_monster_hate)
 					res += temp;
 				}
 			}
+
+			if (res > monsters_battle_total) // recount total monsters when summoned by player
+				monsters_battle_total = res;
 		}
 	}
 
@@ -4155,10 +4149,6 @@ script "ssdremaster_display_monster_hud_loop" (void)
 		delay(1);
 		Restart;
 	}
-	/*
-	delay(35);
-	ssdremaster_clear_monster_hud();
-	*/
 }
 
 script "ssdremaster_encounterMonstersBattle" (int ended_manually_i)
@@ -4352,10 +4342,6 @@ script "ssdremaster_stop_displaying_boss_targets" (void)		// for map 29-30 only
 	if (boss_battle_level)
 	{
 		ACS_NamedTerminate ("ssdremaster_display_boss_target_loop", 0);
-		/*
-		Delay(5);
-		ssdremaster_clear_target_hud();
-		*/
 	}
 }
 
@@ -4387,10 +4373,6 @@ hudmessage (s:ssdremaster_playername,s:" got"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
 else
 {
 hudmessage (s:"\cdDamaGe \cjgot"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
-/*
-hudmessage (s:"DamaGe        "; 0, 3, CR_GREEN, 0.5, 0.32, 0.0);
-hudmessage (s:"            got"; 0, 4, CR_WHITE, 0.5, 0.32, 0.0);
-*/ // deprecated
 }
 hudmessage (s:"through act ",d:act,s:" "; 0, 5, CR_WHITE, 0.5, 0.37, 0.0);
 setfont ("SmallFont");
@@ -4437,15 +4419,10 @@ bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
 ambientsound ("endofact", 127);
 delay(105);
 hudmessage (s:""; 0, 3, 0, 0, 0, 0);
-//if (!ssdremaster_custom_nametag) hudmessage (s:""; 0, 4, 0, 0, 0, 0); // deprecated
 hudmessage (s:""; 0, 5, 0, 0, 0, 0);
 hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 hudmessage (s:""; 0, 8, 0, 0, 0, 0);
-/*
-if (boss_battle_level)
-	ssdremaster_clear_target_hud();
-*/
 SetPlayerProperty (1, 0, 4);
 SetPlayerProperty (1, 0, 5);
 ACS_ExecuteAlways (800, 0, 0, 0, 0);
