@@ -3656,6 +3656,29 @@ bool sdr_reveal_secret_message_ready;
 #libdefine SDR_SECRET_REVEAL_MOCK 1
 #libdefine SDR_SECRET_REVEAL_BONUS 2
 
+function void ssdremaster_mock_trigger(str msg, bool fancy)
+{
+	bool mock_log=true;
+
+	if (sdr_reveal_secret_message_ready)
+	if (StrCmp(msg,"") != 0)
+	{
+		if (fancy)
+		{
+			SetFont("BigFont");
+			hudmessage(s:msg; 2, 0, CR_GREEN, 0.5, 0.5, 3.0, 0.01, 1.0);
+			SetFont("SmallFont");
+		}
+		else
+		{
+			Print(s:"\c-",s:msg);
+		}
+
+		activatorsound ("laugh", 127);
+		ssdremaster_mock_count++;
+	}
+}
+
 script 100 (int arg0, int arg1, int arg2)		// scoring (secrets)
 
 {
@@ -3698,12 +3721,7 @@ sdr_reveal_secret_message_ready = true;
 
 switch (arg1)
 {
-case SDR_SECRET_REVEAL_MOCK:
-	{
-		activatorsound ("laugh", 127);
-		ssdremaster_mock_count++;
-	}
-	break;
+case SDR_SECRET_REVEAL_MOCK: break; // function called instead
 case SDR_SECRET_REVEAL_BONUS:
 	{
 		SetFont("BigFont");
