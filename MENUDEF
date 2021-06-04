@@ -36,11 +36,11 @@ OptionMenu "SonicRemasterSettings"
 	StaticText ""
 	StaticText ""
 
-	StaticText "[WIP] Map specific workaround settings (updated when level starts)"
+	StaticText "[WIP] Workarounds (updated when level starts)"
 	StaticText ""
 
-	Option "Disable barrel spawns in Industrial Zone levels (avoid crashes)", "ssdremaster_workarounds_disable_barrels_in_zone_11", "OnOff"
-	Option "Disable cutscenes in levels before boss battle begins (helpful for debugging)", "ssdremaster_workarounds_disable_preboss_cutscenes", "OnOff"
+	Option "Remove explosive barrels from Industrial Zone levels (avoid crashes)", "ssdremaster_workarounds_disable_barrels_in_zone_11", "OnOff"
+	Option "Skip cutscenes before boss battle in several levels (helpful for debugging)", "ssdremaster_workarounds_disable_preboss_cutscenes", "OnOff"
 }
 
 AddListMenu "MainMenu" before "OptionsMenu"
