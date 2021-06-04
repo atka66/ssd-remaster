@@ -40,9 +40,8 @@ bool ssdremaster_par_time_reached;
 
 bool ssdremaster_debug_timebonus;
 
-bool show_hours, show_frac_seconds;
-
-int tic_per_frac, frac_per_seconds;
+bool time_display_settings[2]; // {show_hours,show_frac_seconds}
+int  time_running_settings[2]; // {tic_per_frac,frac_per_seconds}
 
 int timebonus_per_level[30]={
 	100000, 100000, // zone  1
@@ -62,14 +61,11 @@ int timebonus_per_level[30]={
 	100000, 100000, // zone 15
 	};
 int timebonus_down_per_gameskill[5]={100,200,300,500,750};
+int timebonus_basic_setings[2]; // {timebonus,timebonus_ingame_down_unit}
 
-int timebonus, timebonus_ingame_down_unit;
-
-int killbonus, killcount;
-int secretbonus, secretcount;
-int killtarget;
-
-int rings, ringcount, ringbonus;
+int killbonus_basic_settings[3]; // {killbonus,killcount, killtarget}
+int secretbonus_basic_settings[2]; // {secretbonus,secretcount}
+int ringbonus_basic_settings[3]; // {rings,ringcount,ringbonus}
 
 bool ssdremaster_check_boss_prefs;
 
@@ -1453,7 +1449,7 @@ function bool checkTimeParams(int hours, int mins, int secs, int fracs,   bool m
 	if (useFrac)
 	{
 		if (!maxOnly) res &= (fracs >= 0);
-		res &= (fracs < frac_per_seconds);
+		res &= (fracs < time_running_settings[1]);
 	}
 
 	return res;
@@ -1464,7 +1460,7 @@ function int getTimestamp(int hours, int mins, int secs)
 	int res=-1;
 
 	if (checkTimeParams(hours, mins, secs, -1,   false, false))
-		res = frac_per_seconds*(secs + 60*(mins + 60*hours));
+		res = time_running_settings[1] * (secs + 60*(mins + 60*hours));
 
 	return res;
 }
@@ -1511,6 +1507,7 @@ function bool checkTime(int hours, int mins, int secs, int fracs)
 
 	if (res)
 	{
+		int frac_per_seconds=time_running_settings[1];
 		int timestamp_temp=sdr_timestamp;
 		int hours_temp, mins_temp, secs_temp, fracs_temp;
 
@@ -1548,7 +1545,7 @@ function int querySeconds(void)
 
 	if (sdr_timestamp >= 0)
 	{
-		res = (sdr_timestamp / frac_per_seconds) % 60;
+		res = (sdr_timestamp / time_running_settings[1]) % 60;
 	}
 
 	return res;
@@ -1575,6 +1572,7 @@ function str ssdremaster_get_time_string(int timestamp)
 
 	if (timestamp >= 0)
 	{
+		int frac_per_seconds=time_running_settings[1];
 		int hours, mins, secs, fracs;
 		int div_temp;
 
@@ -1592,10 +1590,10 @@ function str ssdremaster_get_time_string(int timestamp)
 
 		fracs = timestamp;
 
-		if (show_hours)
+		if (time_display_settings[0])
 			res = StrParam(s:res,d:hours,s:":");
 
-		if ((show_hours) && (mins < 10))
+		if (time_display_settings[0] && (mins < 10))
 			res = StrParam(s:res,s:"0",d:mins);
 		else
 			res = StrParam(s:res,d:mins);
@@ -1605,7 +1603,7 @@ function str ssdremaster_get_time_string(int timestamp)
 		else
 			res = StrParam(s:res,s:":",d:secs);
 
-		if (show_frac_seconds)
+		if (time_display_settings[1])
 		{
 			int frac_temp=FixedMul(FixedDiv(fracs << 16,frac_per_seconds << 16),100 << 16) >> 16;
 
@@ -1777,7 +1775,7 @@ function void ssdremaster_display_timebonus(void)
 	if (ssdremaster_debug_timebonus)
 	{
 		hudmessage (s:common_timebonus_display_prefix; 0, 40, CR_GOLD, 0.04, 0.20, 0.0);
-		hudmessage (d:timebonus;                       0, 41, CR_TAN,  0.28, 0.20, 0.0);
+		hudmessage (d:timebonus_basic_setings[0];      0, 41, CR_TAN,  0.28, 0.20, 0.0);
 	}
 }
 
@@ -1816,8 +1814,8 @@ function void ssdremaster_display_score(void)
 
 function void ssdremaster_display_ring(void)
 {
-	hudmessage (s:common_ring_display_prefix; 0,  9, CR_GOLD, 0.04, 0.04, 0.0);
-	hudmessage (d:rings;                      0, 19, CR_TAN,  0.20, 0.04, 0.0);
+	hudmessage (s:common_ring_display_prefix;  0,  9, CR_GOLD, 0.04, 0.04, 0.0);
+	hudmessage (d:ringbonus_basic_settings[0]; 0, 19, CR_TAN,  0.20, 0.04, 0.0);
 }
 
 function str StrTrimmed(str s)
@@ -1934,8 +1932,8 @@ script "ssdremaster_common_init" OPEN
 
 	script904_ang_n = 8;
 
-	tic_per_frac = 5;
-	frac_per_seconds = 7;
+	time_running_settings[0] = 5;
+	time_running_settings[1] = 7;
 
 	show_hud = false;
 
@@ -2025,19 +2023,21 @@ script "ssdremaster_common_init" OPEN
 
 		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
 
-		killtarget = 0;
-		killcount = 0;
-		secretcount = 0;
+		killbonus_basic_settings[0] = 0;
+		killbonus_basic_settings[1] = 0;
+		killbonus_basic_settings[2] = 0;
 
-		timebonus = timebonus_per_level[level_num_temp-1];
-		timebonus_ingame_down_unit = timebonus_down_per_gameskill[GameSkill()];
+		secretbonus_basic_settings[1] = 0;
+
+		timebonus_basic_setings[0] = timebonus_per_level[level_num_temp-1];
+		timebonus_basic_setings[1] = timebonus_down_per_gameskill[GameSkill()];
 
 		ssdremaster_debug_timebonus = false;
 
 		ssdremaster_rad_used = false;
 
-		show_hours = true;
-		show_frac_seconds = false;
+		time_display_settings[0] = true;
+		time_display_settings[1] = false;
 
 		if (!sdr_common_init_firsttime)
 		{
@@ -2089,14 +2089,14 @@ script "ssdremaster_common_init" OPEN
 		monsters_battle_killed = 0;
 		monsters_battle_total = -1;
 
-		show_hours = false;
-		show_frac_seconds = true;
+		time_display_settings[0] = false;
+		time_display_settings[1] = true;
 
 		backupTime();
 
-		rings = 0;
-		ringcount = 0;
-		ringbonus = 0;
+		ringbonus_basic_settings[0] = 0;
+		ringbonus_basic_settings[1] = 0;
+		ringbonus_basic_settings[2] = 0;
 
 		TakeInventory ("PowerInvisibility", 1);
 		TakeInventory ("PowerIronFeet", 1);
@@ -3454,13 +3454,13 @@ function bool ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
 
 	if (res)
 	{
-		int new_rings=rings + ring_n;
+		int new_rings=ringbonus_basic_settings[0] + ring_n;
 
 		if ((new_rings >= 0) && (new_rings <= max_ring_n))
-			rings = new_rings;
+			ringbonus_basic_settings[0] = new_rings;
 
 		if (ring_n > 0)
-			ringbonus += bonus_am;
+			ringbonus_basic_settings[2] += bonus_am;
 	}
 
 	return res;
@@ -3525,6 +3525,16 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 	}
 }
 
+function void ssdremaster_inc_killtarget(void)
+{
+	killbonus_basic_settings[2]++;
+}
+
+function void ssdremaster_dec_killtarget(void)
+{
+	killbonus_basic_settings[2]--;
+}
+
 script 231 (int killtarget2,int killcount2)					// killtarget checker
 
 {
@@ -3563,7 +3573,7 @@ function bool ssdremaster_time_run_frac_sec(int fs, bool reverse)
 
 function bool ssdremaster_time_run_seconds(int s, bool reverse)
 {
-	return ssdremaster_time_run_frac_sec(frac_per_seconds*s, reverse);
+	return ssdremaster_time_run_frac_sec(time_running_settings[1] * s, reverse);
 }
 
 script "ssdremaster_time_warp_one_hour" (void)
@@ -3606,12 +3616,14 @@ script 400 (int skipbonus, int reverse_i)			// time display
 		}
 
 		if(!reverse && !skipbonus && ssdremaster_par_time_reached)
-		if((timebonus != 0) && (checkLevelTime(-1,-1,-1,00)))
+		if((timebonus_basic_setings[0] != 0) && (checkLevelTime(-1,-1,-1,00)))
 		{
-			if(timebonus < timebonus_ingame_down_unit)
-				timebonus = 0;
+			int timebonus_ingame_down_unit=timebonus_basic_setings[1];
+
+			if(timebonus_basic_setings[0] < timebonus_ingame_down_unit)
+				timebonus_basic_setings[0] = 0;
 			else
-				timebonus -= timebonus_ingame_down_unit;		
+				timebonus_basic_setings[0] -= timebonus_ingame_down_unit;		
 
 			setfont ("BigFont");
 			ssdremaster_display_timebonus();
@@ -3643,13 +3655,12 @@ script 400 (int skipbonus, int reverse_i)			// time display
 			activatorsound ("noway", 127);
 		}
 
-		delay(tic_per_frac);
+		delay(time_running_settings[0]);
 	}
 }
 
 // scoring and rundown scripts
 
-bool sdr_debug_scoring_secrets=true;
 bool sdr_reveal_secret_message_ready;
 
 #libdefine SDR_SECRET_REVEAL_NORMAL 0
@@ -3682,26 +3693,27 @@ function void ssdremaster_mock_trigger(str msg, bool fancy)
 script 100 (int arg0, int arg1, int arg2)		// scoring (secrets)
 
 {
+bool sdr_debug_scoring_secrets=true;
 int max_secretcount=secret_count_per_level[story_lev_num-1];
 
-if ((arg2 >= 0) && (arg1 >= 0) && (secretcount < max_secretcount))
+if ((arg2 >= 0) && (arg1 >= 0) && (secretbonus_basic_settings[1] < max_secretcount))
 if ((story_lev_num >=  1) && (story_lev_num <= 28)) // scored in story levels preceding Final Battle Zone
 {
 
 Thing_Remove (arg0);
 
 score+=1000;
-secretcount++;
+secretbonus_basic_settings[1]++;
 
-if(secretcount == max_secretcount)
-	secretbonus = 10000;
+if(secretbonus_basic_settings[1] == max_secretcount)
+	secretbonus_basic_settings[0] = 10000;
 
 if (sdr_debug_scoring_secrets)
 {
-	if (secretcount == max_secretcount)
+	if (secretbonus_basic_settings[1] == max_secretcount)
 		Log(s:"You have revealed all secrets successfully.");
 	else
-		Log(s:"Secrets revealed ",d:secretcount,s:" of ",d:max_secretcount,s:".");
+		Log(s:"Secrets revealed ",d:secretbonus_basic_settings[1],s:" of ",d:max_secretcount,s:".");
 }
 
 if (arg1 != SDR_SECRET_REVEAL_NORMAL)
@@ -3749,11 +3761,11 @@ if ((story_lev_num >=  1) && (story_lev_num <= 29))
 score+=arg0*50;
 if (story_lev_num <= 28) // not for Icon of Skin boss levels
 {
-killcount++;
+killbonus_basic_settings[1]++;
 
-if(killcount >= killtarget)
+if(killbonus_basic_settings[1] >= killbonus_basic_settings[2])
 {
-	killbonus = 10000;
+	killbonus_basic_settings[0] = 10000;
 }
 }
 
@@ -3763,19 +3775,21 @@ if(killcount >= killtarget)
 script 500 (void)					// time bonus rundown
 
 {
-if(timebonus == 0)
+if(timebonus_basic_setings[0] == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 }
 else
 {
-	int timebonus_temp=timebonus;
-	if(timebonus <= timebonus_rundown_unit)
-		timebonus = 0;
+	int timebonus_temp=timebonus_basic_setings[0];
+
+	if(timebonus_basic_setings[0] <= timebonus_rundown_unit)
+		timebonus_basic_setings[0] = 0;
 	else
-		timebonus -= timebonus_rundown_unit;
-	hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+		timebonus_basic_setings[0] -= timebonus_rundown_unit;
+
+	hudmessage (s:"time bonus:   \cc",d:timebonus_basic_setings[0]; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
 	score += min(timebonus_rundown_unit,timebonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
@@ -3786,19 +3800,19 @@ else
 script 600 (void)					// kill bonus rundown
 
 {
-if(killbonus == 0)
+if(killbonus_basic_settings[0] == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 }
 else
 {
-	int killbonus_temp=killbonus;
-	if (killbonus <= killbonus_rundown_unit)
-		killbonus = 0;
+	int killbonus_temp=killbonus_basic_settings[0];
+	if (killbonus_basic_settings[0] <= killbonus_rundown_unit)
+		killbonus_basic_settings[0] = 0;
 	else
-		killbonus -= killbonus_rundown_unit;
-	hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+		killbonus_basic_settings[0] -= killbonus_rundown_unit;
+	hudmessage (s:"kill bonus:   \cc",d:killbonus_basic_settings[0]; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
 	score += min(killbonus_rundown_unit,killbonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
@@ -3809,19 +3823,19 @@ else
 script 700 (void)					// secret bonus rundown
 
 {
-if(secretbonus == 0)
+if(secretbonus_basic_settings[0] == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(rundown_dl);
 }
 else
 {
-	int secretbonus_temp=secretbonus;
-	if (secretbonus <= secretbonus_rundown_unit)
-		secretbonus = 0;
+	int secretbonus_temp=secretbonus_basic_settings[0];
+	if (secretbonus_basic_settings[0] <= secretbonus_rundown_unit)
+		secretbonus_basic_settings[0] = 0;
 	else
-		secretbonus -= secretbonus_rundown_unit;
-	hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
+		secretbonus_basic_settings[0] -= secretbonus_rundown_unit;
+	hudmessage (s:"secret bonus:   \cc",d:secretbonus_basic_settings[0]; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
 	score += min(secretbonus_rundown_unit,secretbonus_temp);
 	activatorsound ("button1", 127);
 	delay(rundown_dl);
@@ -3831,22 +3845,86 @@ else
 
 // bonus level specific functions and scripts
 
+function void ssdremaster_set_goal_rings(int ring_n)
+{
+	if (ring_n > 0)
+		ringbonus_basic_settings[1] = ring_n;
+}
+
+function int ssdremaster_get_goal_rings(void)
+{
+	int res=-1;
+
+	if (ringbonus_basic_settings[1] >= 0)
+		res = ringbonus_basic_settings[1];
+
+	return res;
+}
+
+function str ssdremaster_print_goal_rings(void)
+{
+	int res="";
+	int ringcount=ringbonus_basic_settings[1];
+
+	if (ringcount > 0)
+		res = StrParam(d:ringcount);
+	else if (ringcount == 0)
+		res = "no";
+	else
+		res = "???";
+
+	return res;
+}
+
+function bool ssdremaster_check_rings_count(bool reached)
+{
+	bool res=false;
+
+	int rings=ringbonus_basic_settings[0];
+	int ringcount=ringbonus_basic_settings[1];
+
+	res |= (reached && (rings >= ringcount));
+	res |= (!reached && (rings < ringcount));
+
+	return res;
+}
+
+script "ssdremaster_lose_rings_by_mine" (int dl)
+{
+	activatorsound ("ringout", 127);
+
+	if(ringbonus_basic_settings[0] < 10)
+	{
+		ringbonus_basic_settings[0] = 0;
+		ringbonus_basic_settings[2] = 0;
+	}
+	else
+	{
+		ringbonus_basic_settings[0] -= 10;
+		ringbonus_basic_settings[2] -= 1000;
+		if (ringbonus_basic_settings[2] < 0) ringbonus_basic_settings[2] = 0;
+	}
+
+	if (dl > 0)
+		delay(dl);
+}
+
 function void ssdremaster_lose_ringbonus(int div)
 {
 	if (div > 0)
-	if (ringbonus > 0)
+	if (ringbonus_basic_settings[2] > 0)
 	{
-		if (ringbonus >= div)
-			ringbonus /= div;
+		if (ringbonus_basic_settings[2] >= div)
+			ringbonus_basic_settings[2] /= div;
 		else
-			ringbonus = 0;
+			ringbonus_basic_settings[2] = 0;
 	}
 }
 
 script 900 (void)					// ring bonus rundown
 
 {
-if(ringbonus == 0)
+if(ringbonus_basic_settings[2] == 0)
 {
 	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
 	delay(1);
@@ -3854,18 +3932,18 @@ if(ringbonus == 0)
 }
 else
 {
-	if (ringbonus >= ringbonus_rundown_unit)
+	if (ringbonus_basic_settings[2] >= ringbonus_rundown_unit)
 	{
 		score += ringbonus_rundown_unit;
-		ringbonus -= ringbonus_rundown_unit;
+		ringbonus_basic_settings[2] -= ringbonus_rundown_unit;
 	}
 	else
 	{
-		score += ringbonus;
-		ringbonus = 0;
+		score += ringbonus_basic_settings[2];
+		ringbonus_basic_settings[2] = 0;
 	}
 
-	hudmessage (s:"ring bonus:   \cc",d:ringbonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+	hudmessage (s:"ring bonus:   \cc",d:ringbonus_basic_settings[2]; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
 	activatorsound ("button1", 127);
 }
 delay(1);
@@ -4395,11 +4473,11 @@ hudmessage (s:"\cdDamaGe \cjgot"; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
 hudmessage (s:"through act ",d:act,s:" "; 0, 5, CR_WHITE, 0.5, 0.37, 0.0);
 setfont ("SmallFont");
 delay(35);
-hudmessage (s:"time bonus:   \cc",d:timebonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+hudmessage (s:"time bonus:   \cc",d:timebonus_basic_setings[0]; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
 delay(35);
-hudmessage (s:"kill bonus:   \cc",d:killbonus; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
+hudmessage (s:"kill bonus:   \cc",d:killbonus_basic_settings[0]; 0, 7, CR_GOLD, 0.5, 0.52, 0.0);
 delay(35);
-hudmessage (s:"secret bonus:   \cc",d:secretbonus; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
+hudmessage (s:"secret bonus:   \cc",d:secretbonus_basic_settings[0]; 0, 8, CR_GOLD, 0.5, 0.57, 0.0);
 delay(55);
 SetMusic ("");
 delay(35);
@@ -4418,7 +4496,7 @@ setfont ("BigFont");
 hudmessage (s:"bonus stage ",d:bonus_lev_num; 0, 3, CR_WHITE, 0.5, 0.32, 0.0);
 setfont ("SmallFont");
 delay(35);
-hudmessage (s:"ring bonus:   \cc",d:ringbonus; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
+hudmessage (s:"ring bonus:   \cc",d:ringbonus_basic_settings[2]; 0, 6, CR_GOLD, 0.5, 0.47, 0.0);
 delay(125);
 SetMusic ("");
 delay(35);
