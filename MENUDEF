@@ -32,6 +32,15 @@ OptionMenu "SonicRemasterSettings"
 	Option "[WIP] Scramble sector lighting", "ssdremaster_keyscramble_allow_sector_light_effects", "OnOff", "ssdremaster_enable_keyscramble"
 	Option "[WIP] Scramble light source things", "ssdremaster_keyscramble_allow_light_sources", "OnOff", "ssdremaster_enable_keyscramble"
 	Option "[WIP] Scramble other things (obstacles)", "ssdremaster_keyscramble_allow_other_obstacles", "OnOff", "ssdremaster_enable_keyscramble"
+
+	StaticText ""
+	StaticText ""
+
+	StaticText "[WIP] Map specific workaround settings (updated when level starts)"
+	StaticText ""
+
+	Option "Disable barrel spawns in Industrial Zone levels (avoid crashes)", "ssdremaster_workarounds_disable_barrels_in_zone_11", "OnOff"
+	Option "Disable cutscenes in levels before boss battle begins (helpful for debugging)", "ssdremaster_workarounds_disable_preboss_cutscenes", "OnOff"
 }
 
 AddListMenu "MainMenu" before "OptionsMenu"
