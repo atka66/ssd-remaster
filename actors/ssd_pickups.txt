@@ -289,9 +289,51 @@ Height 16
 
 // key actor name replacement (by tiszaszaki)
 
-actor GreenCard : BlueSkull replaces BlueSkull { +NOGRAVITY }
-actor OrangeCard : YellowSkull replaces YellowSkull { +NOGRAVITY }
-actor PurpleCard : RedSkull replaces RedSkull { +NOGRAVITY }
+actor GreenCard : BlueSkull replaces BlueSkull
+{
+	+NOGRAVITY
+
+	Translation "192:207=112:121", "240:247=122:127" // from blue to green
+	Inventory.AltHUDIcon "GKEYA0"
+
+	States
+	{
+	Spawn:
+		BKEY A 10
+		BKEY B 10 bright
+		loop
+	}
+}
+actor OrangeCard : YellowSkull replaces YellowSkull
+{
+	+NOGRAVITY
+
+	Translation "224:231=208:215", "160:167=216:223" // from yellow to orange
+	Inventory.AltHUDIcon "OKEYA0"
+
+	States
+	{
+	Spawn:
+		YKEY A 10
+		YKEY B 10 bright
+		loop
+	}
+}
+actor PurpleCard : RedSkull replaces RedSkull
+{
+	+NOGRAVITY
+
+	Translation "176:191=250:254" // from red to purple
+	Inventory.AltHUDIcon "PKEYA0"
+
+	States
+	{
+	Spawn:
+		RKEY A 10
+		RKEY B 10 bright
+		loop
+	}
+}
 
 actor BlueCard2 : BlueCard replaces BlueCard { +NOGRAVITY }
 actor YellowCard2 : YellowCard replaces YellowCard { +NOGRAVITY }
