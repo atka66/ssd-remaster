@@ -2250,7 +2250,7 @@ script "ssdremaster_common_init" OPEN
 		SetWeapon ("Fist");
 
 		if ((level_num_temp >= 31) && (level_num_temp <= 34))
-			ACS_Execute(999, 0, 0,0,0);
+			ACS_NamedExecute("ssdremaster_loop_ring_display", 0, 0,0,0);
 	}
 
 	// common part of all levels starting
@@ -2266,7 +2266,7 @@ script "ssdremaster_common_init" OPEN
 	{
 		str title_str=zone_titles[zone-1];
 
-		ACS_Execute (300, 0, 0, 0, 0);
+		ACS_NamedExecute ("ssdremaster_loop_score_display", 0, 0, 0, 0);
 
 		setfont ("BigFont");
 		ssdremaster_display_time();
@@ -2281,7 +2281,7 @@ script "ssdremaster_common_init" OPEN
 		hudmessage (s:StrParam(s:"     ",d:act); 2, 0, CR_WHITE, 0.5, 0.53, 4.83, 0.01, 1.0);
 		delay(24);
 
-		ACS_Execute (400, 0, 0, 0, 0);
+		ACS_NamedExecute ("ssdremaster_loop_time_display", 0, 0, 0, 0);
 		if (level_num_temp == 30)
 			ACS_NamedExecute("ssdremaster_display_boss_targets", 0, 0,0,0);
 	}
@@ -2315,7 +2315,7 @@ script "ssdremaster_common_return" REOPEN
 	if (bonus_stage_state == NOT_A_BONUS_STAGE)
 	{
 		ssdremaster_time_running = true;
-		ACS_Execute(400, 0, 0,0,0);
+		ACS_NamedExecute("ssdremaster_loop_time_display", 0, 0,0,0);
 	}
 	else
 	{
@@ -2334,7 +2334,7 @@ script "ssdremaster_common_return" REOPEN
 
 //// translations
 
-script 301 open		// static translations
+script "ssdremaster_translate_enhanced_monsters" open		// static translations
 
 {
 delay(1);
@@ -2480,14 +2480,24 @@ CreateTranslation (19, 112:127=112:127, 80:95=152:159);
 
 script "ssdremaster_init_sevensinner_translation" (void)
 {
-	int i;
-	for (i=302;i<=312;i++)
-		ACS_Execute(i, 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Envy", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Lust", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Sloth", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Greed", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Vanity", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Gluttony", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_Pride", 0, 0,0,0);
+
+	ACS_NamedExecute("ssdremaster_translate_boss_SuperMancubus", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_SuperSpiderdemon", 0, 0,0,0);
+	ACS_NamedExecute("ssdremaster_translate_boss_SuperCyberdemon", 0, 0,0,0);
+
+	ACS_NamedExecute("ssdremaster_translate_boss_TheFirestarter", 0, 0,0,0);
 }
 
 // boss translations
 
-script 302 (void)		// Envy	(dark green/natural green)
+script "ssdremaster_translate_boss_Envy" (void)		// Envy	(dark green/natural green)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_ENVY] = false;
@@ -2503,7 +2513,7 @@ script 302 (void)		// Envy	(dark green/natural green)
 	}
 }
 
-script 303 (void)		// Lust	(red/dark red)
+script "ssdremaster_translate_boss_Lust" (void)		// Lust	(red/dark red)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_LUST] = false;
@@ -2519,7 +2529,7 @@ script 303 (void)		// Lust	(red/dark red)
 	}
 }
 
-script 304 (void)		// Sloth (brown/tan)
+script "ssdremaster_translate_boss_Sloth" (void)		// Sloth (brown/tan)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_SLOTH] = false;
@@ -2535,7 +2545,7 @@ script 304 (void)		// Sloth (brown/tan)
 	}
 }
 
-script 305 (void)		// 	Greed (blue/purple)
+script "ssdremaster_translate_boss_Greed" (void)		// 	Greed (blue/purple)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_GREED] = false;
@@ -2551,7 +2561,7 @@ script 305 (void)		// 	Greed (blue/purple)
 	}
 }
 
-script 306 (void)		// Vanity (grey/white)
+script "ssdremaster_translate_boss_Vanity" (void)		// Vanity (grey/white)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_VANITY] = false;
@@ -2567,7 +2577,7 @@ script 306 (void)		// Vanity (grey/white)
 	}
 }
 
-script 307 (void)		// Gluttony	(orange/dark orange)
+script "ssdremaster_translate_boss_Gluttony" (void)		// Gluttony	(orange/dark orange)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_GLUTTONY] = false;
@@ -2583,7 +2593,7 @@ script 307 (void)		// Gluttony	(orange/dark orange)
 	}
 }
 
-script 308 (void)		// Pride (yellow/bright yellow)
+script "ssdremaster_translate_boss_Pride" (void)		// Pride (yellow/bright yellow)
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_BOSS_PRIDE] = false;
@@ -2599,7 +2609,7 @@ script 308 (void)		// Pride (yellow/bright yellow)
 	}
 }
 
-script 309 (void)		// Super Mancubus
+script "ssdremaster_translate_boss_SuperMancubus" (void)		// Super Mancubus
 
 {
 	delay (2);
@@ -2617,7 +2627,7 @@ script 309 (void)		// Super Mancubus
 	Restart;
 }
 
-script 310 (void)		// Super Spiderdemon
+script "ssdremaster_translate_boss_SuperSpiderdemon" (void)		// Super Spiderdemon
 
 {
 	delay (2);
@@ -2635,7 +2645,7 @@ script 310 (void)		// Super Spiderdemon
 	Restart;
 }
 
-script 311 (void)		// Super Cyberdemon
+script "ssdremaster_translate_boss_SuperCyberdemon" (void)		// Super Cyberdemon
 
 {
 	delay (2);
@@ -2653,7 +2663,7 @@ script 311 (void)		// Super Cyberdemon
 	Restart;
 }
 
-script 312 (void)		// The Firestarter
+script "ssdremaster_translate_boss_TheFirestarter" (void)		// The Firestarter
 
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] = false;
@@ -2678,7 +2688,7 @@ script 312 (void)		// The Firestarter
 	}
 }
 
-script 313 open		// translation activator
+script "ssdremaster_use_translations" OPEN		// translation activator
 
 {
 Thing_SetTranslation (100, 1);
@@ -2985,13 +2995,13 @@ ThrustThingZ (0, arg0, arg1, 0);
 
 #libdefine T_BAZOOKA 170
 
-script 233 ENTER					// player TID changer
+script "ssdremaster_change_player_TID" ENTER			// player TID changer
 
 {
 Thing_ChangeTID (0, PlayerNumber()+1337);
 }
 
-script 234 ENTER					// clip checker
+script "ssdremaster_check_ammo_clip" ENTER				// clip checker
 
 {
 ammo_a[0] = CheckInventory ("Clip");
@@ -3010,7 +3020,7 @@ delay(1);
 Restart;
 }
 
-script 235 ENTER					// rocket checker
+script "ssdremaster_check_ammo_rockets" ENTER			// rocket checker
 
 {
 ammo_a[2] = CheckInventory ("RocketAmmo");
@@ -3032,7 +3042,7 @@ delay(1);
 Restart;
 }
 
-script 236 ENTER					// chainsaw checker
+script "ssdremaster_check_weapon_chainsaw" ENTER		// chainsaw checker
 
 {
 weapons_a[0] = CheckInventory ("Chainsaw");
@@ -3051,7 +3061,7 @@ delay(1);
 Restart;
 }
 
-script 237 ENTER					// pistol checker
+script "ssdremaster_check_weapon_pistol" ENTER			// pistol checker
 
 {
 weapons_a[1] = CheckInventory ("Pistol");
@@ -3078,7 +3088,7 @@ delay(1);
 Restart;
 }
 
-script 238 ENTER					// shotgun checker
+script "ssdremaster_check_weapon_shotgun" ENTER			// shotgun checker
 
 {
 weapons_a[2] = CheckInventory ("Shotgun");
@@ -3105,7 +3115,7 @@ delay(1);
 Restart;
 }
 
-script 239 ENTER					// super shotgun checker
+script "ssdremaster_check_weapon_supershotgun" ENTER	// super shotgun checker
 
 {
 weapons_a[3] = CheckInventory ("SuperShotgun");
@@ -3133,7 +3143,7 @@ Restart;
 }
 
 
-script 240 ENTER					// chaingun checker
+script "ssdremaster_check_weapon_chaingun" ENTER		// chaingun checker
 
 {
 weapons_a[4] = CheckInventory ("Chaingun");
@@ -3160,7 +3170,7 @@ delay(1);
 Restart;
 }
 
-script 241 ENTER					// rocket launcher checker
+script "ssdremaster_check_weapon_rocketlauncher" ENTER	// rocket launcher checker
 
 {
 weapons_a[5] = CheckInventory ("PhoenixRod");
@@ -3187,7 +3197,7 @@ delay(1);
 Restart;
 }
 
-script 242 ENTER					// plasma gun checker
+script "ssdremaster_check_weapon_plasmarifle" ENTER		// plasma gun checker
 
 {
 weapons_a[6] = CheckInventory ("PlasmaRifle");
@@ -3214,7 +3224,7 @@ delay(1);
 Restart;
 }
 
-script 243 ENTER					// bfg checker
+script "ssdremaster_check_weapon_BFG9000" ENTER			// bfg checker
 
 {
 weapons_a[7] = CheckInventory ("BFG9000");
@@ -3241,7 +3251,7 @@ delay(1);
 Restart;
 }
 
-script 244 ENTER					// railgun checker
+script "ssdremaster_check_weapon_railgun" ENTER			// railgun checker
 
 {
 weapons_a[8] = CheckInventory ("RocketLauncher");
@@ -3268,7 +3278,7 @@ delay(1);
 Restart;
 }
 
-script 245 ENTER					// flame orb/rocket checker
+script "ssdremaster_check_ammo_flameorb" ENTER			// flame orb/rocket checker
 
 {
 ammo_a[2] = CheckInventory ("RocketAmmo");
@@ -3299,7 +3309,7 @@ script 247 (void)					// backpack
 
 }
 
-script 248 ENTER					// capacity checker
+script "ssdremaster_check_ammo_capacity" ENTER					// capacity checker
 
 {
 pack = CheckInventory ("Backpack");
@@ -3398,7 +3408,7 @@ if(arg0 == 200)
 
 }
 
-script 253 ENTER					// golden health potion checker
+script "ssdremaster_check_bonus_goldenpotion" ENTER					// golden health potion checker
 
 {
 health =  CheckInventory ("Health");
@@ -3416,7 +3426,7 @@ delay(1);
 Restart;
 }
 
-script 254 ENTER					// light armour checker
+script "ssdremaster_check_" ENTER					// light armour checker
 
 {
 armour =  CheckInventory ("Armor");
@@ -3601,7 +3611,7 @@ script "ssdremaster_time_warp_one_hour" (void)
 
 // display scripts
 
-script 300 (void)						// score display
+script "ssdremaster_loop_score_display" (void)						// score display
 
 {
 setfont ("BigFont");
@@ -3610,7 +3620,7 @@ delay(1);
 Restart;
 }
 
-script 400 (int skipbonus, int reverse_i)			// time display
+script "ssdremaster_loop_time_display" (int skipbonus, int reverse_i)			// time display
 
 {
 	bool reverse=(reverse_i != 0);
@@ -3781,7 +3791,7 @@ if(killbonus_basic_settings[1] >= killbonus_basic_settings[2])
 }
 }
 
-script 500 (void)					// time bonus rundown
+script "ssdremaster_rundown_timebonus" (void)					// time bonus rundown
 
 {
 if(timebonus_basic_setings[0] == 0)
@@ -3806,7 +3816,7 @@ else
 }
 }
 
-script 600 (void)					// kill bonus rundown
+script "ssdremaster_rundown_killbonus" (void)					// kill bonus rundown
 
 {
 if(killbonus_basic_settings[0] == 0)
@@ -3829,7 +3839,7 @@ else
 }
 }
 
-script 700 (void)					// secret bonus rundown
+script "ssdremaster_rundown_secretbonus" (void)					// secret bonus rundown
 
 {
 if(secretbonus_basic_settings[0] == 0)
@@ -3930,7 +3940,7 @@ function void ssdremaster_lose_ringbonus(int div)
 	}
 }
 
-script 900 (void)					// ring bonus rundown
+script "ssdremaster_rundown_ringbonus" (void)					// ring bonus rundown
 
 {
 if(ringbonus_basic_settings[2] == 0)
@@ -3959,7 +3969,7 @@ delay(1);
 Restart;
 }
 
-script 999 (void)					// ring display
+script "ssdremaster_loop_ring_display" (void)					// ring display
 
 {
 setfont ("BigFont");
@@ -4460,7 +4470,7 @@ script "ssdremaster_end_scoring" (void)
 {
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
-ACS_Terminate (400, 0);
+ACS_Terminate ("ssdremaster_loop_time_display", 0);
 if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
 {
 	boss_battle_state = BOSS_BATTLE_FINALE;
@@ -4496,14 +4506,14 @@ hudmessage (s:"secret bonus:   \cc",d:secretbonus_basic_settings[0]; 0, 8, CR_GO
 delay(55);
 SetMusic ("");
 delay(35);
-ACS_Execute (500, 0, 0, 0, 0);
-ACS_Execute (600, 0, 0, 0, 0);
-ACS_Execute (700, 0, 0, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_timebonus", 0, 0, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_killbonus", 0, 0, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_secretbonus", 0, 0, 0, 0);
 }
 if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
 {
-ACS_Terminate (999, 0);
-ACS_Execute (300, 0, 0, 0, 0);
+ACS_NamedTerminate ("ssdremaster_loop_ring_display", 0);
+ACS_NamedExecute ("ssdremaster_loop_score_display", 0, 0, 0, 0);
 SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
@@ -4515,7 +4525,7 @@ hudmessage (s:"ring bonus:   \cc",d:ringbonus_basic_settings[2]; 0, 6, CR_GOLD, 
 delay(125);
 SetMusic ("");
 delay(35);
-ACS_Execute (900, 0, 0, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_ringbonus", 0, 0, 0, 0);
 }
 }
 
