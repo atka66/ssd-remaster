@@ -2658,7 +2658,8 @@ script 312 (void)		// The Firestarter
 {
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] = false;
 	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] |= (story_lev_num == SDR_LEVELNUM_TITLEMAP);
-	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] |= ((story_lev_num == 16) || (story_lev_num == 28) || (story_lev_num == 30));
+	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] |= ((story_lev_num == 16) || (story_lev_num == 20));
+	ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER] |= ((story_lev_num == 28) || (story_lev_num == 30));
 
 	while (ssdremaster_sevensinner_anim[SDR_SEVENSINNER_THEFIRESTARTER])
 	{
