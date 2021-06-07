@@ -466,6 +466,8 @@ int ringbonus_rundown_unit = 200;
 
 int rundown_dl=2;
 
+bool ssdremaster_do_scoring;
+
 // variables for secret reveal
 
 bool sdr_reveal_secret_message_ready;
@@ -2087,6 +2089,8 @@ script "ssdremaster_common_init" OPEN
 	story_lev_num = 0;
 	bonus_lev_num = 0;
 
+	ssdremaster_do_scoring = false;
+
 	ssdremaster_loop_nametag_change = true;
 	ACS_NamedExecute("ssdremaster_common_set_nametag", 0, 0,0,0);
 
@@ -2308,6 +2312,24 @@ script "ssdremaster_common_final" UNLOADING
 {
 	ready = false;
 	ssdremaster_time_running = false;
+}
+
+script "ssdremaster_common_ragequit" (int pos)
+{
+	if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
+	{
+		boss_target_stats[0] = boss_target_stats[1];
+
+		PlaySound(0, "noway");
+		SetFont("BigFont");
+		HUDMessage(s:"You are leaving boss arena without fight."; 2, 0, CR_RED, 0.5, 0.5, 3.0, 0.01, 1.0);
+
+		ACS_Execute("ssdremaster_end_scoring", 0, 0,0,0);
+
+		while (ssdremaster_do_scoring) delay(1);
+	}
+
+	Exit_Normal(pos);
 }
 
 script "ssdremaster_common_return" REOPEN
@@ -3791,12 +3813,12 @@ if(killbonus_basic_settings[1] >= killbonus_basic_settings[2])
 }
 }
 
-script "ssdremaster_rundown_timebonus" (void)					// time bonus rundown
+script "ssdremaster_rundown_timebonus" (int forced_i)				// time bonus rundown
 
 {
 if(timebonus_basic_setings[0] == 0)
 {
-	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, forced_i, 0, 0);
 	delay(rundown_dl);
 }
 else
@@ -3816,12 +3838,12 @@ else
 }
 }
 
-script "ssdremaster_rundown_killbonus" (void)					// kill bonus rundown
+script "ssdremaster_rundown_killbonus" (int forced_i)				// kill bonus rundown
 
 {
 if(killbonus_basic_settings[0] == 0)
 {
-	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, forced_i, 0, 0);
 	delay(rundown_dl);
 }
 else
@@ -3839,12 +3861,12 @@ else
 }
 }
 
-script "ssdremaster_rundown_secretbonus" (void)					// secret bonus rundown
+script "ssdremaster_rundown_secretbonus" (int forced_i)				// secret bonus rundown
 
 {
 if(secretbonus_basic_settings[0] == 0)
 {
-	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, forced_i, 0, 0);
 	delay(rundown_dl);
 }
 else
@@ -3940,12 +3962,12 @@ function void ssdremaster_lose_ringbonus(int div)
 	}
 }
 
-script "ssdremaster_rundown_ringbonus" (void)					// ring bonus rundown
+script "ssdremaster_rundown_ringbonus" (int forced_i)				// ring bonus rundown
 
 {
 if(ringbonus_basic_settings[2] == 0)
 {
-	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, 0, 0, 0);
+	ACS_NamedExecuteAlways ("ssdremaster_after_scoring", 0, forced_i, 0, 0);
 	delay(1);
 	terminate;
 }
@@ -4466,8 +4488,13 @@ script "ssdremaster_stop_displaying_boss_targets" (void)		// for map 29-30 only
 	}
 }
 
-script "ssdremaster_end_scoring" (void)
+script "ssdremaster_end_scoring" (int forced_i)
 {
+bool forced=(forced_i != 0);
+
+if (forced)
+	ssdremaster_do_scoring = true;
+
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 ACS_Terminate ("ssdremaster_loop_time_display", 0);
@@ -4506,9 +4533,9 @@ hudmessage (s:"secret bonus:   \cc",d:secretbonus_basic_settings[0]; 0, 8, CR_GO
 delay(55);
 SetMusic ("");
 delay(35);
-ACS_NamedExecute ("ssdremaster_rundown_timebonus", 0, 0, 0, 0);
-ACS_NamedExecute ("ssdremaster_rundown_killbonus", 0, 0, 0, 0);
-ACS_NamedExecute ("ssdremaster_rundown_secretbonus", 0, 0, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_timebonus", 0, forced_i, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_killbonus", 0, forced_i, 0, 0);
+ACS_NamedExecute ("ssdremaster_rundown_secretbonus", 0, forced_i, 0, 0);
 }
 if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
 {
@@ -4529,8 +4556,10 @@ ACS_NamedExecute ("ssdremaster_rundown_ringbonus", 0, 0, 0, 0);
 }
 }
 
-script "ssdremaster_after_scoring" (void)
+script "ssdremaster_after_scoring" (int forced_i)
 {
+bool forced=(forced_i != 0);
+
 if (bonus_stage_state == NOT_A_BONUS_STAGE)
 {
 endcounter++;
@@ -4568,9 +4597,18 @@ SetPlayerProperty (1, 0, 3);
 activatorsound ("teleport3", 127);
 delay(35);
 restoreTime();
-ACS_ExecuteAlways (800, 0, 0, 0, 0);
+
+if (!forced)
+	ACS_ExecuteAlways (800, 0, 0, 0, 0);
 }
 }
+
+if (forced)
+{
+	delay(35);
+	ssdremaster_do_scoring = false;
+}
+
 ssdremaster_loop_nametag_change = false;
 ssdremaster_check_boss_prefs = false;
 }
