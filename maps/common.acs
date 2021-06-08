@@ -2316,6 +2316,21 @@ script "ssdremaster_common_final" UNLOADING
 
 script "ssdremaster_common_ragequit" (int pos)
 {
+	bool forced=true;
+
+	if (bonus_stage_state != NOT_A_BONUS_STAGE)
+	{
+		forced = false;
+
+		PlaySound(0, "noway");
+		SetFont("BigFont");
+		HUDMessage(s:"You are leaving bonus stage without efforts."; 2, 0, CR_RED, 0.5, 0.5, 3.0, 0.01, 1.0);
+
+		bonus_stage_state = BONUS_STAGE_LOSE;
+
+		ACS_NamedTerminate("ssdremaster_loop_time_display", 0);
+	}
+
 	if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
 	{
 		boss_target_stats[0] = boss_target_stats[1];
@@ -2323,13 +2338,20 @@ script "ssdremaster_common_ragequit" (int pos)
 		PlaySound(0, "noway");
 		SetFont("BigFont");
 		HUDMessage(s:"You are leaving boss arena without fight."; 2, 0, CR_RED, 0.5, 0.5, 3.0, 0.01, 1.0);
-
-		ACS_Execute("ssdremaster_end_scoring", 0, 0,0,0);
-
-		while (ssdremaster_do_scoring) delay(1);
 	}
 
-	Exit_Normal(pos);
+	Delay(140);
+
+	ACS_NamedExecute("ssdremaster_end_scoring", 0, forced,0,0);
+
+	if (forced)
+	{
+		Delay(5);
+
+		while (ssdremaster_do_scoring) delay(1);
+
+		Exit_Normal(pos);
+	}
 }
 
 script "ssdremaster_common_return" REOPEN
@@ -4558,57 +4580,67 @@ ACS_NamedExecute ("ssdremaster_rundown_ringbonus", 0, 0, 0, 0);
 
 script "ssdremaster_after_scoring" (int forced_i)
 {
-bool forced=(forced_i != 0);
+	bool forced=(forced_i != 0);
+	bool counter_ended=false;
 
-if (bonus_stage_state == NOT_A_BONUS_STAGE)
-{
-endcounter++;
-if (endcounter == 3)
-{
-bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
-ambientsound ("endofact", 127);
-delay(105);
-hudmessage (s:""; 0, 3, 0, 0, 0, 0);
-hudmessage (s:""; 0, 5, 0, 0, 0, 0);
-hudmessage (s:""; 0, 6, 0, 0, 0, 0);
-hudmessage (s:""; 0, 7, 0, 0, 0, 0);
-hudmessage (s:""; 0, 8, 0, 0, 0, 0);
-SetPlayerProperty (1, 0, 4);
-SetPlayerProperty (1, 0, 5);
-ACS_ExecuteAlways (800, 0, 0, 0, 0);
-}
-}
-if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
-{
-endcounter++;
-if (endcounter == 1)
-{
-ambientsound ("endofact", 127);
-delay(105);
-hudmessage (s:""; 0, 3, 0, 0, 0, 0);
-hudmessage (s:""; 0, 4, 0, 0, 0, 0);
-hudmessage (s:""; 0, 6, 0, 0, 0, 0);
-hudmessage (s:""; 0, 7, 0, 0, 0, 0);
-hudmessage (s:""; 0, 8, 0, 0, 0, 0);
-if ((bonus_lev_num >= 1) && (bonus_lev_num <= 4))
-SetPlayerProperty (1, 0, 4);
-if (bonus_lev_num == 3)
-SetPlayerProperty (1, 0, 3);
-activatorsound ("teleport3", 127);
-delay(35);
-restoreTime();
+	if (bonus_stage_state == NOT_A_BONUS_STAGE)
+	{
+		endcounter++;
+		if (endcounter == 3)
+		{
+			bool boss_battle_level=(boss_battle_state != NOT_A_BOSS_BATTLE_LEVEL);
+			ambientsound ("endofact", 127);
+			delay(105);
+			hudmessage (s:""; 0, 3, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 5, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 6, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 7, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+			SetPlayerProperty (1, 0, 4);
+			SetPlayerProperty (1, 0, 5);
 
-if (!forced)
-	ACS_ExecuteAlways (800, 0, 0, 0, 0);
-}
-}
+			counter_ended = true;
+		}
+	}
 
-if (forced)
-{
-	delay(35);
-	ssdremaster_do_scoring = false;
-}
+	if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_LOSE))
+	{
+		endcounter++;
+		if (endcounter == 1)
+		{
+			ambientsound ("endofact", 127);
+			delay(105);
+			hudmessage (s:""; 0, 3, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 4, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 6, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 7, 0, 0, 0, 0);
+			hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+			if ((bonus_lev_num >= 1) && (bonus_lev_num <= 4))
+			SetPlayerProperty (1, 0, 4);
+			if (bonus_lev_num == 3)
+			SetPlayerProperty (1, 0, 3);
+			activatorsound ("teleport3", 127);
+			delay(35);
+			restoreTime();
 
-ssdremaster_loop_nametag_change = false;
-ssdremaster_check_boss_prefs = false;
+			counter_ended = true;
+		}
+	}
+
+	if (counter_ended)
+	{
+		if (forced)
+		{
+			delay(35);
+			ssdremaster_do_scoring = false;
+		}
+		else
+		{
+			ACS_ExecuteAlways (800, 0, 0, 0, 0);
+		}
+	}
+
+
+	ssdremaster_loop_nametag_change = false;
+	ssdremaster_check_boss_prefs = false;
 }
