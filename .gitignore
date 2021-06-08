@@ -4,3 +4,4 @@ maps/*.backup*
 maps/*.bak
 maps/compile.bat
 maps/compile.sh
+maps/acs.err
