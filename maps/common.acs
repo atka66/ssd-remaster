@@ -3604,6 +3604,7 @@ function void ssdremaster_dec_killtarget(void)
 	killbonus_basic_settings[2]--;
 }
 
+/*
 script 231 (int killtarget2,int killcount2)					// killtarget checker
 
 {
@@ -3617,6 +3618,16 @@ script 232 (int killtarget2)					// killtarget
 {
 killtarget2++;
 }
+*/
+
+script "ssdremaster_display_killbonus_info" (void)
+{
+	SetFont("BigFont");
+	Print(s:"\c-Kills: ",d:killbonus_basic_settings[1],s:"/",d:killbonus_basic_settings[2],s:" (bonus: ",d:killbonus_basic_settings[0],s:")");
+	SetFont("SmallFont");
+}
+
+script 232 (void) { ssdremaster_inc_killtarget(); }
 
 // time manipulation scripts
 
