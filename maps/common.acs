@@ -34,6 +34,28 @@ global int   9:ssdremaster_random_seed;
 
 global int  10:keyscramble_random_results[];
 
+global int  16:ssdremaster_game_achievements[];
+
+int ssdremaster_map_achievements[8];
+
+bool ssdremaster_achievements_looped;
+
+// achievement defines - BEGIN
+
+#define SDR_ACHIEVEMENT_TYPE_N 2
+
+#define SDR_ACHIEVEMENT_TYPE_GAME 0
+#define SDR_ACHIEVEMENT_TYPE_MAP 1
+
+#define SDR_GAME_ACHIEVEMENTS_N 1
+#define SDR_MAP_ACHIEVEMENTS_N 1
+
+#define SDR_GAME_ACHIEVEMENT_ALL_MOCKS 0
+
+#define SDR_MAP_ACHIEVEMENT_PERFECT 0
+
+// achievement defines - END
+
 int sdr_timestamp_level;
 
 int ssdremaster_level_par_time;
@@ -2200,7 +2222,28 @@ script "ssdremaster_common_init" OPEN
 
 			ssdremaster_mock_count = 0;
 
+			ssdremaster_game_achievements[0] = 0;
+
 			score = 0;
+		}
+
+		ssdremaster_map_achievements[0] = 0;
+
+		ssdremaster_achievements_looped = true;
+
+		for (j=0;j<SDR_ACHIEVEMENT_TYPE_N;j++)
+		{
+			int achievements_N=0;
+
+			switch (j)
+			{
+				case SDR_ACHIEVEMENT_TYPE_GAME: achievements_N = SDR_GAME_ACHIEVEMENTS_N; break;
+				case SDR_ACHIEVEMENT_TYPE_MAP: achievements_N = SDR_MAP_ACHIEVEMENTS_N; break;
+				default: break;
+			}
+
+			for (i=0;i<achievements_N;i++)
+				ACS_NamedExecuteAlways("ssdremaster_check_achievements", 0, j,i,0);
 		}
 
 		setupLevelTime(00,00,00);
@@ -2312,6 +2355,8 @@ script "ssdremaster_common_final" UNLOADING
 {
 	ready = false;
 	ssdremaster_time_running = false;
+
+	ssdremaster_achievements_looped = false;
 }
 
 script "ssdremaster_common_ragequit" (int pos)
@@ -4525,6 +4570,8 @@ script "ssdremaster_end_scoring" (int forced_i)
 {
 bool forced=(forced_i != 0);
 
+ssdremaster_achievements_looped = false;
+
 if (forced)
 	ssdremaster_do_scoring = true;
 
@@ -4589,10 +4636,40 @@ ACS_NamedExecute ("ssdremaster_rundown_ringbonus", 0, 0, 0, 0);
 }
 }
 
+function str ssdremaster_achievement_to_str(int type_id, int id)
+{
+	str res="";
+
+	switch (type_id)
+	{
+		case SDR_ACHIEVEMENT_TYPE_GAME:
+		{
+			switch (id)
+			{
+				case SDR_GAME_ACHIEVEMENT_ALL_MOCKS: res = "???"; break;
+				default: break;
+			}
+		} break;
+		case SDR_ACHIEVEMENT_TYPE_MAP:
+		{
+			switch (id)
+			{
+				case SDR_MAP_ACHIEVEMENT_PERFECT: res = "PERFECT!"; break;
+				default: break;
+			}
+		} break;
+		default: break;
+	}
+
+	return res;
+}
+
 script "ssdremaster_after_scoring" (int forced_i)
 {
 	bool forced=(forced_i != 0);
 	bool counter_ended=false;
+
+	int n;
 
 	if (bonus_stage_state == NOT_A_BONUS_STAGE)
 	{
@@ -4607,6 +4684,18 @@ script "ssdremaster_after_scoring" (int forced_i)
 			hudmessage (s:""; 0, 6, 0, 0, 0, 0);
 			hudmessage (s:""; 0, 7, 0, 0, 0, 0);
 			hudmessage (s:""; 0, 8, 0, 0, 0, 0);
+
+			n = ssdremaster_map_achievements[0];
+			if (false && (n > 0))
+			{
+				int picked_id=ssdremaster_map_achievements[Random(0,n-1)];
+				str achievement_str=ssdremaster_achievement_to_str(SDR_ACHIEVEMENT_TYPE_MAP,picked_id);
+
+				PlaySound(0, "powerup");
+				HUDMessage(s:achievement_str; 1, 0, CR_GREEN, 0.5, 0.5, 5.0, 1.0);
+				Delay(210);
+			}
+
 			SetPlayerProperty (1, 0, 4);
 			SetPlayerProperty (1, 0, 5);
 
@@ -4651,7 +4740,121 @@ script "ssdremaster_after_scoring" (int forced_i)
 		}
 	}
 
-
 	ssdremaster_loop_nametag_change = false;
 	ssdremaster_check_boss_prefs = false;
+}
+
+script "ssdremaster_check_achievements" (int type_id, int idx)
+{
+	bool done_achievement=false;
+
+	while (ssdremaster_achievements_looped && !done_achievement)
+	{
+		done_achievement=true;
+		int cmp1,cmp2;
+
+		//Log(s:"Checking achievement with IDs (",d:type_id,s:",",d:idx,s:") - BEGIN");
+
+		switch (type_id)
+		{
+			case SDR_ACHIEVEMENT_TYPE_GAME:
+			{
+				switch (idx)
+				{
+					case SDR_GAME_ACHIEVEMENT_ALL_MOCKS:
+					{
+						// GAME - ALL MOCKS
+
+						cmp1 = ssdremaster_mock_count; cmp2 = SSDREMASTER_MOCK_MAX_COUNT;
+						done_achievement &= (cmp1 == cmp2);
+
+						//Log(s:"(",d:type_id,s:",",d:idx,s:"): ",d:cmp1,s:" == ",d:cmp2,s:" ?");
+					} break;
+					default: break;
+				}
+			} break;
+			case SDR_ACHIEVEMENT_TYPE_MAP:
+			{
+				switch (idx)
+				{
+					case SDR_MAP_ACHIEVEMENT_PERFECT:
+					{
+						// MAP - PERFECT
+						cmp1 = secretbonus_basic_settings[1]; cmp2 = secret_count_per_level[story_lev_num-1];
+						done_achievement &= (cmp1 == cmp2);
+						//Log(s:"(",d:type_id,s:",",d:idx,s:"): ",d:cmp1,s:" == ",d:cmp2,s:" ?");
+
+						cmp1 = killbonus_basic_settings[1]; cmp2 = killbonus_basic_settings[2];
+						done_achievement &= (cmp1 >= cmp2);
+						//Log(s:"(",d:type_id,s:",",d:idx,s:"): ",d:cmp1,s:" >= ",d:cmp2,s:" ?");
+					} break;
+					default: break;
+				}
+			} break;
+			default: break;
+		}
+
+		//Log(s:"Checking achievement with IDs (",d:type_id,s:",",d:idx,s:") - END");
+
+		Delay(20);
+	}
+
+	if (done_achievement)
+	{
+		Log(s:"Reached achievement with IDs (",d:type_id,s:",",d:idx,s:").");
+
+		switch (type_id)
+		{
+			case SDR_ACHIEVEMENT_TYPE_GAME:
+			{
+				ssdremaster_game_achievements[0]++;
+				ssdremaster_game_achievements[ ssdremaster_map_achievements[0] ] = idx;
+			} break;
+			case SDR_ACHIEVEMENT_TYPE_MAP:
+			{
+				ssdremaster_map_achievements[0]++;
+				ssdremaster_map_achievements[ ssdremaster_map_achievements[0] ] = idx;
+			} break;
+			default: break;
+		}
+	}	
+}
+
+script "ssdremaster_log_achievements" (void)
+{
+	int i,j;
+
+	for (j=0;j<SDR_ACHIEVEMENT_TYPE_N;j++)
+	{
+		int N=0;
+
+		switch (j)
+		{
+			case SDR_ACHIEVEMENT_TYPE_GAME: N = ssdremaster_game_achievements[0]; break;
+			case SDR_ACHIEVEMENT_TYPE_MAP: N = ssdremaster_map_achievements[0]; break;
+			default: break;
+		}
+
+		if (N > 0)
+		{
+			str temp=StrParam(s:"Achievements #",d:j,s:": ");
+
+			for (i=0;i<N;i++)
+			{
+				int e=-1;
+
+				switch (j)
+				{
+					case SDR_ACHIEVEMENT_TYPE_GAME: e = ssdremaster_game_achievements[i+1]; break;
+					case SDR_ACHIEVEMENT_TYPE_MAP: e = ssdremaster_map_achievements[i+1]; break;
+					default: break;
+				}
+
+				if (i > 0) temp = StrParam(s:temp,s:",");
+				temp = StrParam(s:temp,d:e);
+			}
+
+			Log(s:temp);
+		}
+	}
 }
