@@ -2,32 +2,65 @@
 // SSD Pickups
 //===========================================================================
 
-pickup RedArmour
+actor RedArmour : Inventory 20009
 {
-DoomEdNum 20009
-SpawnNum 159
-Sprite ARM3
-Frames "6:A*B*"
-PickupMessage "Light armour"
-PickupSound "ishield"
-Respawns
-NoGravity
-Radius 15
-Height 17
+	SpawnID 159
+
+	+NOGRAVITY
+
+	Radius 15
+	Height 17
+
+	Translation "112:127=176:191" // from green to red
+
+	Inventory.PickupMessage "Light armour"
+	Inventory.PickupSound "ishield"
+	Inventory.Icon "ARM3A0"
+	Inventory.AltHUDIcon "ARM3A0"
+
+//	Respawns
+
+//	Sprite ARM3
+//	Frames "6:A*B*"
+
+	States
+	{
+	Spawn:
+		ARM1 AB 6 Thing_ChangeTID(0, 1050)
+		loop
+	}
 }
 
-pickup GoldenHealthPotion
+actor GoldenHealthPotion : Inventory 20010 // modified by tiszaszaki
 {
-DoomEdNum 20010
-SpawnNum 160
-Sprite GOLD
-Frames "6:A*B*C*D*"
-PickupMessage "Golden Health Potion!"
-PickupSound "golden"
-Respawns
-NoGravity
-Radius 13
-Height 34
+	SpawnID 160
+
+	+NOGRAVITY
+
+	Radius 13
+	Height 34
+
+	Translation "192:203=224:231", "204:207=160:161", "240:247=162:167" // from blue to gold
+	Scale 2.5 // bigger
+
+	Inventory.PickupMessage "Golden Health Potion!"
+	Inventory.PickupSound "golden"
+	Inventory.Icon "GOLDA0"
+	Inventory.AltHUDIcon "GOLDA0"
+
+	Inventory.Amount 50
+
+//	Respawns
+
+//	Sprite BON1
+//	Frames "6:A*B*C*D*"
+
+	States
+	{
+	Spawn:
+		BON1 ABCD 6 Thing_ChangeTID(0, 1200)
+		loop
+	}
 }
 
 pickup Ring
@@ -308,7 +341,7 @@ actor OrangeCard : YellowSkull replaces YellowSkull
 {
 	+NOGRAVITY
 
-	Translation "224:231=208:215", "160:167=216:223" // from yellow to orange
+	Translation "224:231=208:213", "160:167=214:219", "232:235=220:223" // from yellow to orange
 	Inventory.AltHUDIcon "OKEYA0"
 
 	States
