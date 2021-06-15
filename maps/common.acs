@@ -378,7 +378,7 @@ int monsters_battle_state;
 #libdefine SDR_SEVENSINNER_BOSS_PRIDE 6
 #libdefine SDR_SEVENSINNER_THEFIRESTARTER 7 // head of the seven sinners
 
-// boss related scripts - seven deadly sinners - variable declarations
+// boss related variables - seven deadly sinners
 
 bool ssdremaster_sevensinner_anim[8];
 
@@ -428,7 +428,7 @@ int ssdremaster_sevensinner_keydrop[8]={1,1,0,1,0,0,0,7};
 int ssdremaster_sevensinner_deadacs[8]={21,16, 9,20, 0,31,39, 5};
 int ssdremaster_sevensinner_stopacs[8]={36,33,42,32, 0,33,40, 0};
 
-// boss related scripts - other - variable declarations
+// boss related variables - other
 
 #libdefine SDR_OTHER_BOSS_GIANTMANCUBUS 0
 #libdefine SDR_OTHER_BOSS_SPIDERDEMON 1
@@ -473,7 +473,7 @@ int ssdremaster_other_boss_colvals[7][8]=
 
 bool ssdremaster_other_boss_death;
 
-// boss related scripts - monster-based - variable declarations
+// boss related variables - monster-based
 
 bool ssdremaster_monster_battle_cd;
 
@@ -2804,87 +2804,7 @@ Thing_SetTranslation (719, 19);
 
 //// end of translations
 
-// boss related scripts - seven deadly sinners - functions
-
-function int ssdremaster_specific_boss_tid(int boss_id)
-{
-	int res=0;
-
-	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
-	{
-		res = ssdremaster_sevensinner_tids[boss_id];
-
-		// level specific appearance of some bosses (e.g. Vanity)
-		if (boss_id == SDR_SEVENSINNER_BOSS_VANITY)
-		{
-			switch (story_lev_num)
-			{
-				case 17: res = 108; break;
-				case 20: res =  63; break;
-				default: break; // no other levels where Vanity appears
-			}
-		}
-	}
-
-	return res;
-}
-
-script "ssdremaster_show_seven_sinner_health" (int boss_id)
-{
-	if (!ssdremaster_boss_health_engaged)
-	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
-	{
-		str boss_name=ssdremaster_sevensinner_names[boss_id];
-		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
-
-		int boss_hud_anim_i=0, boss_hud_anim_n=ssdremaster_sevensinner_colhead[boss_id][0];
-		int boss_hud_anim_dl=ssdremaster_sevensinner_colhead[boss_id][1];
-
-		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
-		{
-			ssdremaster_boss_health_engaged = true;
-
-			while (ssdremaster_boss_health_engaged)
-			{
-				int boss_health=GetActorProperty(boss_tid, APROP_Health);
-				int boss_col=ssdremaster_sevensinner_colvals[boss_id][boss_hud_anim_i];
-
-				if (boss_health < 0) boss_health = 0;
-
-				SetFont ("BigFont");
-				ssdremaster_display_boss_health(boss_name, boss_health, boss_col);
-
-				delay(boss_hud_anim_dl);
-				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
-			}
-		}
-	}
-}
-
-script "ssdremaster_clear_seven_sinner_health" (void)
-{
-	if (ssdremaster_boss_health_engaged)
-	{
-		delay(35);
-		ssdremaster_boss_health_engaged = false;
-	}
-}
-
-script "ssdremaster_clear_seven_sinner_translation" (int boss_id)
-{
-	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
-	if (ssdremaster_sevensinner_anim[boss_id])
-	{
-		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
-
-		if (boss_tid > 0)
-		{
-			Thing_SetTranslation(boss_tid, 0);
-
-			ssdremaster_sevensinner_anim[boss_id] = false;
-		}
-	}
-}
+// spawning function
 
 function void sdr_SpawnThingToRandomDir(int spot_tid, int new_tid, int thing_sid, int speed,int vspeed, int thing_n)
 {
@@ -2912,141 +2832,7 @@ function void sdr_SpawnThingToRandomDir(int spot_tid, int new_tid, int thing_sid
 	}
 }
 
-script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
-{
-	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
-	if (!ssdremaster_sevensinner_death[boss_id])
-	{
-		int i,n;
-
-		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
-		int boss_keydrop_id=ssdremaster_sevensinner_keydrop[boss_id];
-		int boss_stopacs=ssdremaster_sevensinner_stopacs[boss_id];
-		int post_death_acs=ssdremaster_sevensinner_deadacs[boss_id];
-		bool extreme=(extreme_i != 0);
-
-		ssdremaster_sevensinner_death[boss_id] = true;
-
-		if (extreme)
-			ACS_NamedExecute("ssdremaster_clear_seven_sinner_translation", 0, boss_id,0,0);
-
-		if (boss_stopacs > 0)
-			ACS_Execute(boss_stopacs, 0, 0,0,0);
-
-		if (boss_tid > 0)
-		{
-			if ((boss_keydrop_id >= 1) && (boss_keydrop_id <= 7))
-			{
-				int ssdremaster_allkeys_N=6;
-
-				int keydrop_hspeed=8;
-				int keydrop_vspeed=12;
-
-				sdr_spawn_dir = 0;
-
-				if (boss_keydrop_id <= ssdremaster_allkeys_N)
-				{
-					sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[boss_keydrop_id-1], keydrop_hspeed,keydrop_vspeed, 1);
-				}
-				else
-				{
-					n = ssdremaster_allkeys_N;
-
-					for (i=0;i<n;i++)
-						sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[i], keydrop_hspeed,keydrop_vspeed, 1);
-				}
-			}
-
-			n = 8;
-			for (i=0;i<n;i++)
-				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 32*i, 16, -1);
-
-			delay(2);
-
-			n = 9;
-			for (i=0;i<n;i++)
-			{
-				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
-				delay(2);
-			}
-
-			Thing_ProjectileGravity (boss_tid, T_BRAINS, 0, 0, -1);
-
-			if (post_death_acs > 0)
-			{
-				delay(15);
-
-				ACS_Execute(post_death_acs, 0, 0,0,0);
-			}
-		}
-	}
-}
-
-// boss related scripts - other - functions
-
-script "ssdremaster_show_other_boss_health" (int boss_id, int boss_tid)
-{
-	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
-	if ((boss_id >= SDR_OTHER_BOSS_GIANTMANCUBUS) && (boss_id <= SDR_OTHER_BOSS_SURPRISE))
-	{
-		str boss_name=ssdremaster_other_boss_names[boss_id];
-
-		int boss_hud_anim_i=0, boss_hud_anim_n=ssdremaster_other_boss_colhead[boss_id][0];
-		int boss_hud_anim_dl=ssdremaster_other_boss_colhead[boss_id][1];
-
-		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
-		{
-			bool monster_alive=true;
-
-			if (monsters_battle_state == MONSTERS_BATTLE_COMBINED)
-			{
-				monsters_battle_running++;
-				while (monsters_battle_running < 2) delay(1);
-			}
-
-			monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
-
-			ssdremaster_other_boss_death = false;
-
-			while ((monster_alive && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER)) 
-				|| (monsters_battle_running > 0))
-			{
-				int boss_health=GetActorProperty(boss_tid, APROP_Health);
-				int boss_col=ssdremaster_other_boss_colvals[boss_id][boss_hud_anim_i];
-
-				if (boss_health < 0) boss_health = 0;
-
-				if (do_sdr_show_normal_boss_health)
-				{
-					SetFont ("BigFont");
-					ssdremaster_display_boss_health(boss_name, boss_health, boss_col);
-				}
-
-				delay(boss_hud_anim_dl);
-				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
-
-				monster_alive = (boss_health > 0);
-
-				if (!ssdremaster_other_boss_death && !ssdremaster_other_boss_death)
-				if (monsters_battle_running > 0)
-				{
-					ssdremaster_other_boss_death = true;
-					monsters_battle_running--;
-				}
-			}
-
-			monsters_battle_state = MONSTERS_BATTLE_FINALE;
-		}
-	}
-}
-
-function void ssdremaster_other_boss_finish(void)
-{
-	if (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER)
-	{
-		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
-	}
-}
+// water splash (to be deprecated) and spring scripts
 
 script 250 (void)					// water splash
 
@@ -3515,7 +3301,7 @@ delay(1);
 Restart;
 }
 
-script "ssdremaster_check_" ENTER					// light armour checker
+script "ssdremaster_check_lightarmour" ENTER					// light armour checker
 
 {
 armour =  CheckInventory ("Armor");
@@ -3559,6 +3345,8 @@ function int max(int a, int b)
 }
 
 //// SCORES.ACS
+
+// ring functions and scripts
 
 function bool ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
 {
@@ -3639,6 +3427,8 @@ script 208 (int min_ring_n, int max_ring_n, int ring_tid) // spawn random rings 
 	}
 }
 
+// killbonus-related functions and scripts
+
 function void ssdremaster_inc_killtarget(void)
 {
 	killbonus_basic_settings[2]++;
@@ -3672,9 +3462,26 @@ script "ssdremaster_display_killbonus_info" (void)
 	SetFont("SmallFont");
 }
 
+script 200 (int arg0)				// scoring (kills)
+{
+	if ((story_lev_num >=  1) && (story_lev_num <= 29))
+	{
+		score+=arg0*50;
+		if (story_lev_num <= 28) // not for Icon of Skin boss levels
+		{
+			killbonus_basic_settings[1]++;
+
+			if(killbonus_basic_settings[1] >= killbonus_basic_settings[2])
+			{
+				killbonus_basic_settings[0] = 10000;
+			}
+		}
+	}
+}
+
 script 232 (void) { ssdremaster_inc_killtarget(); }
 
-// time manipulation scripts
+// time manipulation functions and scripts
 
 function bool ssdremaster_time_run_frac_sec(int fs, bool reverse)
 {
@@ -3709,7 +3516,7 @@ script "ssdremaster_time_warp_one_hour" (void)
 	}
 }
 
-// display scripts
+// display-looping scripts
 
 script "ssdremaster_loop_score_display" (void)						// score display
 
@@ -3720,7 +3527,7 @@ delay(1);
 Restart;
 }
 
-script "ssdremaster_loop_time_display" (int skipbonus, int reverse_i)			// time display
+script "ssdremaster_loop_time_display" (int skipbonus, int reverse_i)			// time running and display
 
 {
 	bool reverse=(reverse_i != 0);
@@ -3784,7 +3591,9 @@ script "ssdremaster_loop_time_display" (int skipbonus, int reverse_i)			// time 
 	}
 }
 
-// scoring and rundown scripts
+// scoring and rundown scripts in story levels
+
+// score secrets
 
 function void ssdremaster_mock_trigger(str msg, bool fancy)
 {
@@ -3871,25 +3680,7 @@ activatorsound ("secret", 127);
 }
 }
 
-script 200 (int arg0)				// scoring (kills)
-
-{
-if ((story_lev_num >=  1) && (story_lev_num <= 29))
-{
-
-score+=arg0*50;
-if (story_lev_num <= 28) // not for Icon of Skin boss levels
-{
-killbonus_basic_settings[1]++;
-
-if(killbonus_basic_settings[1] >= killbonus_basic_settings[2])
-{
-	killbonus_basic_settings[0] = 10000;
-}
-}
-
-}
-}
+// rundown scripts in story levels
 
 script "ssdremaster_rundown_timebonus" (int forced_i)				// time bonus rundown
 
@@ -4078,7 +3869,227 @@ delay(1);
 Restart;
 }
 
-// boss related scripts - target-based
+// boss related scripts and functions - seven deadly sinners
+
+function int ssdremaster_specific_boss_tid(int boss_id)
+{
+	int res=0;
+
+	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
+	{
+		res = ssdremaster_sevensinner_tids[boss_id];
+
+		// level specific appearance of some bosses (e.g. Vanity)
+		if (boss_id == SDR_SEVENSINNER_BOSS_VANITY)
+		{
+			switch (story_lev_num)
+			{
+				case 17: res = 108; break;
+				case 20: res =  63; break;
+				default: break; // no other levels where Vanity appears
+			}
+		}
+	}
+
+	return res;
+}
+
+script "ssdremaster_show_seven_sinner_health" (int boss_id)
+{
+	if (!ssdremaster_boss_health_engaged)
+	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
+	{
+		str boss_name=ssdremaster_sevensinner_names[boss_id];
+		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
+
+		int boss_hud_anim_i=0, boss_hud_anim_n=ssdremaster_sevensinner_colhead[boss_id][0];
+		int boss_hud_anim_dl=ssdremaster_sevensinner_colhead[boss_id][1];
+
+		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
+		{
+			ssdremaster_boss_health_engaged = true;
+
+			while (ssdremaster_boss_health_engaged)
+			{
+				int boss_health=GetActorProperty(boss_tid, APROP_Health);
+				int boss_col=ssdremaster_sevensinner_colvals[boss_id][boss_hud_anim_i];
+
+				if (boss_health < 0) boss_health = 0;
+
+				SetFont ("BigFont");
+				ssdremaster_display_boss_health(boss_name, boss_health, boss_col);
+
+				delay(boss_hud_anim_dl);
+				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
+			}
+		}
+	}
+}
+
+script "ssdremaster_clear_seven_sinner_health" (void)
+{
+	if (ssdremaster_boss_health_engaged)
+	{
+		delay(35);
+		ssdremaster_boss_health_engaged = false;
+	}
+}
+
+script "ssdremaster_clear_seven_sinner_translation" (int boss_id)
+{
+	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
+	if (ssdremaster_sevensinner_anim[boss_id])
+	{
+		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
+
+		if (boss_tid > 0)
+		{
+			ssdremaster_sevensinner_anim[boss_id] = false;
+
+			Delay(35);
+
+			Thing_SetTranslation(boss_tid, -1);
+		}
+	}
+}
+
+script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
+{
+	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
+	if (!ssdremaster_sevensinner_death[boss_id])
+	{
+		int i,n;
+
+		int boss_tid=ssdremaster_specific_boss_tid(boss_id);
+		int boss_keydrop_id=ssdremaster_sevensinner_keydrop[boss_id];
+		int boss_stopacs=ssdremaster_sevensinner_stopacs[boss_id];
+		int post_death_acs=ssdremaster_sevensinner_deadacs[boss_id];
+		bool extreme=(extreme_i != 0);
+
+		ssdremaster_sevensinner_death[boss_id] = true;
+
+		if (extreme)
+			ACS_NamedExecute("ssdremaster_clear_seven_sinner_translation", 0, boss_id,0,0);
+
+		if (boss_stopacs > 0)
+			ACS_Execute(boss_stopacs, 0, 0,0,0);
+
+		if (boss_tid > 0)
+		{
+			if ((boss_keydrop_id >= 1) && (boss_keydrop_id <= 7))
+			{
+				int ssdremaster_allkeys_N=6;
+
+				int keydrop_hspeed=8;
+				int keydrop_vspeed=12;
+
+				sdr_spawn_dir = 0;
+
+				if (boss_keydrop_id <= ssdremaster_allkeys_N)
+				{
+					sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[boss_keydrop_id-1], keydrop_hspeed,keydrop_vspeed, 1);
+				}
+				else
+				{
+					n = ssdremaster_allkeys_N;
+
+					for (i=0;i<n;i++)
+						sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[i], keydrop_hspeed,keydrop_vspeed, 1);
+				}
+			}
+
+			n = 8;
+			for (i=0;i<n;i++)
+				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 32*i, 16, -1);
+
+			delay(2);
+
+			n = 9;
+			for (i=0;i<n;i++)
+			{
+				Thing_ProjectileGravity (boss_tid, T_BLOODPOOL2, 0, 0, -1);
+				delay(2);
+			}
+
+			Thing_ProjectileGravity (boss_tid, T_BRAINS, 0, 0, -1);
+
+			if (post_death_acs > 0)
+			{
+				delay(15);
+
+				ACS_Execute(post_death_acs, 0, 0,0,0);
+			}
+		}
+	}
+}
+
+// boss related scripts and functions - other
+
+script "ssdremaster_show_other_boss_health" (int boss_id, int boss_tid)
+{
+	if ((monsters_battle_state == MONSTERS_BATTLE_STANDBY) || (monsters_battle_state == MONSTERS_BATTLE_COMBINED))
+	if ((boss_id >= SDR_OTHER_BOSS_GIANTMANCUBUS) && (boss_id <= SDR_OTHER_BOSS_SURPRISE))
+	{
+		str boss_name=ssdremaster_other_boss_names[boss_id];
+
+		int boss_hud_anim_i=0, boss_hud_anim_n=ssdremaster_other_boss_colhead[boss_id][0];
+		int boss_hud_anim_dl=ssdremaster_other_boss_colhead[boss_id][1];
+
+		if ((boss_hud_anim_n > 0) && (boss_hud_anim_dl > 0) && (boss_tid > 0))
+		{
+			bool monster_alive=true;
+
+			if (monsters_battle_state == MONSTERS_BATTLE_COMBINED)
+			{
+				monsters_battle_running++;
+				while (monsters_battle_running < 2) delay(1);
+			}
+
+			monsters_battle_state = MONSTERS_BATTLE_ENCOUNTER;
+
+			ssdremaster_other_boss_death = false;
+
+			while ((monster_alive && (monsters_battle_state == MONSTERS_BATTLE_ENCOUNTER)) 
+				|| (monsters_battle_running > 0))
+			{
+				int boss_health=GetActorProperty(boss_tid, APROP_Health);
+				int boss_col=ssdremaster_other_boss_colvals[boss_id][boss_hud_anim_i];
+
+				if (boss_health < 0) boss_health = 0;
+
+				if (do_sdr_show_normal_boss_health)
+				{
+					SetFont ("BigFont");
+					ssdremaster_display_boss_health(boss_name, boss_health, boss_col);
+				}
+
+				delay(boss_hud_anim_dl);
+				boss_hud_anim_i = (boss_hud_anim_i + 1) % boss_hud_anim_n;
+
+				monster_alive = (boss_health > 0);
+
+				if (!ssdremaster_other_boss_death && !ssdremaster_other_boss_death)
+				if (monsters_battle_running > 0)
+				{
+					ssdremaster_other_boss_death = true;
+					monsters_battle_running--;
+				}
+			}
+
+			monsters_battle_state = MONSTERS_BATTLE_FINALE;
+		}
+	}
+}
+
+function void ssdremaster_other_boss_finish(void)
+{
+	if (monsters_battle_state >= MONSTERS_BATTLE_ENCOUNTER)
+	{
+		monsters_battle_state = MONSTERS_BATTLE_STANDBY;
+	}
+}
+
+// boss related scripts and functions - target-based
 
 function void ssdremaster_set_target_tid(int tid)
 {
@@ -4228,7 +4239,7 @@ script "ssdremaster_display_boss_target_loop" (void)	// target hit display (loop
 	Restart;
 }
 
-// boss related scripts - monster-based
+// boss related scripts and functions - monster-based
 
 function void ssdremaster_setCommonMonsterTag(str new_tag)
 {
@@ -4420,7 +4431,7 @@ function void ssdremaster_combineBattles(void)
 		monsters_battle_state = MONSTERS_BATTLE_COMBINED;
 }
 
-// monitor pickup scripts
+// monitor powerup scripts
 
 script 201 (int arg0, int arg1)				// health monitor
 
