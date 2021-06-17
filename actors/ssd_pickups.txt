@@ -41,7 +41,7 @@ actor GoldenHealthPotion : Inventory 20010 // modified by tiszaszaki
 	Height 34
 
 	Translation "192:203=224:231", "204:207=160:161", "240:247=162:167" // from blue to gold
-	Scale 2.5 // bigger
+	Scale 2 // bigger
 
 	Inventory.PickupMessage "Golden Health Potion!"
 	Inventory.PickupSound "golden"
