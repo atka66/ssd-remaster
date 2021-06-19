@@ -84,13 +84,6 @@ int killbonus_basic_settings[3]; // {killbonus,killcount, killtarget}
 int secretbonus_basic_settings[2]; // {secretbonus,secretcount}
 int ringbonus_basic_settings[3]; // {rings,ringcount,ringbonus}
 
-// CVar-related variables
-
-bool ssdremaster_check_boss_prefs;
-bool ssdremaster_show_target_hud;
-bool ssdremaster_show_monster_hud, ssdremaster_debug_monster_tags;
-bool do_sdr_show_normal_boss_health;
-
 // monster-boss battle variable stuff
 
 int boss_target_stats[4]; // {boss_target_hit,boss_target_max, boss_target_tid,boss_target_initial_health}
@@ -145,7 +138,7 @@ int boss_target_count_borders[15][2]={
 int secret_count_per_level[30]=
 	{
 		 4,  2, // zone 1
-		 3,  4, // zone 2
+		 4,  4, // zone 2
 		 8,  4, // zone 3
 		 5,  6, // zone 4
 		 7,  3, // zone 5
@@ -1916,6 +1909,13 @@ function void ssdremaster_display_monster_hud(void)
 {
 	str common_monster_tag_disp_pref="Tags for ";
 
+	bool ssdremaster_show_monster_hud, ssdremaster_debug_monster_tags;
+
+	ssdremaster_show_monster_hud = (GetCVar("ssdremaster_show_monster_count_hud") != 0);
+
+	if (ssdremaster_show_monster_hud)
+		ssdremaster_debug_monster_tags = (GetCVar("ssdremaster_debug_monster_tags") != 0);
+
 	if (ssdremaster_show_monster_hud)
 	{
 		int hud1_x=0,hud1_y=0;
@@ -1986,6 +1986,8 @@ function void ssdremaster_display_monster_hud(void)
 
 function void ssdremaster_display_target_hud(void)
 {
+	bool ssdremaster_show_target_hud=(GetCVar("ssdremaster_show_boss_target_hud") != 0);
+
 	if (ssdremaster_show_target_hud)
 	{
 		int hud1_y=0, hud2_y=0;
@@ -2159,42 +2161,6 @@ script "ssdremaster_common_set_nametag" (void)
 	} while (ssdremaster_loop_nametag_change);
 }
 
-// other CVar settings
-
-function void ssdremaster_cvar_keyscramble(void)
-{
-	ssdremaster_enable_keyscramble = (GetCVar("ssdremaster_enable_keyscramble"));
-}
-
-script "ssdremaster_common_set_boss_prefs" (void)
-{
-	do
-	{
-		bool cvar_new_val, cvar_old_val;
-
-		cvar_new_val = (GetCVar("ssdremaster_show_boss_target_hud") != 0);
-		cvar_old_val = ssdremaster_show_target_hud;
-		ssdremaster_show_target_hud = cvar_new_val;
-
-		cvar_new_val = (GetCVar("ssdremaster_show_monster_count_hud") != 0);
-		cvar_old_val = ssdremaster_show_monster_hud;
-		ssdremaster_show_monster_hud = cvar_new_val;
-
-		if (ssdremaster_show_monster_hud)
-		{
-			cvar_new_val = (GetCVar("ssdremaster_debug_monster_tags") != 0);
-			cvar_old_val = ssdremaster_debug_monster_tags;
-			ssdremaster_debug_monster_tags = cvar_new_val;
-		}
-
-		cvar_new_val = (GetCVar("ssdremaster_show_normal_boss_health") != 0);
-		cvar_old_val = do_sdr_show_normal_boss_health;
-		do_sdr_show_normal_boss_health = cvar_new_val;
-
-		if (ssdremaster_check_boss_prefs) Delay(1);
-	} while (ssdremaster_check_boss_prefs);
-}
-
 // map control scripts (e.g. OPEN)
 
 script "ssdremaster_common_init" OPEN
@@ -2203,7 +2169,7 @@ script "ssdremaster_common_init" OPEN
 
 	int level_num_temp=ssdremaster_levelinfo();
 
-	ssdremaster_cvar_keyscramble();
+	ssdremaster_enable_keyscramble = (GetCVar("ssdremaster_enable_keyscramble"));
 
 	ssdremaster_dw_chk_water_id = -1;
 
@@ -2273,9 +2239,6 @@ script "ssdremaster_common_init" OPEN
 
 			apply_keyscramble_for_stage(story_lev_num);
 		}
-
-		ssdremaster_check_boss_prefs = true;
-		ACS_NamedExecute("ssdremaster_common_set_boss_prefs", 0, 0,0,0);
 
 		boss_target_stats[0] = 0;
 
@@ -4167,7 +4130,11 @@ script "ssdremaster_show_other_boss_health" (int boss_id, int boss_tid)
 				int boss_health=GetActorProperty(boss_tid, APROP_Health);
 				int boss_col=ssdremaster_other_boss_colvals[boss_id][boss_hud_anim_i];
 
+				bool do_sdr_show_normal_boss_health;
+
 				if (boss_health < 0) boss_health = 0;
+
+				do_sdr_show_normal_boss_health = (GetCVar("ssdremaster_show_normal_boss_health") != 0);
 
 				if (do_sdr_show_normal_boss_health)
 				{
@@ -4864,7 +4831,6 @@ script "ssdremaster_after_scoring" (int forced_i)
 	}
 
 	ssdremaster_loop_nametag_change = false;
-	ssdremaster_check_boss_prefs = false;
 }
 
 script "ssdremaster_check_achievements" (int type_id, int idx)
