@@ -261,6 +261,7 @@ str ssdremaster_playername;
 #libdefine T_MINE 135
 #libdefine T_HEXENARROW 209
 #libdefine T_HEXENBLADE 210
+#libdefine T_ICESHARD2 218
 
 #libdefine T_REIVERFIREBALL 207
 #libdefine T_REIVERFIREBALL2 212
