@@ -31,21 +31,21 @@ bool ssdremaster_achievements_looped;
 
 // achievement defines
 
-#define SDR_ACHIEVEMENT_TYPE_N 2
+#libdefine SDR_ACHIEVEMENT_TYPE_N 2
 
-#define SDR_ACHIEVEMENT_TYPE_GAME 0
-#define SDR_ACHIEVEMENT_TYPE_MAP 1
+#libdefine SDR_ACHIEVEMENT_TYPE_GAME 0
+#libdefine SDR_ACHIEVEMENT_TYPE_MAP 1
 
-#define SDR_GAME_ACHIEVEMENTS_N 1
-#define SDR_MAP_ACHIEVEMENTS_N 1
+#libdefine SDR_GAME_ACHIEVEMENTS_N 1
+#libdefine SDR_MAP_ACHIEVEMENTS_N 1
 
-#define SDR_GAME_ACHIEVEMENT_ALL_MOCKS 0
+#libdefine SDR_GAME_ACHIEVEMENT_ALL_MOCKS 0
 
-#define SDR_MAP_ACHIEVEMENT_PERFECT 0
+#libdefine SDR_MAP_ACHIEVEMENT_PERFECT 0
 
 // time-related variables and defines
 
-#define SDR_TIMESTAMP_BACKUP_READY -1
+#libdefine SDR_TIMESTAMP_BACKUP_READY -1
 
 int sdr_timestamp_level;
 
@@ -288,6 +288,13 @@ str ssdremaster_playername;
 #libdefine T_ICEMACE 225
 #libdefine T_ROCKET2 116
 #libdefine T_TRACER2 9
+
+#libdefine T_SSDROCK1 219
+#libdefine T_SSDROCK2 220
+#libdefine T_SSDROCK3 221
+#libdefine T_SSDDIRT1 0
+#libdefine T_SSDDIRT2 0
+#libdefine T_SSDDIRT3 0
 
 #libdefine T_PLASMABOLT2 206
 
