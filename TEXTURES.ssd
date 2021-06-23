@@ -1,0 +1,6 @@
+texture RADIOSPK, 128, 128
+{
+	XScale 2
+	YScale 2
+	Patch FLAT4W, 0, 0
+}
