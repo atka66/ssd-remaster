@@ -15,6 +15,9 @@ OptionMenu "SonicRemasterSettings"
 
 	Option "Show player direction (on text compass)", "ssdremaster_show_player_compass", "OnOff"
 
+	StaticText ""
+	StaticText ""
+
 	StaticText "HUD battle settings (updated real-time)"
 	StaticText ""
 
