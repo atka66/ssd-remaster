@@ -2434,6 +2434,50 @@ script "ssdremaster_common_init" OPEN
 	}
 }
 
+script "ssdremaster_show_compass" ENTER
+{
+	bool looped=true;
+
+	while (!show_hud) Delay(1);
+
+	while (looped)
+	{
+		bool ssdremaster_show_player_compass=(GetCVar("ssdremaster_show_player_compass") != 0);
+
+		if (ssdremaster_show_player_compass)
+		{
+			int tid=0;
+			int angle=(GetActorAngle(tid) >> 8);
+			str angle_str="";
+
+			if (((angle >= 0) && (angle < 16)) || ((angle >= 240) && (angle < 256)))
+				angle_str = "E";
+			else if ((angle >= 16) && (angle < 48))
+				angle_str = "NE";		
+			else if ((angle >= 48) && (angle < 80))
+				angle_str = "N";
+			else if ((angle >= 80) && (angle < 112))
+				angle_str = "NW";
+			else if ((angle >= 112) && (angle < 144))
+				angle_str = "W";
+			else if ((angle >= 144) && (angle < 176))
+				angle_str = "SW";
+			else if ((angle >= 176) && (angle < 208))
+				angle_str = "S";
+			else if ((angle >= 208) && (angle < 240))
+				angle_str = "SE";
+			else
+				angle_str = "???";
+
+			SetFont("BigFont");
+			HUDMessage(s:angle_str; 1, 18, CR_WHITE, 0.80, 0.96, 1.0, 1.0);
+			SetFont("SmallFont");
+		}
+
+		Delay(5);
+	}
+}
+
 script "ssdremaster_common_final" UNLOADING
 {
 	ready = false;

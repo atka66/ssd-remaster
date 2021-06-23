@@ -1,6 +1,8 @@
 server int   ssdremaster_custom_nametag = 0;
 server int   ssdremaster_show_boss_target_hud = 0;
 
+server int   ssdremaster_show_player_compass = 0;
+
 server int   ssdremaster_show_monster_count_hud = 0;
 server int   ssdremaster_debug_monster_tags = 0;
 
