@@ -344,8 +344,8 @@ int keyscramble_defs_per_stage[28][6][8]=
 			{ 52,1,0,  52, 0,  56,35,2},{ 0,0,0,  50, 0,  0, 0,0},{  0,0,0, 104, 0,   0, 0,0}
 		}, // stage  4
 		{
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+			{  0,0,0,   0, 0,   0, 0,0},{32,1,1,  33, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
+			{  0,0,0,   0, 0,   0, 0,0},{31,1,1,  32, 0,  0, 0,0},{ 30,1,1,  18, 0,   0, 0,0}
 		}, // stage  5
 		{
 			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
@@ -2244,8 +2244,8 @@ script "ssdremaster_common_init" OPEN
 		endcounter = 0;
 
 		// disable 'key scramble' feature in levels where fails (temporarily!)
-		if (false)
-		if ((story_lev_num == 4) || (story_lev_num == 5) || (story_lev_num == 6)) // examples
+		if (true)
+		if ((story_lev_num == 5) || (story_lev_num == 6))
 			ssdremaster_enable_keyscramble = false;
 
 		if (true)
