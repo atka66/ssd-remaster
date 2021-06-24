@@ -1289,7 +1289,7 @@ function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int
 {
 	bool current_log=false;
 
-	if ((tag > 0) && (wtag > 0) && (tid0 > 0) && (tid1 > 0) && (sp > 0))
+	if ((tag > 0) && (wtag > 0) && (tid0 > 0) && (tid1 > 0) && (sp >= 0))
 	{
 		int ang,len;
 		int ang_temp;
@@ -1318,32 +1318,48 @@ function void sdr_deepwater_set_current(int tag,int wtag, int tid0,int tid1, int
 
 		if (do_surface_anim)
 		{
-			int x_scroll=GetActorX(tid1) - GetActorX(tid0);
-			int y_scroll=GetActorY(tid1) - GetActorY(tid0);
-			if (use_custom_speed)
+			if (sp)
 			{
-				x_scroll = FixedMul(FixedDiv(x_scroll,len),sp);
-				y_scroll = FixedMul(FixedDiv(y_scroll,len),sp);
+				int x_scroll=GetActorX(tid1) - GetActorX(tid0);
+				int y_scroll=GetActorY(tid1) - GetActorY(tid0);
+				if (use_custom_speed)
+				{
+					x_scroll = FixedMul(FixedDiv(x_scroll,len),sp);
+					y_scroll = FixedMul(FixedDiv(y_scroll,len),sp);
+				}
+				Scroll_Ceiling(wtag, x_scroll >> 16, y_scroll >> 16, SCROLL);
+				if (current_log) Log(s:"Liquid Surface scrolling ON");
 			}
-			Scroll_Ceiling(wtag, x_scroll >> 16, y_scroll >> 16, SCROLL);
-			if (current_log) Log(s:" Surface scrolling ON");
+			else
+			{
+				Scroll_Ceiling(wtag, 0, 0, SCROLL);
+				if (current_log) Log(s:"Liquid Surface scrolling OFF");
+			}
 		}
 		if (do_surface_rotate)
 		{
 			ang_temp = ang - sdr_water_current_base_dir;
 			while (ang_temp < 0.0) ang_temp += 1.0;
 			Sector_SetRotation(wtag, 0, FixedMul(ang_temp,360) >> 16);
-			if (current_log) Log(s:" Surface rotation DONE");
+			if (current_log) Log(s:"Liquid Surface rotation DONE");
 		}
 
 		if (do_current && ((len > 0) || use_custom_speed))
 		{
-			int sp_temp=sp;
-			if (!use_custom_speed)
-				sp_temp = FixedMul(sp,len);
-			ang_temp = FixedMul(ang,256 << 16);
-			Sector_SetCurrent(tag, sp_temp >> 16, ang_temp >> 16, NO);
-			if (current_log) Log(s:" Current ON");
+			if (sp > 0)
+			{
+				int sp_temp=sp;
+				if (!use_custom_speed)
+					sp_temp = FixedMul(sp,len);
+				ang_temp = FixedMul(ang,256 << 16);
+				Sector_SetCurrent(tag, sp_temp >> 16, ang_temp >> 16, NO);
+				if (current_log) Log(s:"Liquid Current ON");
+			}
+			else
+			{
+				Sector_SetCurrent(tag, 0, 0, NO);
+				if (current_log) Log(s:"Liquid Current OFF");
+			}
 		}
 
 		if (current_log) Log(s:"Current description END");
