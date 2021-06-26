@@ -363,8 +363,8 @@ int keyscramble_defs_per_stage[28][6][8]=
 		}, // stage  8
 		////////////////
 		{
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+			{ 46,1,1, 203, 0,  65,38,5},{ 0,0,0,   0, 0,  0, 0,0},{ 44,1,1, 186, 0,  51,36,6},
+			{ 47,1,1, 185, 0,  70,39,1},{43,1,1, 198, 0, 48,35,3},{ 45,1,1, 199, 0,  57,37,8}
 		}, // stage  9
 		{
 			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
@@ -4104,6 +4104,7 @@ script "ssdremaster_clear_seven_sinner_translation" (int boss_id)
 script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 {
 	bool debug_death_trigger=true;
+	bool keyscramble_debug=(GetCVar("ssdremaster_debug_keyscramble") != 0);
 
 	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
 	if (!ssdremaster_sevensinner_death[boss_id])
@@ -4146,7 +4147,7 @@ script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 
 						if ((random_res >= 1) && (random_res <= ssdremaster_allkeys_N))
 						{
-							if (debug_death_trigger)
+							if (keyscramble_debug)
 								Log(s:"[seven_sinner_death_trigger] keyscramble: ",d:boss_keydrop_id,s:" -> ",d:random_res);
 
 							boss_keydrop_id = random_res;
@@ -4156,7 +4157,8 @@ script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 
 				if (boss_keydrop_id <= ssdremaster_allkeys_N)
 				{
-					sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[boss_keydrop_id-1], keydrop_hspeed,keydrop_vspeed, 1);
+					//sdr_SpawnThingToRandomDir(boss_tid, 0, ssdremaster_allkeys[boss_keydrop_id-1], keydrop_hspeed,keydrop_vspeed, 1);
+					Thing_Spawn(boss_tid, ssdremaster_allkeys[boss_keydrop_id-1], 0, 0);
 				}
 				else
 				{
