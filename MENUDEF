@@ -40,6 +40,8 @@ OptionMenu "SonicRemasterSettings"
 	Option "[WIP] Scramble sector lighting", "ssdremaster_keyscramble_allow_sector_light_effects", "OnOff", "ssdremaster_enable_keyscramble"
 	Option "[WIP] Scramble light source things", "ssdremaster_keyscramble_allow_light_sources", "OnOff", "ssdremaster_enable_keyscramble"
 	Option "[WIP] Scramble other things (obstacles)", "ssdremaster_keyscramble_allow_other_obstacles", "OnOff", "ssdremaster_enable_keyscramble"
+	StaticText ""
+	Option "Debug KeyScramble feature (used for development)", "ssdremaster_debug_keyscramble", "OnOff", "ssdremaster_enable_keyscramble"
 
 	StaticText ""
 	StaticText ""

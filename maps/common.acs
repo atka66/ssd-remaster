@@ -352,8 +352,8 @@ int keyscramble_defs_per_stage[28][6][8]=
 			{ 31,1,1, 144, 0,  37,46,8},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
 		}, // stage  6
 		{
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+			{ 31,0,1, 166, 0,  36,27,1},{33,1,1,  80, 0, 39,28,2},{ 30,1,1, 165, 0,  34, 3,2},
+			{  0,0,0,   0, 0,   0, 0,0},{32,1,1, 167, 0, 37, 4,2},{  0,0,0,   0, 0,   0, 0,0}
 		}, // stage  7
 		{
 			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
@@ -737,7 +737,7 @@ function str ssdremaster_queryKeyName(int lock_id, bool capital)
 
 function void init_keyscramble_for_stage(int stagenum)
 {
-	bool keyscramble_debug=true;
+	bool keyscramble_debug=(GetCVar("ssdremaster_debug_keyscramble") != 0);
 
 	int ssdremaster_allkeys_N=6;
 	int keyscramble_samples[6];
@@ -777,7 +777,7 @@ function void init_keyscramble_for_stage(int stagenum)
 
 		if (keyscramble_debug)
 		{
-			temp = "";
+			temp = "[init_keyscramble] ";
 			for (j=0;j<m;j++)
 				temp = StrParam(s:temp,d:keyscramble_samples[j],s:";");
 
@@ -828,11 +828,11 @@ function void init_keyscramble_for_stage(int stagenum)
 				m--;
 
 				keyscramble_random_results[i] = res + 1;
-				if (keyscramble_debug) Log(d:i,s:" -> ",d:res);
+				if (keyscramble_debug) Log(s:"[init_keyscramble] ",d:i,s:" -> ",d:res);
 
 				if (keyscramble_debug && (m > 0))
 				{
-					temp = "";
+					temp = "[init_keyscramble] ";
 					for (j=0;j<m;j++)
 						temp = StrParam(s:temp,d:keyscramble_samples[j],s:";");
 
@@ -843,7 +843,7 @@ function void init_keyscramble_for_stage(int stagenum)
 
 		if (keyscramble_debug)
 		{
-			temp = "result: ";
+			temp = "[init_keyscramble] result: ";
 
 			n = ssdremaster_allkeys_N;
 
@@ -948,7 +948,7 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 	if (ssdremaster_enable_keyscramble)
 	{
 		int ssdremaster_allkeys_N=6;
-		bool keyscramble_debug=false;
+		bool keyscramble_debug=(GetCVar("ssdremaster_debug_keyscramble") != 0);
 
 		str keyscramble_light_sources[6];
 		int i,n;
@@ -1014,7 +1014,7 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 				{
 					int newtid = light_tid + tid_off_for_swap;
 
-					if (keyscramble_debug) Log(s:"key #1 -> ",s:light_class2);
+					if (keyscramble_debug) Log(s:"[keyscramble_translation] key #",d:i,s:" -> ",s:light_class2);
 
 					SpawnSpotForced(light_class2, light_tid, newtid, 0);
 					Thing_Remove(light_tid);
