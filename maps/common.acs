@@ -310,6 +310,8 @@ int sdr_spawn_dir;
 
 // 'key scramble' related stuff
 
+#define SDR_KEYSCRAMBLE_BOSS_KEY_TID -666
+
 bool ssdremaster_enable_keyscramble;
 bool sdr_keyscramble_pick_onlyexist;
 
@@ -356,8 +358,8 @@ int keyscramble_defs_per_stage[28][6][8]=
 			{  0,0,0,   0, 0,   0, 0,0},{32,1,1, 167, 0, 37, 4,2},{  0,0,0,   0, 0,   0, 0,0}
 		}, // stage  7
 		{
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
-			{  0,0,0,   0, 0,   0, 0,0},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0}
+			{ 42,1,1,-666, 0,  46,77,2},{ 0,0,0,   0, 0,  0, 0,0},{  0,0,0,   0, 0,   0, 0,0},
+			{ 40,1,1, 134, 0,  43,34,1},{ 0,0,0,   0, 0,  0, 0,0},{ 41,1,1, 135, 0,  44, 7,2}
 		}, // stage  8
 		////////////////
 		{
@@ -800,7 +802,7 @@ function void init_keyscramble_for_stage(int stagenum)
 
 			tid = keyscramble_defs_per_stage[stagenum-1][i][3];
 
-			if ((m > 0) && (tid > 0))
+			if ((m > 0) && ((tid > 0) || (tid == SDR_KEYSCRAMBLE_BOSS_KEY_TID)))
 			if (((lid >= 0) && (texPos >= 0) && (texPos <= 2) && (keyTexType >= 0) && (keyTexType <= 1)) && (stag >= 0))
 			if ((trigger_lid >= 0) && (trigger_acs >= 0) && (trigger_N >= 0))
 			{
@@ -923,9 +925,12 @@ function void apply_keyscramble_for_stage(int stagenum)
 					Sector_SetColor(stag, r,g,b);
 				}
 
-				SpawnSpotForced(keyspawnclass, tid, newtid, 0);
-				Thing_Remove(tid);
-				Thing_ChangeTID(newtid, tid);
+				if (tid > 0)
+				{
+					SpawnSpotForced(keyspawnclass, tid, newtid, 0);
+					Thing_Remove(tid);
+					Thing_ChangeTID(newtid, tid);
+				}
 
 				if ((trigger_lid > 0) && (trigger_acs > 0) && (trigger_N > 0))
 				{
@@ -2245,7 +2250,7 @@ script "ssdremaster_common_init" OPEN
 
 		// disable 'key scramble' feature in levels where fails (temporarily!)
 		if (false)
-		if ((story_lev_num == 7) || (story_lev_num == 8))
+		if ((story_lev_num ==  9) || (story_lev_num == 10))
 			ssdremaster_enable_keyscramble = false;
 
 		if (true)
@@ -4098,6 +4103,8 @@ script "ssdremaster_clear_seven_sinner_translation" (int boss_id)
 
 script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 {
+	bool debug_death_trigger=true;
+
 	if ((boss_id >= SDR_SEVENSINNER_BOSS_ENVY) && (boss_id <= SDR_SEVENSINNER_THEFIRESTARTER))
 	if (!ssdremaster_sevensinner_death[boss_id])
 	{
@@ -4127,6 +4134,25 @@ script "ssdremaster_seven_sinner_death_trigger" (int boss_id, int extreme_i)
 				int keydrop_vspeed=12;
 
 				sdr_spawn_dir = 0;
+
+				if (ssdremaster_enable_keyscramble)
+				{
+					int boss_keyscramble_idx=boss_keydrop_id-1;
+
+					if ((boss_keyscramble_idx >= 0) && (boss_keyscramble_idx < ssdremaster_allkeys_N))
+					if (keyscramble_defs_per_stage[story_lev_num-1][boss_keyscramble_idx][3] == SDR_KEYSCRAMBLE_BOSS_KEY_TID)
+					{
+						int random_res=keyscramble_random_results[boss_keydrop_id-1];
+
+						if ((random_res >= 1) && (random_res <= ssdremaster_allkeys_N))
+						{
+							if (debug_death_trigger)
+								Log(s:"[seven_sinner_death_trigger] keyscramble: ",d:boss_keydrop_id,s:" -> ",d:random_res);
+
+							boss_keydrop_id = random_res;
+						}
+					}
+				}
 
 				if (boss_keydrop_id <= ssdremaster_allkeys_N)
 				{
