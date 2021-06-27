@@ -183,10 +183,16 @@ str zone_titles[15]={
 int zone, act;
 int story_lev_num, bonus_lev_num;
 
+// some other useful stuff
+
 bool ready, show_hud;
 
 bool ssdremaster_time_running;
 bool ssdremaster_rad_used;
+
+bool ssdremaster_is_invincible;
+
+str ssdremaster_or_music_name;
 
 // deep water define-variable stuff
 
@@ -1700,29 +1706,72 @@ function void ssdremaster_leveldefaults(void)
 function void ssdremaster_setLevelMusic(void)
 {
 	str level_music="";
+	str music_silenced="-";
 
-	if (bonus_stage_state == NOT_A_BONUS_STAGE)
+	if (StrCmp(ssdremaster_or_music_name,"") == 0)
 	{
-		if (endcounter < 3)
+		if (bonus_stage_state == NOT_A_BONUS_STAGE)
 		{
-			str music_zone_str="";
+			if (endcounter < 3)
+			{
+				str music_zone_str="";
 
-			level_music = "zone";
+				level_music = "zone";
 
-			if (zone < 10)
-				music_zone_str = StrParam(s:"0",d:zone);
-			else
-				music_zone_str = StrParam(d:zone);
+				if (zone < 10)
+					music_zone_str = StrParam(s:"0",d:zone);
+				else
+					music_zone_str = StrParam(d:zone);
 
-			level_music = StrParam(s:level_music,s:music_zone_str,s:"a",d:act);
+				level_music = StrParam(s:level_music,s:music_zone_str,s:"a",d:act);
+			}
 		}
+		else
+		{
+			level_music = "z_bonus";
+		}
+	}
+	else if (StrCmp(ssdremaster_or_music_name,music_silenced) == 0)
+	{
+		level_music = "";
 	}
 	else
 	{
-		level_music = "z_bonus";
+		level_music = ssdremaster_or_music_name;
 	}
 
 	SetMusic (level_music);
+}
+
+function void ssdremaster_OR_SetMusic(str musicName)
+{
+	bool debug_music_change=false;
+	str music_silenced="-";
+
+	if (StrCmp(ssdremaster_or_music_name,musicName) != 0)
+	{
+		if (StrCmp(musicName,"") == 0)
+			ssdremaster_or_music_name = music_silenced;
+		else
+			ssdremaster_or_music_name = musicName;
+
+		if (debug_music_change)
+			Log(s:"Successfully override music settings: '",s:ssdremaster_or_music_name,s:"'.");
+
+		ACS_NamedExecute("ssdremaster_wait_for_music_change", 0, 0,0,0);
+	}
+}
+
+function void ssdremaster_OR_ClearMusic(void)
+{
+	ssdremaster_or_music_name = "";
+	ACS_NamedExecute("ssdremaster_wait_for_music_change", 0, 0,0,0);
+}
+
+script "ssdremaster_wait_for_music_change" (void)
+{
+	while (ssdremaster_is_invincible) Delay(1);
+	ssdremaster_setLevelMusic();
 }
 
 function int ssdremaster_levelinfo(void)
@@ -2233,7 +2282,10 @@ script "ssdremaster_common_init" OPEN
 
 	// main title
 	if (level_num_temp == SDR_LEVELNUM_TITLEMAP)
+	{
 		story_lev_num = SDR_LEVELNUM_TITLEMAP;
+		ssdremaster_is_invincible = false;
+	}
 
 	// init translation to 'seven sinner' bosses
 	if (((level_num_temp >=  1) && (level_num_temp <= 30)) || (level_num_temp == 99))
@@ -2310,6 +2362,8 @@ script "ssdremaster_common_init" OPEN
 		ssdremaster_debug_timebonus = false;
 
 		ssdremaster_rad_used = false;
+		ssdremaster_is_invincible = false;
+		ssdremaster_or_music_name = "";
 
 		time_display_settings[0] = true;
 		time_display_settings[1] = false;
@@ -4635,25 +4689,31 @@ ACS_Execute(arg1, 0, 0,0,0);
 script 203 (int arg0)	// invincibility monitor 
 
 {
-Thing_Remove (arg0); 
-activatorsound ("monitor", 127); 
-delay(5); 
-SetMusic ("z_invuln");
-delay(30);
-SetPlayerProperty (1, 2, 5); 
-ACS_ExecuteAlways (209, 0, 776, 0, 0); 
-delay(3); 
-ACS_ExecuteAlways (209, 0, 777, 0, 0); 
-delay(3); 
-ACS_ExecuteAlways (209, 0, 778, 0, 0);
-delay(3); 
-ACS_ExecuteAlways (209, 0, 779, 0, 0); 
-delay(3); 
-ACS_ExecuteAlways (209, 0, 780, 0, 0);
-delay(700);
-sethudsize (0, 0, 0);
-SetPlayerProperty (1, 0, 5);
-ssdremaster_setLevelMusic();
+if (bonus_stage_state == NOT_A_BONUS_STAGE)
+if (story_lev_num != SDR_LEVELNUM_TITLEMAP)
+{
+	ssdremaster_is_invincible = true;
+	Thing_Remove (arg0); 
+	activatorsound ("monitor", 127); 
+	delay(5); 
+	ACS_NamedExecute("ssdremaster_wait_for_music_change", 0, 0,0,0);
+	SetMusic ("z_invuln");
+	delay(30);
+	SetPlayerProperty (1, 2, 5); 
+	ACS_ExecuteAlways (209, 0, 776, 0, 0); 
+	delay(3); 
+	ACS_ExecuteAlways (209, 0, 777, 0, 0); 
+	delay(3); 
+	ACS_ExecuteAlways (209, 0, 778, 0, 0);
+	delay(3); 
+	ACS_ExecuteAlways (209, 0, 779, 0, 0); 
+	delay(3); 
+	ACS_ExecuteAlways (209, 0, 780, 0, 0);
+	delay(700);
+	sethudsize (0, 0, 0);
+	SetPlayerProperty (1, 0, 5);
+	ssdremaster_is_invincible = false;
+}
 }
 
 script 209 (int arg0)
@@ -4772,7 +4832,7 @@ if (boss_battle_state == BOSS_BATTLE_ENCOUNTER)
 SetPlayerProperty (1, 1, 4);
 SetPlayerProperty (1, 2, 5);
 SetWeapon ("Fist");
-SetMusic ("");
+ssdremaster_OR_SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
 
@@ -4807,7 +4867,7 @@ if ((bonus_stage_state == BONUS_STAGE_WIN) || (bonus_stage_state == BONUS_STAGE_
 {
 ACS_NamedTerminate ("ssdremaster_loop_ring_display", 0);
 ACS_NamedExecute ("ssdremaster_loop_score_display", 0, 0, 0, 0);
-SetMusic ("");
+ssdremaster_OR_SetMusic ("");
 delay(105);
 SetMusic ("z_inter");
 setfont ("BigFont");

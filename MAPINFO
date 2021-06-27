@@ -360,7 +360,6 @@ evenlighting
 nointermission
 aircontrol 0.25
 airsupply 15
-music z_boss2
 
 map MAP30 "Final Battle Zone - Act 2"
 levelnum 30
