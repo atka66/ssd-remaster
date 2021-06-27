@@ -2464,7 +2464,8 @@ script "ssdremaster_common_init" OPEN
 
 	ready = true;
 
-	while (!show_hud) Delay(1);
+	if (((level_num_temp >=  1) && (level_num_temp <= 30)) || ((level_num_temp >= 31) && (level_num_temp <= 35)))
+		while (!show_hud) Delay(1);
 
 	// show HUD in story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
@@ -2512,6 +2513,11 @@ script "ssdremaster_common_init" OPEN
 script "ssdremaster_show_compass" ENTER
 {
 	bool looped=true;
+
+	while (!ready) Delay(1);
+
+	if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+		Terminate;
 
 	while (!show_hud) Delay(1);
 
@@ -2565,6 +2571,9 @@ script "ssdremaster_common_ragequit" (int pos)
 {
 	bool forced=true;
 
+	if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+		Terminate;
+
 	if (bonus_stage_state != NOT_A_BONUS_STAGE)
 	{
 		forced = false;
@@ -2605,6 +2614,9 @@ script "ssdremaster_common_return" REOPEN
 {
 	if (bonus_stage_state == NOT_A_BONUS_STAGE)
 	{
+		if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+			Terminate;
+
 		ssdremaster_time_running = true;
 		ACS_NamedExecute("ssdremaster_loop_time_display", 0, 0,0,0);
 	}
@@ -3554,7 +3566,10 @@ function bool ssdremaster_get_rings(int ring_n, int bonus_am, int max_ring_n)
 {
 	bool res=true;
 
-	res &= ((ring_n != 0) && (max_ring_n > 0));
+	res &= (story_lev_num != SDR_LEVELNUM_TITLEMAP);
+
+	if (res)
+		res &= ((ring_n != 0) && (max_ring_n > 0));
 
 	if (res)
 	{
@@ -3976,6 +3991,7 @@ function int ssdremaster_get_goal_rings(void)
 function str ssdremaster_print_goal_rings(void)
 {
 	int res="";
+
 	int ringcount=ringbonus_basic_settings[1];
 
 	if (ringcount > 0)
@@ -4003,22 +4019,25 @@ function bool ssdremaster_check_rings_count(bool reached)
 
 script "ssdremaster_lose_rings_by_mine" (int dl)
 {
-	activatorsound ("ringout", 127);
-
-	if(ringbonus_basic_settings[0] < 10)
+	if (bonus_stage_state != NOT_A_BONUS_STAGE)
 	{
-		ringbonus_basic_settings[0] = 0;
-		ringbonus_basic_settings[2] = 0;
-	}
-	else
-	{
-		ringbonus_basic_settings[0] -= 10;
-		ringbonus_basic_settings[2] -= 1000;
-		if (ringbonus_basic_settings[2] < 0) ringbonus_basic_settings[2] = 0;
-	}
+		activatorsound ("ringout", 127);
 
-	if (dl > 0)
-		delay(dl);
+		if(ringbonus_basic_settings[0] < 10)
+		{
+			ringbonus_basic_settings[0] = 0;
+			ringbonus_basic_settings[2] = 0;
+		}
+		else
+		{
+			ringbonus_basic_settings[0] -= 10;
+			ringbonus_basic_settings[2] -= 1000;
+			if (ringbonus_basic_settings[2] < 0) ringbonus_basic_settings[2] = 0;
+		}
+
+		if (dl > 0)
+			delay(dl);
+	}
 }
 
 function void ssdremaster_lose_ringbonus(int div)
@@ -4665,6 +4684,8 @@ function void ssdremaster_combineBattles(void)
 script 201 (int arg0, int arg1)				// health monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
@@ -4677,6 +4698,8 @@ ACS_Execute(arg1, 0, 0,0,0);
 script 202 (int arg0, int arg1)				// armour monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
@@ -4719,6 +4742,9 @@ if (story_lev_num != SDR_LEVELNUM_TITLEMAP)
 script 209 (int arg0)
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
+
 int i;
 
 str frames[14];// = {"1", "2", "3", "4", "5", "6", "7", "6", "5", "4", "3", "2", "1", "0"};
@@ -4745,6 +4771,8 @@ delay(1);
 script 204 (int arg0, int arg1)				// invisibility monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
@@ -4757,6 +4785,8 @@ ACS_Execute(arg1, 0, 0,0,0);
 script 205 (int arg0, int arg1, int arg2)				// rad monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 bool check_radsuit_inv=(arg2 != 0);
 
 Thing_Remove (arg0);
@@ -4778,6 +4808,8 @@ ACS_Execute(arg1, 0, 0,0,0);
 script 206 (int arg0, int arg1)				// extra life monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
@@ -4790,6 +4822,8 @@ ACS_Execute(arg1, 0, 0,0,0);
 script 207 (int arg0)				// speed monitor
 
 {
+if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	Terminate;
 Thing_Remove (arg0);
 activatorsound ("monitor", 127);
 delay(35);
