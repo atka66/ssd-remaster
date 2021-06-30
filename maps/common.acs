@@ -3979,7 +3979,7 @@ script "ssdremaster_bonus_level_goal_success" (int dl)
 		delay(dl);
 }
 
-script "ssdremaster_bonus_level_victory" (void)
+script "ssdremaster_bonus_level_victory" (int dl)
 {
 	setfont ("BigFont");
 	delay(35);
@@ -3987,9 +3987,11 @@ script "ssdremaster_bonus_level_victory" (void)
 	delay(5);
 	hudmessage (s:"a winner is you!"; 2, 5, CR_GREEN, 0.5, 0.46, 5.0, 0.01, 1.0);
 	activatorsound ("emerald", 127);
+	if (dl > 0)
+		delay(dl);
 }
 
-script "ssdremaster_bonus_level_fail" (void)
+script "ssdremaster_bonus_level_fail" (int dl)
 {
 	setfont ("BigFont");
 	activatorsound ("noway", 127);
@@ -4000,7 +4002,8 @@ script "ssdremaster_bonus_level_fail" (void)
 	hudmessage (s:"see you next time"; 2, 3, CR_RED, 0.5, 0.56, 5.0, 0.01, 1.0);
 	delay(35);
 	hudmessage (s:"bye-bye"; 2, 4, CR_RED, 0.5, 0.61, 4.0, 0.01, 1.0);
-	delay(35);
+	if (dl > 0)
+		delay(dl);
 }
 
 script "ssdremaster_bonus_level_goal_rings" (void)
