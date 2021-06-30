@@ -246,7 +246,7 @@ int script210_tags[2];
 // forcefield variable stuff
 
 int forceFieldN = 32;
-int  forceField_intprops [32][5]; // {lid,anim_n,anim_dl,trans,cd}
+int  forceField_intprops [32][7]; // {lid,anim_n,anim_dl,trans,cd,thrust_angle,thrust_force}
 bool forceField_boolprops[32][2]; // {hurt,active}
 str  forceField_strprops [32][1]; // {texStr}
 
@@ -1589,12 +1589,20 @@ script 230 (int ff_i, int test_mode_i)
 			int  cd      =forceField_intprops [ff_i][4];
 			bool hurt    =forceField_boolprops[ff_i][0];
 
+			int  ang     =forceField_intprops [ff_i][5];
+			int  f       =forceField_intprops [ff_i][6];
+
 			int  n       =forceField_intprops [ff_i][1];
 			int  anim_dl =forceField_intprops [ff_i][2];
 
 			forceField_boolprops[ff_i][1] = true;
 
 			if (!test_mode && hurt) ForceField();
+
+			if (!test_mode && (ang >= 0))
+			{
+				ThrustThing(ang, f, NO, 0);
+			}
 
 			if ((n > 0) && (texStr != "-"))
 			{
@@ -1640,14 +1648,49 @@ function void clear_forcefield_entry(int ff_i)
 {
 	if ((ff_i >= 0) && (ff_i < forceFieldN))
 	{
-		forceField_intprops [ff_i][0] = 0;
-		forceField_intprops [ff_i][1] = 0;
-		forceField_intprops [ff_i][2] = 0;
-		forceField_intprops [ff_i][3] = 0;
-		forceField_strprops [ff_i][0] = "";
-		forceField_intprops [ff_i][4] = 0;
-		forceField_boolprops[ff_i][0] = false;
-		forceField_boolprops[ff_i][1] = false;
+		int i,n;
+
+		n = 7;
+		for (i=0;i<n;i++)
+			forceField_intprops [ff_i][i] = 0;
+		forceField_intprops [ff_i][5] = -1;
+
+		n = 2;
+		for (i=0;i<n;i++)
+			forceField_boolprops[ff_i][i] = false;
+
+		n = 1;
+		for (i=0;i<n;i++)
+			forceField_strprops [ff_i][i] = "";
+	}
+}
+
+function void sdr_set_forcefield_thrusting(int ff_i, int ang, int f)
+{
+	if ((ff_i >= 0) && (ff_i < forceFieldN))
+	if ((ang >= 0) && (f > 0))
+	{
+		int lid=forceField_intprops[ff_i][0];
+		
+		if (lid > 0)
+		{
+			forceField_intprops[ff_i][5] = ang;
+			forceField_intprops[ff_i][6] = f;
+		}
+	}
+}
+
+function void sdr_remove_forcefield_thrusting(int ff_i)
+{
+	if ((ff_i >= 0) && (ff_i < forceFieldN))
+	{
+		int lid=forceField_intprops[ff_i][0];
+		
+		if (lid > 0)
+		{
+			forceField_intprops[ff_i][5] = -1;
+			forceField_intprops[ff_i][6] = 0;
+		}
 	}
 }
 
