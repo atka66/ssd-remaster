@@ -193,6 +193,8 @@ bool ssdremaster_is_invincible;
 
 str ssdremaster_or_music_name;
 
+bool ssdremaster_overall_cheats;
+
 // deep water define-variable stuff
 
 int deepWaterN = 128;
@@ -2246,6 +2248,8 @@ script "ssdremaster_common_init" OPEN
 
 	int level_num_temp=ssdremaster_levelinfo();
 
+	ssdremaster_overall_cheats = false;
+
 	ssdremaster_enable_keyscramble = (GetCVar("ssdremaster_enable_keyscramble"));
 
 	ssdremaster_dw_chk_water_id = -1;
@@ -3966,6 +3970,61 @@ else
 	delay(rundown_dl);
 	Restart;
 }
+}
+
+// cheat specific functions and scripts
+
+script "ssdremaster_reward_cheater" (int reward_acs)
+{
+	str cheat_msg_long="However, you are a cheater!";
+
+    if (ssdremaster_overall_cheats)
+    {
+		if (bonus_stage_state != NOT_A_BONUS_STAGE)
+		{
+			activatorsound ("noway", 127);
+			SetFont("BigFont");
+			hudmessage(s:cheat_msg_long; 2, 0, CR_RED, 0.5, 0.54, 2.5, 0.01, 1.0);
+
+			if (reward_acs > 0)
+				ACS_Execute(reward_acs, 0, 0,0,0);
+
+			ssdremaster_lose_ringbonus(100);
+		}
+    }
+}
+
+function void ssdremaster_trigger_cheat(void)
+{
+	str cheat_str="Cheater!";
+
+    if (!ssdremaster_overall_cheats)
+	{
+		ssdremaster_overall_cheats = true;
+
+        Log(s:cheat_str);
+	}
+}
+
+script 20 ENTER     // check for flying cheat
+{
+	bool flying_cheat=false;
+
+    while (!flying_cheat && (bonus_stage_state == BONUS_STAGE_PLAYING))
+    {
+        bool flag_checked=CheckFlag(0, "FLOAT");
+
+        if (flag_checked && !flying_cheat)
+        {
+            flying_cheat = true;
+
+			if (bonus_lev_num != 3)
+				ssdremaster_trigger_cheat();
+        }
+
+		if (!flying_cheat)
+			delay(5);
+    }
 }
 
 // bonus level specific functions and scripts
