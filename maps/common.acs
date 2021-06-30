@@ -3970,6 +3970,45 @@ else
 
 // bonus level specific functions and scripts
 
+script "ssdremaster_bonus_level_goal_success" (int dl)
+{
+	setfont ("BigFont");
+	activatorsound ("checkpoint", 127);
+	hudmessage (s:"cool!"; 2, 0, CR_GREEN, 0.5, 0.46, 2.0, 0.01, 1.0);
+	if (dl > 0)
+		delay(dl);
+}
+
+script "ssdremaster_bonus_level_victory" (void)
+{
+	setfont ("BigFont");
+	delay(35);
+	ssdremaster_OR_SetMusic ("");
+	delay(5);
+	hudmessage (s:"a winner is you!"; 2, 5, CR_GREEN, 0.5, 0.46, 5.0, 0.01, 1.0);
+	activatorsound ("emerald", 127);
+}
+
+script "ssdremaster_bonus_level_fail" (void)
+{
+	setfont ("BigFont");
+	activatorsound ("noway", 127);
+	hudmessage (s:"you fail it!"; 2, 1, CR_RED, 0.5, 0.46, 7.0, 0.01, 1.0);
+	delay(35);
+	hudmessage (s:"your skill is not enough"; 2, 2, CR_RED, 0.5, 0.51, 6.0, 0.01, 1.0);
+	delay(35);
+	hudmessage (s:"see you next time"; 2, 3, CR_RED, 0.5, 0.56, 5.0, 0.01, 1.0);
+	delay(35);
+	hudmessage (s:"bye-bye"; 2, 4, CR_RED, 0.5, 0.61, 4.0, 0.01, 1.0);
+	delay(35);
+}
+
+script "ssdremaster_bonus_level_goal_rings" (void)
+{
+	setfont ("BigFont");
+	hudmessage (s:"get   \cc",s:ssdremaster_print_goal_rings(),s:"\cf   rings!"; 2, 0, CR_GOLD, 0.5, 0.46, 5.0, 0.01, 1.0);
+}
+
 function void ssdremaster_set_goal_rings(int ring_n)
 {
 	if (ring_n > 0)
