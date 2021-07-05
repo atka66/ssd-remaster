@@ -2333,6 +2333,16 @@ script "ssdremaster_common_init" OPEN
 		ssdremaster_is_invincible = false;
 	}
 
+	// story levels
+	if ((level_num_temp >=  1) && (level_num_temp <= 30))
+		story_lev_num = level_num_temp;
+
+	// bonus levels
+	if ((level_num_temp >= 31) && (level_num_temp <= 35))
+		bonus_lev_num = level_num_temp - 30;
+
+	ACS_NamedExecute("ssdremaster_create_obstacle_translations", 0, 0,0,0);
+
 	// init translation to 'seven sinner' bosses
 	if (((level_num_temp >=  1) && (level_num_temp <= 30)) || (level_num_temp == 99))
 		ACS_NamedExecute("ssdremaster_init_sevensinner_translation", 0, 0,0,0);
@@ -2340,8 +2350,6 @@ script "ssdremaster_common_init" OPEN
 	// story levels
 	if ((level_num_temp >=  1) && (level_num_temp <= 30))
 	{
-		story_lev_num = level_num_temp;
-
 		bonus_stage_state = NOT_A_BONUS_STAGE;
 
 		endcounter = 0;
@@ -2468,8 +2476,6 @@ script "ssdremaster_common_init" OPEN
 	// bonus levels
 	if ((level_num_temp >= 31) && (level_num_temp <= 35))
 	{
-		bonus_lev_num = level_num_temp - 30;
-
 		bonus_stage_state = BONUS_STAGE_PLAYING;
 
 		endcounter = 0;
@@ -3033,6 +3039,202 @@ script "ssdremaster_translate_boss_TheFirestarter" (void)		// The Firestarter
 	CreateTranslation (30, 112:127=160:167, 152:159=128:143, 9:12=236:239);
 	delay (2);
 	CreateTranslation (30, 112:127=224:231, 152:159=128:143, 9:12=236:239);
+	}
+}
+
+script "ssdremaster_create_obstacle_translations" (void)
+{
+	// copied from MAP04 script
+	if (story_lev_num == 4)
+	{
+		CreateTranslation (45, 64:79=192:207, 151:151=240:240);
+		CreateTranslation (46, 64:79=176:191, 151:151=191:191);
+		CreateTranslation (47, 64:79=224:231, 151:151=231:231);
+		CreateTranslation (48, 64:79=208:223, 151:151=232:232);
+		CreateTranslation (49, 64:79=250:254, 151:151=254:254);
+		CreateTranslation (50, 64:79=16:31, 151:151=32:32);
+		CreateTranslation (51, 64:79=48:63, 151:151=64:64);
+		CreateTranslation (52, 152:159=128:143, 9:12=136:143, 112:127=128:143);
+		CreateTranslation (53, 152:159=80:95, 9:12=88:95);
+		CreateTranslation (54, 64:79=96:111);
+		CreateTranslation (55, 64:71=224:231, 72:79=160:167);
+		CreateTranslation (56, 96:111=32:47, 64:79=32:47, 1:8=40:47, 236:239=44:47, 126:127=46:47);
+		CreateTranslation (57, 96:111=240:247, 64:79=240:247, 1:8=244:247, 236:239=246:247, 126:127=247:247);
+		CreateTranslation (58, 96:111=168:175, 64:79=168:175, 1:8=172:175, 236:239=174:175, 126:127=175:175);
+		CreateTranslation (64, 225:228=169:172, 160:162=173:175);
+		CreateTranslation (65, 225:228=112:115, 160:162=116:118);
+		CreateTranslation (66, 225:228=192:195, 160:162=196:198);
+		CreateTranslation (67, 225:228=209:213, 160:162=214:216);
+		CreateTranslation (68, 225:226=250:250, 227:228=251:252, 160:162=252:254);
+		CreateTranslation (69, 225:228=80:83, 160:162=84:86);
+	}
+	// copied from MAP05 script
+	if (story_lev_num == 5)
+	{
+		CreateTranslation (51, 160:167=172:187);
+		CreateTranslation (52, 160:167=208:223);
+		CreateTranslation (53, 160:167=192:207);
+		CreateTranslation (54, 112:127=208:223);
+		CreateTranslation (55, 112:127=192:207);
+		CreateTranslation (56, 112:127=168:183);
+		CreateTranslation (57, 160:167=112:127);
+		CreateTranslation (58, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167);
+		CreateTranslation (59, 152:159=208:215, 126:126=216:216, 9:12=217:220, 64:79=208:223, 128:151=208:223, 1:2=221:222, 5:8=220:223, 104:111=216:223);
+		CreateTranslation (60, 168:191=208:223, 32:47=208:223);
+		CreateTranslation (61, 168:188=194:207, 189:191=240:241, 32:47=192:207);
+		CreateTranslation (62, 168:191=112:127, 32:47=112:127);
+		CreateTranslation (63, 152:159=194:201, 126:126=202:202, 9:12=203:205, 64:75=194:207, 76:79=240:241, 128:148=194:207, 149:151=240:241, 1:1=207:207, 2:2=240:240, 5:6=206:207, 7:8=240:241, 104:109=202:207, 110:111=240:241);
+	}
+	// copied from MAP06 script
+	if (story_lev_num == 6)
+	{
+		CreateTranslation (51, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167, 208:223=160:163, 232:235=160:163);
+		CreateTranslation (52, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167);
+		CreateTranslation (53, 152:155=228:231, 156:159=160:163, 126:126=166:166, 9:12=164:167, 64:71=224:231, 72:79=160:167, 128:139=224:231, 140:151=160:167, 1:2=165:166, 5:8=163:167, 104:111=160:167);
+		CreateTranslation (54, 168:191=250:254, 32:47=250:254, 208:223=250:254, 160:167=250:254, 232:235=254:254);
+		CreateTranslation (55, 168:191=250:254, 168:174=250:250, 188:191=254:254, 32:47=250:254, 44:47=254:254);
+		CreateTranslation (56, 152:159=250:254, 126:126=254:254, 9:9=253:253, 10:12=254:254, 64:79=250:254, 128:151=250:254, 1:2=254:254, 5:8=252:253, 99:99=250:250, 102:102=251:251, 104:111=250:251);
+		CreateTranslation (57, 112:127=172:187);
+		CreateTranslation (58, 112:117=250:250, 118:119=251:251, 120:121=252:252, 122:123=253:253, 124:127=254:254);
+		CreateTranslation (59, 160:162=250:250, 163:163=251:251, 164:164=252:252, 165:165=253:253, 166:167=254:254);
+		CreateTranslation (60, 160:167=172:187);
+		CreateTranslation (61, 112:127=160:167);
+	}
+	// copied from MAP07 script
+	if (story_lev_num == 7)
+	{
+		CreateTranslation (51, 168:188=194:207, 189:191=240:241, 32:47=192:207);
+		CreateTranslation (52, 112:127=160:167);
+		CreateTranslation (53, 112:127=192:207);
+		CreateTranslation (54, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167, 208:223=160:163, 232:235=160:163);
+	}
+	// copied from MAP08 script
+	if (story_lev_num == 8)
+	{
+		CreateTranslation (51, 168:191=208:223, 32:47=208:223);
+	}
+	// copied from MAP09 script
+	if (story_lev_num == 9)
+	{
+		CreateTranslation (51, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167, 208:223=160:163, 232:235=160:163);
+		CreateTranslation (52, 168:175=224:231, 176:191=160:167, 32:39=224:231, 40:47=160:167);
+		CreateTranslation (53, 152:155=228:231, 156:159=160:163, 126:126=166:166, 9:12=164:167, 64:71=224:231, 72:79=160:167, 128:139=224:231, 140:151=160:167, 1:2=165:166, 5:8=163:167, 104:111=160:167);
+		CreateTranslation (54, 168:191=208:223, 32:47=208:223);
+	}
+	// copied from MAP12 script
+	if (story_lev_num == 12)
+	{
+		CreateTranslation (54, 225:228=169:172, 160:162=173:175);
+		CreateTranslation (55, 225:228=112:115, 160:162=116:118);
+		CreateTranslation (56, 225:228=192:195, 160:162=196:198);
+	}
+	// copied from MAP13 script
+	if (story_lev_num == 13)
+	{
+		CreateTranslation (61, 112:124=168:174, 125:127=175:175);
+		CreateTranslation (62, 112:119=220:223, 120:124=232:234, 125:127=235:235);
+		CreateTranslation (63, 112:119=156:159, 120:124=9:11, 125:127=12:12);
+		CreateTranslation (64, 112:113=142:143, 114:114=13:13, 115:115=236:236, 116:116=150:150, 117:117=14:14, 118:118=151:151, 119:119=237:237, 120:120=15:15, 121:123=77:79, 124:125=238:239, 126:127=1:2);
+		CreateTranslation (65, 112:127=32:47);
+		CreateTranslation (66, 112:124=144:150, 125:127=151:151);
+		CreateTranslation (67, 112:124=152:158, 125:127=159:159);
+		CreateTranslation (54, 225:228=169:172, 160:162=173:175);
+		CreateTranslation (55, 225:228=112:115, 160:162=116:118);
+		CreateTranslation (56, 225:228=192:195, 160:162=196:198);
+		CreateTranslation (57, 225:228=209:213, 160:162=214:216);
+		CreateTranslation (58, 225:226=250:250, 227:228=251:252, 160:162=252:254);
+		CreateTranslation (59, 225:228=80:83, 160:162=84:86);
+		CreateTranslation (70, 192:200=169:177);
+		CreateTranslation (71, 192:200=209:217);
+		CreateTranslation (72, 192:198=225:231, 199:200=160:161);
+		CreateTranslation (73, 192:200=112:120);
+		CreateTranslation (74, 192:200=80:88);
+	}
+	// copied from MAP14 script
+	if (story_lev_num == 14)
+	{
+		CreateTranslation(54, 225:228=169:172, 160:162=173:175);
+		CreateTranslation(55, 225:228=112:115, 160:162=116:118);
+		CreateTranslation(56, 225:228=192:195, 160:162=196:198);
+		CreateTranslation(57, 225:228=209:213, 160:162=214:216);
+		CreateTranslation(58, 225:226=250:250, 227:228=251:252, 160:162=252:254);
+		CreateTranslation(59, 225:228=80:83, 160:162=84:86);
+		CreateTranslation(60, 192:200=169:177);
+		CreateTranslation(61, 192:200=209:217);
+		CreateTranslation(62, 192:198=225:231, 199:200=160:161);
+		CreateTranslation(63, 192:200=112:120);
+		CreateTranslation(64, 192:200=80:88);
+	}
+	// copied from MAP15 script
+	if (story_lev_num == 15)
+	{
+		CreateTranslation (51, 160:167=172:187);
+		CreateTranslation (52, 160:167=208:223);
+		CreateTranslation (53, 160:167=192:207);
+		CreateTranslation (57, 160:167=112:127);
+		CreateTranslation (59, 160:162=250:250, 163:163=251:251, 164:164=252:252, 165:165=253:253, 166:167=254:254);
+	}
+	// copied from MAP16 script
+	if (story_lev_num == 16)
+	{
+		CreateTranslation (39, 89:95=16:16, 96:111=16:31, 123:127=27:31, 152:159=20:27, 1:3=23:23, 5:8=30:31, 64:79=16:31, 144:151=16:31, 236:239=28:31);
+	}
+	// copied from MAP18 script
+	if (story_lev_num == 18)
+	{
+		CreateTranslation (59, 0:255=0:0);
+	}
+	// copied from MAP23 script
+	if (story_lev_num == 23)
+	{
+		CreateTranslation(57, 225:228=209:213, 160:162=214:216);
+		CreateTranslation(59, 225:228=80:83, 160:162=84:86);
+	}
+	// copied from MAP24 script
+	if (story_lev_num == 24)
+	{
+		CreateTranslation(56, 225:228=192:195, 160:162=196:198);
+		CreateTranslation(58, 225:226=250:250, 227:228=251:252, 160:162=252:254);
+	}
+	// copied from MAP27 script
+	if (story_lev_num == 27)
+	{
+		CreateTranslation (55, 225:228=209:213, 160:162=214:216);
+	}
+	// copied from MAP30 script
+	if (story_lev_num == 30)
+	{
+		CreateTranslation (46, 112:113=142:143, 114:114=13:13, 115:115=236:236, 116:116=150:150, 117:117=14:14, 118:118=151:151, 119:119=237:237, 120:120=15:15, 121:123=77:79, 124:125=238:239, 126:127=1:2);
+		CreateTranslation (47, 112:124=144:150, 125:127=151:151);
+	}
+	// copied from MAP31 script
+	if (bonus_lev_num == 1)
+	{
+		CreateTranslation (54, 225:228=169:172, 160:167=173:180);
+		CreateTranslation (55, 225:228=112:115, 160:167=116:123);
+		CreateTranslation (56, 225:228=192:195, 160:167=196:203);
+		CreateTranslation (57, 225:228=209:213, 160:167=214:221);
+		CreateTranslation (58, 225:226=250:250, 227:228=251:252, 160:167=252:254);
+		CreateTranslation (59, 225:228=80:83, 160:167=84:91);
+	}
+	// copied from MAP32 script
+	if (bonus_lev_num == 2)
+	{
+		CreateTranslation (54, 225:228=169:172, 160:162=173:175);
+		CreateTranslation (55, 225:228=112:115, 160:162=116:118);
+		CreateTranslation (56, 225:228=192:195, 160:162=196:198);
+		CreateTranslation (57, 225:228=209:213, 160:162=214:216);
+		CreateTranslation (58, 225:226=250:250, 227:228=251:252, 160:162=252:254);
+		CreateTranslation (59, 225:228=80:83, 160:162=84:86);
+	}
+	// copied from TITLEMAP script
+	if (story_lev_num == SDR_LEVELNUM_TITLEMAP)
+	{
+		CreateTranslation (35, 112:119=156:159, 120:124=9:11, 125:127=12:12);
+		CreateTranslation (36, 112:113=142:143, 114:114=13:13, 115:115=236:236, 116:116=150:150, 117:117=14:14, 118:118=151:151, 119:119=237:237, 120:120=15:15, 121:123=77:79, 124:125=238:239, 126:127=1:2);
+		CreateTranslation (37, 112:124=144:150, 125:127=151:151);
+		CreateTranslation (38, 112:124=168:174, 125:127=175:175);
+		CreateTranslation (65, 225:228=112:115, 160:162=116:118);
 	}
 }
 
