@@ -322,6 +322,8 @@ int sdr_spawn_dir;
 bool ssdremaster_enable_keyscramble;
 bool sdr_keyscramble_pick_onlyexist;
 
+int keyscramble_translation_id;
+
 str keyscramble_wall_textures[6][2]=
 	{ // {keycardTex,skullkeyTex}, for each key
 		{"DOORRED","DOORRED2"}, // red key
@@ -952,10 +954,12 @@ function void apply_keyscramble_for_stage(int stagenum)
 }
 
 function void keyscramble_translation(int light_tid1, int light_translate1, int light_tid2, int light_translate2, int light_tid3, int light_translate3,
-	int light_tid4, int light_translate4, int light_tid5, int light_translate5, int light_tid6, int light_translate6)
+	int light_tid4, int light_translate4, int light_tid5, int light_translate5, int light_tid6, int light_translate6, int litsrc_id)
 {
 	bool ssdremaster_keyscramble_actlite=(GetCVar("ssdremaster_keyscramble_allow_light_sources") != 0);
 	bool ssdremaster_keyscramble_actmisc=(GetCVar("ssdremaster_keyscramble_allow_other_obstacles") != 0);
+
+	str debug_common_prefix=StrParam(s:"[keyscramble_translation_",d:keyscramble_translation_id+1,s:"]");
 
 	if (ssdremaster_enable_keyscramble)
 	{
@@ -965,9 +969,9 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 		str keyscramble_light_sources[6];
 		int i,n;
 
-		switch (story_lev_num)
+		switch (litsrc_id)
 		{
-			case 4:
+			case 0:
 			{
 				keyscramble_light_sources[0] = "ColumnRed";
 				keyscramble_light_sources[1] = "ColumnBlue";
@@ -975,6 +979,24 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 				keyscramble_light_sources[3] = "ColumnPurple";
 				keyscramble_light_sources[4] = "ColumnGreen";
 				keyscramble_light_sources[5] = "ColumnOrange";
+			} break;
+			case 1:
+			{
+				keyscramble_light_sources[0] = "RedTorch";
+				keyscramble_light_sources[1] = "BlueTorch";
+				keyscramble_light_sources[2] = "YellowTorch";
+				keyscramble_light_sources[3] = "PurpleTorch";
+				keyscramble_light_sources[4] = "GreenTorch";
+				keyscramble_light_sources[5] = "OrangeTorch";
+			} break;
+			case 2:
+			{
+				keyscramble_light_sources[0] = "ShortRedTorch";
+				keyscramble_light_sources[1] = "ShortBlueTorch";
+				keyscramble_light_sources[2] = "ShortYellowTorch";
+				keyscramble_light_sources[3] = "ShortPurpleTorch";
+				keyscramble_light_sources[4] = "ShortGreenTorch";
+				keyscramble_light_sources[5] = "ShortOrangeTorch";
 			} break;
 			default:
 			{
@@ -992,6 +1014,8 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			int tid_off_for_swap=10000;
 			bool is_light_source=true;
 
+			bool success=false;
+
 			n = ssdremaster_allkeys_N;
 			for (i=1;i<=n;i++)
 			{
@@ -999,6 +1023,8 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 
 				int light_tid=0;
 				str light_class1, light_class2;
+
+				int light_count=0;
 
 				if ((random_res < 1) || (random_res > ssdremaster_allkeys_N)) continue;
 
@@ -1013,20 +1039,33 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 					default: break;
 				}
 
-				if ((i == random_res) || (light_tid <= 0)) continue;			
+				if ((i == random_res) || (light_tid <= 0)) continue;
 
 				light_class1 = keyscramble_light_sources[i-1];
 				light_class2 = keyscramble_light_sources[random_res-1];
 
-				if ((StrCmp(light_class1,"") == 0) || (StrCmp(light_class2,"") == 0)) continue;
+				if ((StrCmp(light_class1,"") == 0) || (StrCmp(light_class2,"") == 0))
+					is_light_source = false;
+				else
+				{
+					if (keyscramble_debug) Log(s:debug_common_prefix,s:" key #",d:i,s:" original class: '",s:GetActorClass(light_tid),s:"'");
+					is_light_source &= (CheckActorClass(light_tid, light_class1));
+				}
 
-				is_light_source &= (CheckActorClass(light_tid, light_class1));
+				if (is_light_source)
+					light_count = ThingCount(0, light_tid);
 
-				if ((is_light_source && ssdremaster_keyscramble_actlite && ThingCount(0, light_tid) > 0))
+				if (is_light_source)
+				{
+					if (keyscramble_debug) Log(s:debug_common_prefix,s:" key #",d:i,s:" classes: '",s:light_class1,s:"' and '",s:light_class2,s:"'");
+					if (keyscramble_debug) Log(s:debug_common_prefix,s:" key #",d:i,s:" count: ",d:light_count);
+				}
+
+				if (is_light_source && ssdremaster_keyscramble_actlite && (light_count > 0))
 				{
 					int newtid = light_tid + tid_off_for_swap;
 
-					if (keyscramble_debug) Log(s:"[keyscramble_translation] key #",d:i,s:" -> ",s:light_class2);
+					if (keyscramble_debug) Log(s:debug_common_prefix,s:" key #",d:i,s:" -> ",s:light_class2);
 
 					SpawnSpotForced(light_class2, light_tid, newtid, 0);
 					Thing_Remove(light_tid);
@@ -1049,9 +1088,16 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 						default: break;
 					}
 
+					if (keyscramble_debug) Log(s:debug_common_prefix,s:" key #",d:i,s:" translation: ",d:light_translate);
+
 					Thing_SetTranslation(light_tid, light_translate);
 				}
+
+				success = true;
 			}
+
+			if (success)
+				keyscramble_translation_id++;
 		}
 	}
 }
@@ -2342,6 +2388,7 @@ script "ssdremaster_common_init" OPEN
 		bonus_lev_num = level_num_temp - 30;
 
 	ACS_NamedExecute("ssdremaster_create_obstacle_translations", 0, 0,0,0);
+	NamedScriptWait("ssdremaster_create_obstacle_translations");
 
 	// init translation to 'seven sinner' bosses
 	if (((level_num_temp >=  1) && (level_num_temp <= 30)) || (level_num_temp == 99))
@@ -2353,6 +2400,8 @@ script "ssdremaster_common_init" OPEN
 		bonus_stage_state = NOT_A_BONUS_STAGE;
 
 		endcounter = 0;
+
+		keyscramble_translation_id = 0;
 
 		// disable 'key scramble' feature in levels where fails (temporarily!)
 		if (false)
@@ -3084,6 +3133,10 @@ script "ssdremaster_create_obstacle_translations" (void)
 		CreateTranslation (61, 168:188=194:207, 189:191=240:241, 32:47=192:207);
 		CreateTranslation (62, 168:191=112:127, 32:47=112:127);
 		CreateTranslation (63, 152:159=194:201, 126:126=202:202, 9:12=203:205, 64:75=194:207, 76:79=240:241, 128:148=194:207, 149:151=240:241, 1:1=207:207, 2:2=240:240, 5:6=206:207, 7:8=240:241, 104:109=202:207, 110:111=240:241);
+		CreateTranslation (64, 160:162=250:250, 163:163=251:251, 164:164=252:252, 165:165=253:253, 166:167=254:254);
+		CreateTranslation (65, 160:167=112:127);
+		CreateTranslation (66, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167, 208:223=160:163, 232:235=160:163);
+		CreateTranslation (67, 168:191=250:254, 32:47=250:254, 208:223=250:254, 160:167=250:254, 232:235=254:254);
 	}
 	// copied from MAP06 script
 	if (story_lev_num == 6)
