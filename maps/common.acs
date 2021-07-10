@@ -2662,8 +2662,9 @@ script "ssdremaster_show_compass" ENTER
 script "ssdremaster_common_final" UNLOADING
 {
 	ready = false;
-	ssdremaster_time_running = false;
 
+	ssdremaster_time_running = false;
+	ssdremaster_loop_nametag_change = false;
 	ssdremaster_achievements_looped = false;
 }
 
@@ -5424,8 +5425,6 @@ script "ssdremaster_after_scoring" (int forced_i)
 			ACS_ExecuteAlways (800, 0, 0, 0, 0);
 		}
 	}
-
-	ssdremaster_loop_nametag_change = false;
 }
 
 script "ssdremaster_check_achievements" (int type_id, int idx)
