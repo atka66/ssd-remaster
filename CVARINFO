@@ -17,3 +17,4 @@ server int   ssdremaster_debug_keyscramble = 0;
 
 server int   ssdremaster_workarounds_disable_barrels_in_zone_11 = 0;
 server int   ssdremaster_workarounds_disable_preboss_cutscenes = 0;
+server int   ssdremaster_workarounds_activate_bonus_stage_cheats = 0;

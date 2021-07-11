@@ -51,6 +51,7 @@ OptionMenu "SonicRemasterSettings"
 
 	Option "Remove explosive barrels from Industrial Zone levels (avoid crashes)", "ssdremaster_workarounds_disable_barrels_in_zone_11", "OnOff"
 	Option "Skip cutscenes before boss battle in several levels (helpful for debugging)", "ssdremaster_workarounds_disable_preboss_cutscenes", "OnOff"
+	Option "Activate cheats (no ring goals, no time limit, fall protection) in bonus stages", "ssdremaster_workarounds_activate_bonus_stage_cheats", "OnOff"
 }
 
 AddListMenu "MainMenu" before "OptionsMenu"
