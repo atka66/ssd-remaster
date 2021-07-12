@@ -326,14 +326,14 @@ actor GreenCard : BlueSkull replaces BlueSkull
 {
 	+NOGRAVITY
 
-	Translation "192:207=112:121", "240:247=122:127" // from blue to green
+	Translation "176:191=112:127", "40:47=120:123" // from red to green
 	Inventory.AltHUDIcon "GKEYA0"
 
 	States
 	{
 	Spawn:
-		BKEY A 10
-		BKEY B 10 bright
+		RKEY A 10
+		RKEY B 10 bright
 		loop
 	}
 }
@@ -341,14 +341,14 @@ actor OrangeCard : YellowSkull replaces YellowSkull
 {
 	+NOGRAVITY
 
-	Translation "224:231=208:213", "160:167=214:219", "232:235=220:223" // from yellow to orange
+	Translation "176:183=212:219", "184:187=220:223", "188:191=232:235", "40:47=235:235" // from red to orange
 	Inventory.AltHUDIcon "OKEYA0"
 
 	States
 	{
 	Spawn:
-		YKEY A 10
-		YKEY B 10 bright
+		RKEY A 10
+		RKEY B 10 bright
 		loop
 	}
 }
@@ -356,7 +356,7 @@ actor PurpleCard : RedSkull replaces RedSkull
 {
 	+NOGRAVITY
 
-	Translation "176:191=250:254" // from red to purple
+	Translation "176:191=250:254", "40:47=254:254" // from red to purple
 	Inventory.AltHUDIcon "PKEYA0"
 
 	States
