@@ -49,6 +49,7 @@ OptionMenu "SonicRemasterSettings"
 	StaticText "[WIP] Workarounds (updated when level starts)"
 	StaticText ""
 
+	Option "Skip eruption sequence when approached first shaft in Active Volcano Zone", "ssdremaster_workarounds_skip_first_eruption_map11", "OnOff"
 	Option "Remove explosive barrels from Industrial Zone levels (avoid crashes)", "ssdremaster_workarounds_disable_barrels_in_zone_11", "OnOff"
 	Option "Skip cutscenes before boss battle in several levels (helpful for debugging)", "ssdremaster_workarounds_disable_preboss_cutscenes", "OnOff"
 	Option "Activate cheats (no ring goals, no time limit, fall protection) in bonus stages", "ssdremaster_workarounds_activate_bonus_stage_cheats", "OnOff"
