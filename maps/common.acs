@@ -766,6 +766,13 @@ function str ssdremaster_queryKeyName(int lock_id, bool capital)
 	return res;
 }
 
+function bool keyscramble_check_sectlit(void)
+{
+	bool ssdremaster_keyscramble_sectlit=(GetCVar("ssdremaster_keyscramble_allow_sector_light_effects") != 0);
+
+	return ssdremaster_keyscramble_sectlit;
+}
+
 function void init_keyscramble_for_stage(int stagenum)
 {
 	bool keyscramble_debug=(GetCVar("ssdremaster_debug_keyscramble") != 0);
