@@ -449,7 +449,7 @@ int keyscramble_defs_per_stage[28][6][8]=
 			{  0,0,0,   0,   0,   0, 0, 0},{  0,0,0, 275, 280,  55,41,1},{  0,0,0, 274, 279,  54,41,1}
 		}, // stage 26
 		{
-			{  0,0,0, 268, 270, 300,42,17},{214,1,2, 264,   3, 216,37,1},{211,1,2, 266,   4, 218,37,1},
+			{215,0,0, 268, 270, 300,42,17},{214,1,2, 264,   3, 216,37,1},{211,1,2, 266,   4, 218,37,1},
 			{213,1,2, 269,   6, 221,37, 1},{210,1,2, 265,   2, 217,37,1},{212,1,2, 267,   5, 219,37,1}
 		}, // stage 27
 		{
@@ -1168,6 +1168,55 @@ function void keyscramble_replace_textures(int lid1, int lid1pos, int lid2, int 
 
 				SetLineTexture(lid, SIDE_FRONT, 2 - texPos, newTex);
 			}
+		}
+	}
+}
+
+function void keyscramble_sectlite_per_key(int tag1, int tag2, int tag3, int tag4, int tag5, int tag6,
+	int tag7, int tag8, int tag9, int tag10, int tag11, int tag12, int key_i)
+
+{
+	bool ssdremaster_keyscramble_sectlit=(GetCVar("ssdremaster_keyscramble_allow_sector_light_effects") != 0);
+
+	if (ssdremaster_enable_keyscramble && ssdremaster_keyscramble_sectlit)
+	{
+		int ssdremaster_allkeys_N=6;
+
+		if ((key_i >= 1) && (key_i <= ssdremaster_allkeys_N))
+		if ((tag1  >= 0) && (tag2  >= 0) && (tag3  >= 0))
+		if ((tag4  >= 0) && (tag5  >= 0) && (tag6  >= 0))
+		if ((tag7  >= 0) && (tag8  >= 0) && (tag9  >= 0))
+		if ((tag10 >= 0) && (tag11 >= 0) && (tag12 >= 0))
+		{
+			int random_res=keyscramble_random_results[key_i-1];
+
+			int r,g,b;
+
+			if ((random_res < 1) || (random_res > ssdremaster_allkeys_N)) return;
+
+			switch (random_res)
+			{
+				case 1: { r = 255; g =   0; b =   0; } break; // red key
+				case 2: { r =   0; g =   0; b = 255; } break; // blue key
+				case 3: { r = 255; g = 255; b =   0; } break; // yellow key
+				case 4: { r = 255; g =   0; b = 255; } break; // purple key
+				case 5: { r =   0; g = 255; b =   0; } break; // green key
+				case 6: { r = 255; g = 128; b =   0; } break; // orange key
+				default: break;
+			}
+
+			if (tag1  > 0) Sector_SetColor(tag1,  r,g,b);
+			if (tag2  > 0) Sector_SetColor(tag2,  r,g,b);
+			if (tag3  > 0) Sector_SetColor(tag3,  r,g,b);
+			if (tag4  > 0) Sector_SetColor(tag4,  r,g,b);
+			if (tag5  > 0) Sector_SetColor(tag5,  r,g,b);
+			if (tag6  > 0) Sector_SetColor(tag6,  r,g,b);
+			if (tag7  > 0) Sector_SetColor(tag7,  r,g,b);
+			if (tag8  > 0) Sector_SetColor(tag8,  r,g,b);
+			if (tag9  > 0) Sector_SetColor(tag9,  r,g,b);
+			if (tag10 > 0) Sector_SetColor(tag10, r,g,b);
+			if (tag11 > 0) Sector_SetColor(tag11, r,g,b);
+			if (tag12 > 0) Sector_SetColor(tag12, r,g,b);
 		}
 	}
 }
