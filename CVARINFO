@@ -13,6 +13,7 @@ server int   ssdremaster_keyscramble_allow_lock_textures = 1;
 server int   ssdremaster_keyscramble_allow_sector_light_effects = 0;
 server int   ssdremaster_keyscramble_allow_light_sources = 1;
 server int   ssdremaster_keyscramble_allow_other_obstacles = 0;
+server int   ssdremaster_keyscramble_allow_other_textures = 0;
 server int   ssdremaster_debug_keyscramble = 0;
 
 server int   ssdremaster_workarounds_skip_first_eruption_map11 = 0;
