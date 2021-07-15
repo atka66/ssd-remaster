@@ -1773,6 +1773,8 @@ script 230 (int ff_i, int test_mode_i)
 
 			if (!test_mode && (ang >= 0))
 			{
+				if (forcefield_log) Log(s:"ForceField #",d:ff_i+1,s:" is thrusting with args (",d:ang,s:",",d:f,s:")...");
+
 				ThrustThing(ang, f, NO, 0);
 			}
 
@@ -1794,7 +1796,7 @@ script 230 (int ff_i, int test_mode_i)
 						int temp_trans=FixedMul(trans_am << 16,i_fixed) >> 16;
 
 						if (forcefield_log)
-						if (test_mode) Log(d:i,s:" -> ",d:temp_trans);
+						if (test_mode) Log(s:"ForceField #",d:ff_i,s:": ",d:i,s:" -> ",d:temp_trans);
 
 						TranslucentLine(lid, temp_trans, tr_add);
 						if (anim_dl > 0) Delay(anim_dl);
@@ -1839,6 +1841,8 @@ function void clear_forcefield_entry(int ff_i)
 
 function void sdr_set_forcefield_thrusting(int ff_i, int ang, int f)
 {
+	bool forcefield_log=false;
+
 	if ((ff_i >= 0) && (ff_i < forceFieldN))
 	if ((ang >= 0) && (f > 0))
 	{
@@ -1849,6 +1853,14 @@ function void sdr_set_forcefield_thrusting(int ff_i, int ang, int f)
 			forceField_intprops[ff_i][5] = ang;
 			forceField_intprops[ff_i][6] = f;
 		}
+
+		if (forcefield_log)
+			Log(s:"Thrusting successfully set up for ForceField #",d:ff_i,s:".");
+	}
+	else
+	{
+		if (forcefield_log)
+			Log(s:"Failed to set up thrusting for ForceField #",d:ff_i,s:".");
 	}
 }
 
@@ -1868,6 +1880,8 @@ function void sdr_remove_forcefield_thrusting(int ff_i)
 
 function void ssdremaster_setup_forcefield(int ff_i, int lid, int anim_n, int anim_dl, int trans_am, str texStr, int cd, int blktype, bool hurt)
 {
+	bool forcefield_log=false;
+
 	if ((ff_i >= 0) && (ff_i < forceFieldN) && (forceField_intprops[ff_i][0] == 0)
 		&& (lid > 0) && (anim_n >= 0) && (anim_dl >= 0) && (anim_dl <= 8) && (trans_am >= 0)
 		&& (texStr != "") && (cd >= 0) && (blktype > BLOCK_NOTHING))
@@ -1889,6 +1903,14 @@ function void ssdremaster_setup_forcefield(int ff_i, int lid, int anim_n, int an
 			SetLineActivation(lid, SPAC_Push);
 
 		ACS_ExecuteAlways(230, 0, ff_i,YES,0);
+
+		if (forcefield_log)
+			Log(s:"ForceField #",d:ff_i,s:" successfully created.");
+	}
+	else
+	{
+		if (forcefield_log)
+			Log(s:"Failed to create ForceField #",d:ff_i,s:".");
 	}
 }
 
