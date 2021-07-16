@@ -317,6 +317,8 @@ int sdr_spawn_dir;
 
 // 'key scramble' related stuff
 
+int keyscramble_backup_results[6]={0,0,0,0,0,0};
+
 #define SDR_KEYSCRAMBLE_BOSS_KEY_TID -666
 
 bool ssdremaster_enable_keyscramble;
@@ -766,11 +768,75 @@ function str ssdremaster_queryKeyName(int lock_id, bool capital)
 	return res;
 }
 
+function void keyscramble_clear_results(void)
+{
+	int ssdremaster_allkeys_N=6;
+	int i,n;
+
+	n = ssdremaster_allkeys_N;
+	for (i=0;i<n;i++)
+		keyscramble_random_results[i] = 0;
+}
+
 function bool keyscramble_check_sectlit(void)
 {
 	bool ssdremaster_keyscramble_sectlit=(GetCVar("ssdremaster_keyscramble_allow_sector_light_effects") != 0);
 
 	return ssdremaster_keyscramble_sectlit;
+}
+
+function bool keyscramble_check_backup(bool logged)
+{
+	bool res=false;
+	int ssdremaster_allkeys_N=6;
+	int i,n;
+
+	str logStr="[keyscramble_check_backup] ";
+
+	n = ssdremaster_allkeys_N;
+	for (i=0;i<n;i++)
+	{
+		int e=keyscramble_backup_results[i];
+		res |= (e > 0);
+		logStr = StrParam(s:logStr,d:e,s:";");
+	}
+
+	if (logged) Log(s:logStr,s:" (",d:res,s:")");
+
+	return res;
+}
+
+function void keyscramble_make_backup(void)
+{
+	if (!keyscramble_check_backup(false))
+	{
+		bool has_results=false;
+		int ssdremaster_allkeys_N=6;
+		int i,n;
+
+		n = ssdremaster_allkeys_N;
+		for (i=0;i<n;i++)
+			has_results |= (keyscramble_random_results[i] > 0);
+
+		if (has_results)
+		{
+			for (i=0;i<n;i++)
+				keyscramble_backup_results[i] = keyscramble_random_results[i];
+		}
+	}
+}
+
+function void keyscramble_drop_backup(void)
+{
+	if (keyscramble_check_backup(false))
+	{
+		int ssdremaster_allkeys_N=6;
+		int i,n;
+
+		n = ssdremaster_allkeys_N;
+		for (i=0;i<n;i++)
+			keyscramble_backup_results[i] = 0;
+	}
 }
 
 function void init_keyscramble_for_stage(int stagenum)
@@ -1042,16 +1108,22 @@ function void keyscramble_translation(int light_tid1, int light_translate1, int 
 			bool is_light_source=true;
 
 			bool success=false;
+			bool use_backup=(keyscramble_check_backup(keyscramble_debug));
 
 			n = ssdremaster_allkeys_N;
 			for (i=1;i<=n;i++)
 			{
-				int random_res=keyscramble_random_results[i-1];
+				int random_res=0;
 
 				int light_tid=0;
 				str light_class1, light_class2;
 
 				int light_count=0;
+
+				if (use_backup)
+					random_res = keyscramble_backup_results[i-1];
+				else
+					random_res = keyscramble_random_results[i-1];
 
 				if ((random_res < 1) || (random_res > ssdremaster_allkeys_N)) continue;
 
@@ -2551,6 +2623,9 @@ script "ssdremaster_common_init" OPEN
 
 		keyscramble_translation_id = 0;
 
+		if (!sdr_common_init_firsttime)
+			keyscramble_clear_results();
+
 		// disable 'key scramble' feature in levels where fails (temporarily!)
 		if (false)
 		if ((story_lev_num ==  9) || (story_lev_num == 10))
@@ -2560,12 +2635,15 @@ script "ssdremaster_common_init" OPEN
 		if (story_lev_num == 21)
 			sdr_keyscramble_pick_onlyexist = true;
 
+
 		if (ssdremaster_enable_keyscramble)
 		{
 			if (story_lev_num ==  3) apply_keyscramble_for_stage( 2);
 			if (story_lev_num ==  9) apply_keyscramble_for_stage( 8);
 			if (story_lev_num == 14) apply_keyscramble_for_stage(13);
 			if (story_lev_num == 16) apply_keyscramble_for_stage(15);
+
+			if (story_lev_num ==  8) keyscramble_make_backup();
 
 			init_keyscramble_for_stage(story_lev_num);
 
@@ -2754,7 +2832,6 @@ script "ssdremaster_common_init" OPEN
 
 		hudmessage (s:StrParam(s:title_str_prefix,s:"\cf ",d:bonus_lev_num); 2, 0, CR_WHITE, 0.5, 0.46, 3.0, 0.01, 1.0);
 		delay(6);
-
 	}
 }
 
@@ -3336,6 +3413,10 @@ script "ssdremaster_create_obstacle_translations" (void)
 	if (story_lev_num == 8)
 	{
 		CreateTranslation (51, 168:191=208:223, 32:47=208:223);
+		CreateTranslation (52, 168:188=194:207, 189:191=240:241, 32:47=192:207);
+		CreateTranslation (53, 168:179=224:231, 180:191=160:167, 32:39=224:231, 40:47=160:167, 208:223=160:163, 232:235=160:163);
+		CreateTranslation (54, 168:191=250:254, 32:47=250:254, 208:223=250:254, 160:167=250:254, 232:235=254:254);
+		CreateTranslation (55, 168:191=112:127, 32:47=112:127);
 	}
 	// copied from MAP09 script
 	if (story_lev_num == 9)
